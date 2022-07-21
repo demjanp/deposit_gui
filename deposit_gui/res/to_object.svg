@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="svg2" inkscape:export-xdpi="135" inkscape:export-ydpi="135" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32"
+	 style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#00BBD6;}
+	.st1{opacity:0.677;fill:#00BBD6;enable-background:new    ;}
+	.st2{opacity:0.32;fill:#00BBD6;enable-background:new    ;}
+	.st3{fill:#494949;}
+	.st4{fill-rule:evenodd;clip-rule:evenodd;fill:#494949;}
+	.st5{fill:#E5E5E5;stroke:#191919;}
+</style>
+<defs>
+	
+		<inkscape:perspective  id="perspective3029" inkscape:persp3d-origin="5.9602913 : 6.6606441 : 1" inkscape:vp_x="-184.98217 : 134.99922 : 1" inkscape:vp_y="0 : 1137.778 : 0" inkscape:vp_z="217.72741 : 133.73499 : 1" sodipodi:type="inkscape:persp3d">
+		</inkscape:perspective>
+</defs>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1.0" id="base" inkscape:bbox-nodes="true" inkscape:bbox-paths="true" inkscape:current-layer="layer1" inkscape:cx="17.170353" inkscape:cy="18.345291" inkscape:document-units="px" inkscape:guide-bbox="true" inkscape:object-nodes="true" inkscape:object-paths="true" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:snap-bbox="true" inkscape:snap-bbox-edge-midpoints="true" inkscape:snap-bbox-midpoints="true" inkscape:snap-center="false" inkscape:snap-global="true" inkscape:snap-intersection-paths="true" inkscape:snap-midpoints="true" inkscape:snap-object-midpoints="true" inkscape:snap-smooth-nodes="true" inkscape:window-height="1191" inkscape:window-maximized="0" inkscape:window-width="1385" inkscape:window-x="75" inkscape:window-y="0" inkscape:zoom="16" pagecolor="#ffffff" showgrid="false" showguides="true">
+	<sodipodi:guide  id="guide3143" inkscape:locked="false" orientation="0,1" position="69.866667,134.93333"></sodipodi:guide>
+</sodipodi:namedview>
+<g id="layer1" transform="translate(0,-1090.5196)" inkscape:groupmode="layer" inkscape:label="Layer 1">
+	<g id="g4500" transform="matrix(0.93749982,0,0,0.93749982,3.087625e-6,70.16108)">
+		<path id="path4050" inkscape:connector-curvature="0" d="M21.3,1118.2L9.6,1112v-12.8l11.7-6.5l11.7,6.5v12.8L21.3,1118.2z"/>
+		<path id="path3944" inkscape:connector-curvature="0" class="st0" d="M21.3,1105.5l-11.7-6.3l11.7-6.5l11.7,6.5L21.3,1105.5z"/>
+		<path id="path3985" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccc" class="st1" d="M21.3,1118.2v-12.8l11.7-6.3
+			v12.8L21.3,1118.2z"/>
+		<path id="path3998" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccc" class="st2" d="M21.3,1118.2v-12.8l-11.7-6.3
+			v12.8L21.3,1118.2z"/>
+		<g id="g3992-1" transform="matrix(-1,0,0,1,78.933333,34.536241)">
+		</g>
+	</g>
+</g>
+<g id="g5159-8-1" transform="matrix(1.3259088,0,0,0.90292559,-5.5621769,107.10211)">
+	<path id="path3041-7-8" inkscape:connector-curvature="0" class="st3" d="M59.2-96.7h-7.8v5.7h7.8V-96.7z"/>
+	<path id="path5151-9-4" inkscape:connector-curvature="0" class="st4" d="M47.4-93.9l5.9-7v14L47.4-93.9z"/>
+</g>
+<path id="path3041-7-8_00000163761066158739464610000013743321656792560319_" inkscape:connector-curvature="0" class="st5" d="
+	M11.9,7.2L0.9,16l11,8.8v-5.3h10.8v-7.1H11.9V7.2z"/>
+</svg>
