@@ -1,0 +1,2 @@
+src/deposit_gui/dgui/graphviz_win/**/* filter=lfs diff=lfs merge=lfs -text
+src/deposit_gui/dgui/pygraphviz/**/* filter=lfs diff=lfs merge=lfs -text
