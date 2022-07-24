@@ -4,7 +4,7 @@ __version__ = '.'.join(map(str, version_info))
 __title__ = 'Deposit GUI'
 __date__ = "21.07.2022"
 
-from deposit_gui.main import DGUIMain
+from deposit_gui.dgui_main import DGUIMain
 
 from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller
 from deposit_gui.dgui.abstract_subview import AbstractSubview

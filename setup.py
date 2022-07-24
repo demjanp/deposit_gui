@@ -12,10 +12,16 @@ setup(
 	author='Peter Demján',
 	author_email='peter.demjan@gmail.com',
 	packages=find_packages(include = ['deposit_gui', 'deposit_gui.*']),
-	install_requires=[],
+	install_requires=[
+		'deposit==1.4.0',
+		'networkx==2.6.3',
+		'natsort==8.1.0',
+		'Pillow==9.1.1',
+		'PySide2==5.15.2.1',	
+	],
 	scripts=[],
 	license='LICENSE',
-	description='GUI for Deposit - Graph-based data storage and exchange',
+	description='GUI for Deposit: Graph database focused on scientific data collection',
 	long_description=open('README.md').read(),
 	python_requires='>=3.10',
 )
