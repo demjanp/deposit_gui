@@ -1,5 +1,5 @@
 # ![](dep_cube.svg)Deposit GUI
-GUI for Deposit - Graph-based data collection and storage
+GUI for [Deposit](https://github.com/demjanp/deposit): Graph database focused on scientific data collection.
 
 Created on 29. 4. 2013
 
@@ -14,6 +14,20 @@ Institute of Archaeology of the Czech Academy of Sciences, Prague, v.v.i.
 3. [License](#license)
 
 ## Installation <a name="installation"></a>
+
+To install the latest version of Deposit from GitHub, use the following command:
+```
+pip install -U git+https://github.com/demjanp/deposit_gui
+```
+
+To start the GUI use:
+```
+bin\start_gui.py
+```
+
+For a Windows installer see:
+
+https://github.com/demjanp/deposit_gui/releases/latest
 
 ## Acknowledgements: <a name="acknowledgements"></a>
 
