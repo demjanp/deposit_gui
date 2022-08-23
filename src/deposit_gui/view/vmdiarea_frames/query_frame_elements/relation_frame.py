@@ -8,10 +8,13 @@ class RelationFrame(QtWidgets.QFrame):
 	signal_object_link = QtCore.Signal(int)		# obj_id
 	signal_class_link = QtCore.Signal(str)		# class_name
 	signal_relation_link = QtCore.Signal(int, str, str)	# obj_id, rel_label, class_name
+	signal_relation_unlink = QtCore.Signal(int, str, str)	# obj_id, rel_label, class_name
 	
 	def __init__(self):
 		
 		QtWidgets.QFrame.__init__(self)
+		
+		self._obj = None
 		
 		self.setLayout(QtWidgets.QVBoxLayout())
 		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -34,7 +37,7 @@ class RelationFrame(QtWidgets.QFrame):
 		form_header.layout().addRow("<b>Classes:</b>", self.label_classes)
 		
 		self.list_related = QtWidgets.QWidget()
-		self.list_related.setLayout(QtWidgets.QVBoxLayout())
+		self.list_related.setLayout(QtWidgets.QFormLayout())
 		self.list_related.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.layout().addWidget(form_header)
@@ -42,10 +45,15 @@ class RelationFrame(QtWidgets.QFrame):
 		self.layout().addWidget(self.list_related)
 		self.layout().addStretch()
 		
-	def populate(self, obj):
+	def populate(self, obj = None):
 		
-		for i in reversed(range(self.list_related.layout().count())):
-			self.list_related.layout().itemAt(i).widget().deleteLater()
+		if obj is None:
+			obj = self._obj
+		
+		self._obj = obj
+		
+		for i in reversed(range(self.list_related.layout().rowCount())):
+			self.list_related.layout().removeRow(i)
 		
 		if obj is None:
 			self.label_obj_id.setText("None")
@@ -54,9 +62,13 @@ class RelationFrame(QtWidgets.QFrame):
 		
 		class_names = [cls.name for cls in obj.get_classes(ordered = True)]
 		
-		self.label_obj_id.setText("<a style=\"text-decoration:none;\" href=\"%s\">%d</a>" % (urlencode({"obj_id": obj.id}), obj.id))
+		self.label_obj_id.setText(
+			"<a style=\"text-decoration:none;\" href=\"%s\">%d</a>" % \
+				(urlencode({"obj_id": obj.id}), obj.id)
+		)
 		self.label_classes.setText(", ".join([
-			"<a style=\"text-decoration:none;\" href=\"%s\">%s</a>" % (urlencode({"name": name}), name) for name in class_names
+			"<a style=\"text-decoration:none;\" href=\"%s\">%s</a>" % \
+				(urlencode({"name": name}), name) for name in class_names
 		]))
 		relations = set()
 		for obj_tgt, label in obj.get_relations():
@@ -64,10 +76,21 @@ class RelationFrame(QtWidgets.QFrame):
 				relations.add((label, cls.name))
 		relations = natsorted(list(relations))
 		for label, name in relations:
-			label = QtWidgets.QLabel("<a style=\"text-decoration:none;\" href=\"%s\">%s.%s</a>" % (urlencode({"obj_id": obj.id, "label": label, "name": name}), label, name))
-			label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
-			label.linkActivated.connect(self.on_relation_link)
-			self.list_related.layout().addWidget(label)
+			label_link = QtWidgets.QLabel(
+				"<a style=\"text-decoration:none;\" href=\"%s\">%s.%s</a>" % \
+					(urlencode({"obj_id": obj.id, "label": label, "name": name}), label, name)
+			)
+			label_link.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+			label_link.linkActivated.connect(self.on_relation_link)
+			
+			label_unlink = QtWidgets.QLabel(
+				"<a style=\"text-decoration:none;\" href=\"%s\">unlink</a>" % \
+					(urlencode({"obj_id": obj.id, "label": label, "name": name}))
+			)
+			label_unlink.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+			label_unlink.linkActivated.connect(self.on_relation_unlink)
+			
+			self.list_related.layout().addRow(label_link, label_unlink)
 	
 	@QtCore.Slot(str)
 	def on_object_link(self, text):
@@ -89,4 +112,13 @@ class RelationFrame(QtWidgets.QFrame):
 		label = data["label"]
 		name = data["name"]
 		self.signal_relation_link.emit(obj_id, label, name)
-
+	
+	@QtCore.Slot(str)
+	def on_relation_unlink(self, text):
+		
+		data = dict(parse_qsl(text))
+		obj_id = int(data["obj_id"])
+		label = data["label"]
+		name = data["name"]
+		self.signal_relation_unlink.emit(obj_id, label, name)
+		

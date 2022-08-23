@@ -12,13 +12,15 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	signal_query_activated = QtCore.Signal(object)	# QueryItem
 	signal_object_selected = QtCore.Signal(list)	# [DObject, ...]
 	signal_relation_selected = QtCore.Signal(list)	# [(Source, Target, label), ...]
-	signal_class_link = QtCore.Signal(str)			# class_name
-	signal_relation_link = QtCore.Signal(int, str, str)	# obj_id, rel_label, class_name
 	signal_add_object = QtCore.Signal(object)	# Query
 	signal_del_object = QtCore.Signal()
 	signal_del_descriptor = QtCore.Signal()
 	signal_edited = QtCore.Signal(object, object)	# QueryItem, value
 	signal_drop_url = QtCore.Signal(object, str)	# QueryItem, url
+	
+	# signal_class_link = QtCore.Signal(str)				# class_name
+	# signal_relation_link = QtCore.Signal(int, str, str)	# obj_id, rel_label, class_name
+	# signal_relation_unlink = QtCore.Signal(int, str, str)	# obj_id, rel_label, class_name
 	
 	
 	INITIAL_THUMBNAIL_SIZE = 128
@@ -36,16 +38,17 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(0)
 		
+		self.relation_frame = RelationFrame()
+		self.relation_frame.signal_object_link.connect(self.on_object_link)
+		self.signal_class_link = self.relation_frame.signal_class_link
+		self.signal_relation_link = self.relation_frame.signal_relation_link
+		self.signal_relation_unlink = self.relation_frame.signal_relation_unlink
+		
 		self.footer = QueryFooter(self)
 		
 		self.tab_table = QueryTabTable(self)
 		self.tab_images = QueryTabImagesLazy(self)
 		self.tab_graph = QueryTabGraphLazy(self)
-		
-		self.relation_frame = RelationFrame()
-		self.relation_frame.signal_object_link.connect(self.on_object_link)
-		self.relation_frame.signal_class_link.connect(self.on_class_link)
-		self.relation_frame.signal_relation_link.connect(self.on_relation_link)
 		
 		self.tabs = QtWidgets.QTabWidget()
 		self.tabs.addTab(self.tab_table, "Table")
@@ -63,13 +66,13 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		frame_left.layout().addWidget(self.tabs)
 		frame_left.layout().addWidget(self.footer)
 
-		scroll_area = QtWidgets.QScrollArea()
-		scroll_area.setWidgetResizable(True)
-		scroll_area.setFrameStyle(QtWidgets.QFrame.NoFrame)
-		scroll_area.setWidget(self.relation_frame)
+		self.scroll_area = QtWidgets.QScrollArea()
+		self.scroll_area.setWidgetResizable(True)
+		self.scroll_area.setFrameStyle(QtWidgets.QFrame.NoFrame)
+		self.scroll_area.setWidget(self.relation_frame)
 		
 		splitter.addWidget(frame_left)
-		splitter.addWidget(scroll_area)
+		splitter.addWidget(self.scroll_area)
 		
 		self._filter_timer = QtCore.QTimer()
 		self._filter_timer.setSingleShot(True)
@@ -90,9 +93,10 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		return "dep_cube.svg"
 	
-	def update_query(self, objects, classes):
+	def update_query(self, objects = None, classes = None):
 		
-		if  ("*" in self._query.classes) or \
+		if  ((objects is None) and (classes is None)) or \
+			("*" in self._query.classes) or \
 			(self._query.main_class is None) or \
 			set(self._query.classes).intersection([
 				cls if isinstance(cls, str) else cls.name for cls in classes
@@ -100,16 +104,24 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 				obj if isinstance(obj, int) else obj.id for obj in objects
 			]):
 			
+			current_index = self.tabs.currentIndex()
+			if current_index > 0:
+				self.tabs.setCurrentIndex(0)
+			
 			self._query.process()
 			self._cview.progress.stop()
 			
 			self.tab_table.update_query()
+			self.relation_frame.populate()
 			if isinstance(self.tab_images, QueryTabImages):
 				self.tab_images.update_query(
 					self.tab_table.get_images(), self.tab_table.get_item_order()
 				)
 			if isinstance(self.tab_graph, QueryTabGraph):
 				self.tab_graph.update_query()
+			
+			if current_index > 0:
+				self.tabs.setCurrentIndex(current_index)
 	
 	def populate_tab_images(self):
 		
@@ -225,16 +237,6 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		self.on_to_object(obj_id)
 	
-	@QtCore.Slot(str)
-	def on_class_link(self, name):
-		
-		self.signal_class_link.emit(name)
-	
-	@QtCore.Slot(int, str, str)
-	def on_relation_link(self, obj_id, label, name):
-		
-		self.signal_relation_link.emit(obj_id, label, name)
-	
 	def on_query_activated(self, item):
 		
 		self.signal_query_activated.emit(item)
@@ -248,10 +250,14 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 			if (item.obj_id is not None) and (item.value is not None):
 				has_descriptor = True
 				break
+		found = False
 		for item in items:
 			if item.obj_id is not None:
 				self.relation_frame.populate(self._cmodel.get_object(item.obj_id))
+				found = True
 				break
+		if not found:
+			self.relation_frame.populate()
 		
 		self.footer.set_del_descriptor_enabled(has_descriptor)
 	
@@ -265,7 +271,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		obj = None
 		if len(objects) == 1:
 			obj = objects[0]
-		self.relation_frame.populate(obj)
+		self.relation_frame.populate()
 		self.signal_object_selected.emit(objects)
 	
 	def on_relation_selected(self, relations):

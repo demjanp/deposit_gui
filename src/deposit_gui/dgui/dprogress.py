@@ -46,3 +46,4 @@ class DProgress(QtWidgets.QProgressDialog):
 			self.setMaximum(maximum)
 		
 		QtWidgets.QApplication.processEvents()
+

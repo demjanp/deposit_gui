@@ -9,8 +9,11 @@ class DGUIMain(object):
 	def __init__(self, store: object = None) -> None:
 		
 		app = QtWidgets.QApplication(sys.argv)
+		app.setStyle("Fusion")
 		
 		self.controller = Controller(store)
+		self.controller.cview.show()
+		self.controller.cdialogs.open("Connect")
 		
 		app.exec_()
 	

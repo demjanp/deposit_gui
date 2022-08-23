@@ -25,7 +25,7 @@ class DToolBar(QtCore.QObject):
 					self.toolbars[toolbar_name].addSeparator()
 				else:
 					name, caption = name
-					self.actions[name] = QtWidgets.QAction(caption, self.view)
+					self.actions[name] = QtWidgets.QAction(caption)
 					self.actions[name].setData(name)
 					self.actions[name]._toolbar_name = toolbar_name
 					self.toolbars[toolbar_name].addAction(self.actions[name])
@@ -43,6 +43,7 @@ class DToolBar(QtCore.QObject):
 			shortcut: str,
 			help: str,
 			combo: list,
+			editable: bool,
 			checkable: bool,
 			checked: bool,
 			enabled: bool,
@@ -82,6 +83,8 @@ class DToolBar(QtCore.QObject):
 					self.actions[name].setCurrentText(text)
 				if self.actions[name].currentText() != text:
 					self.on_combo_changed(name, self.actions[name].currentText())
+				if "editable" in data:
+					self.actions[name].setEditable(data["editable"])
 				self.actions[name].adjustSize()
 				self.actions[name].blockSignals(False)
 		if "caption" in data:

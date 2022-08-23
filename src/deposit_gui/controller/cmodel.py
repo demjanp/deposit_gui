@@ -5,7 +5,7 @@ from deposit import (DDateTime, DGeometry, DResource)
 from deposit.datasource import AbstractDatasource
 
 from deposit.utils.fnc_files import (as_url)
-from deposit.utils.fnc_serialize import (try_numeric, value_to_str, select_to_class_descr)
+from deposit.utils.fnc_serialize import (try_numeric, value_to_str)
 from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 
 from PySide2 import (QtCore)
@@ -14,11 +14,11 @@ from natsort import natsorted
 
 class CModel(AbstractSubcontroller):
 	
-	def __init__(self, cmain) -> None:
+	def __init__(self, cmain, store) -> None:
 		
 		AbstractSubcontroller.__init__(self, cmain)
 		
-		self._model = Model()
+		self._model = Model(store)
 		
 		self._model.signal_added.connect(self.on_added)
 		self._model.signal_deleted.connect(self.on_deleted)
@@ -28,6 +28,13 @@ class CModel(AbstractSubcontroller):
 		self._model.signal_local_folder_changed.connect(self.on_local_folder_changed)
 		self._model.signal_queries_changed.connect(self.on_queries_changed)
 		self._model.signal_user_tools_changed.connect(self.on_user_tools_changed)
+		
+		self._update_timer = QtCore.QTimer()
+		self._update_timer.setSingleShot(True)
+		self._update_timer.timeout.connect(self.on_update_timer)
+		self._update_objects = set()
+		self._update_classes = set()
+	
 	
 	# ---- Signal handling
 	# ------------------------------------------------------------------------
@@ -35,47 +42,54 @@ class CModel(AbstractSubcontroller):
 	def on_added(self, objects, classes):
 		# elements = [DObject, DClass, ...]
 		
-		if classes:
-			self.cmain.cnavigator.populate_classes()
-			self.cmain.cmdiarea.update_class_graphs()
-		self.cmain.cmdiarea.update_queries(objects, classes)
-		self.cmain.cusertools.on_data_changed()
+		self._update_objects.update(objects)
+		self._update_classes.update(classes)
+		self._update_timer.start(100)
 	
 	@QtCore.Slot(list)
 	def on_deleted(self, objects, classes):
 		# elements = [obj_id, name, ...]
 		
-		if classes:
-			self.cmain.cnavigator.populate_classes()
-			self.cmain.cmdiarea.update_class_graphs()
-		self.cmain.cmdiarea.update_queries(objects, classes)
-		self.cmain.cusertools.on_data_changed()
+		self._update_objects.update(objects)
+		self._update_classes.update(classes)
+		self._update_timer.start(100)
 	
 	@QtCore.Slot(list)
 	def on_changed(self, objects, classes):
 		# elements = [DObject, DClass, ...]
 		
-		if classes:
+		self._update_objects.update(objects)
+		self._update_classes.update(classes)
+		self._update_timer.start(100)
+	
+	@QtCore.Slot()
+	def on_update_timer(self):
+		
+		if self._update_classes:
 			self.cmain.cnavigator.populate_classes()
 			self.cmain.cmdiarea.update_class_graphs()
-		self.cmain.cmdiarea.update_queries(objects, classes)
+		self.cmain.cmdiarea.update_queries(self._update_objects, self._update_classes)
 		self.cmain.cusertools.on_data_changed()
+		self._update_objects.clear()
+		self._update_classes.clear()
+		self.cmain.cactions.update()
 	
 	@QtCore.Slot(object)
 	def on_saved(self, datasource):
 		
 		self.cmain.cview.set_status_message("Saved: %s" % (str(datasource)))
+		self.cmain.cactions.update()
 	
 	@QtCore.Slot()
 	def on_loaded(self):
 		
 		self.update_model_info()
-		self.cmain.cactions.update()
 		self.cmain.cmdiarea.close_all()
 		self.cmain.cnavigator.populate_classes()
 		self.cmain.cnavigator.populate_queries()
 		self.cmain.cusertools.populate_tools()
 		self.cmain.cusertools.on_data_changed()
+		self.cmain.cactions.update()
 	
 	@QtCore.Slot()
 	def on_local_folder_changed(self):
@@ -87,11 +101,13 @@ class CModel(AbstractSubcontroller):
 	def on_queries_changed(self):
 		
 		self.cmain.cnavigator.populate_queries()
+		self.cmain.cactions.update()
 	
 	@QtCore.Slot()
 	def on_user_tools_changed(self):
 		
 		self.cmain.cusertools.populate_tools()
+		self.cmain.cactions.update()
 	
 	
 	# ---- get/set
@@ -370,17 +386,26 @@ class CModel(AbstractSubcontroller):
 	# ---- Import
 	# ------------------------------------------------------------------------
 	
-	def add_data_row(self, data, relations = set(), unique = set()):
+	def add_data_row(self, 
+		data: dict, 
+		relations: set = set(), 
+		unique: set = set(), 
+		existing = {}, 
+		return_added = False,
+	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
 		# data = {(Class name, Descriptor name): value, ...}
 		# relations = {(Class name 1, label, Class name 2), ...}
-		# unique = {Class, ...}; always add a new object to classes 
+		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
+		# existing = {Class name: Object, ...}
+		#	use existing object for specified classes (i.e. just update descriptors)
 		#
-		# returns number of added Objects
+		# returns n_added or (n_added, added) if return_added == True
+		#	added = {Class name: Object, ...}
 		
-		return self._model.add_data_row(data, relations, unique)
+		return self._model.add_data_row(data, relations, unique, existing, return_added)
 	
 	def import_data(self, get_data, n_rows, targets, relations, unique):
 		# get_data(row, col) = value
@@ -474,4 +499,8 @@ class CModel(AbstractSubcontroller):
 			return True
 		self.cmain.cview.progress.stop()
 		return False
+	
+	def is_saved(self):
+		
+		return self._model.is_saved()
 

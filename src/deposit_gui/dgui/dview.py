@@ -1,8 +1,5 @@
 '''
-Generic class to be re-used also by Deposit in the future
-'''
-'''
-DView(QtWidgets.QMainWindow).
+DView(DMainWindow).
 	.registry
 		.get(var)
 		.set(var, value)
@@ -20,26 +17,27 @@ DView(QtWidgets.QMainWindow).
 		.append(text)
 		.flush()
 	.set_title(name)
+	.set_res_folder(path)
 	.set_icon(name)
 	.get_icon(name)
 '''
 
-from deposit_gui.dgui.dregistry import DRegistry
-from deposit_gui.dgui.dprogress import DProgress
+from deposit_gui.dgui.abstract_subview import AbstractSubview
+from deposit_gui.dgui.dmain_window import DMainWindow
 from deposit_gui.dgui.dstatus_bar import DStatusBar
+from deposit_gui.dgui.dprogress import DProgress
 from deposit_gui.dgui.dlogging import DLogging
-
-from deposit_gui import res as icon_resources
-import deposit_gui
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 import traceback
+import json
 import sys
 import os
 
-class DView(QtWidgets.QMainWindow):
+class DView(AbstractSubview, DMainWindow):
 	
 	APP_NAME = "DView"
+	REG_PREFIX = ""
 	VERSION = "0.0.0"
 	
 	def __init__(self):
@@ -47,22 +45,19 @@ class DView(QtWidgets.QMainWindow):
 		self._current_geometry = None
 		self._previous_geometry = None
 		
-		QtWidgets.QMainWindow.__init__(self)
+		AbstractSubview.__init__(self)
+		DMainWindow.__init__(self)
 		
-		self.registry = DRegistry(self.APP_NAME)
 		self.progress = DProgress(self)
 		self.statusbar = DStatusBar(self)
 		self.logging = DLogging(self.APP_NAME, self.VERSION)
 		
 		self.set_title()
 		self.setStatusBar(self.statusbar)
-		self._load_geometry()
-		self._current_geometry = self._get_geometry()
-		self._previous_geometry = self._current_geometry
-		self._load_window_state()
 		
 		sys.excepthook = self.exception_event
-			
+	
+	
 	# public methods
 	
 	def set_title(self, name: str = None) -> None:
@@ -76,60 +71,52 @@ class DView(QtWidgets.QMainWindow):
 	def set_icon(self, name):
 		
 		self.setWindowIcon(self.get_icon(name))
-		
-	def get_icon(self, name: str) -> QtGui.QIcon:
-		
-		path = os.path.join(os.path.dirname(icon_resources.__file__), name)
-		if os.path.isfile(path):
-			return QtGui.QIcon(path)
-		path = os.path.join(os.path.dirname(deposit_gui.__file__), "res", name)
-		if os.path.isfile(path):
-			return QtGui.QIcon(path)
-		raise Exception("Could not load icon %s" % (name))
 	
-	# private methods
+	def get_recent_dir(self):
+		
+		return self.registry.get(self.REG_PREFIX + "recent_dir")
 	
-	def _load_geometry(self):
+	def set_recent_dir(self, path):
 		
-		geometry = self.registry.get("window_geometry")
-		if geometry:
-			geometry = geometry[1:].strip("'")
-			self.restoreGeometry(QtCore.QByteArray().fromPercentEncoding(bytearray(geometry, "utf-8")))
+		self.registry.set(self.REG_PREFIX + "recent_dir", path)
+	
+	def get_recent_connections(self):
 		
-	def _get_geometry(self):
+		rows = self.registry.get(self.REG_PREFIX + "recent")
+		if rows:
+			return json.loads(rows)
+		return []
+	
+	def add_recent_connection(self, url = None, identifier = None, connstr = None):
 		
-		return str(self.saveGeometry().toPercentEncoding())
+		data = self.get_recent_connections()
+		row = None
+		if url is not None:
+			row = [url]
+		elif (identifier is not None) and (connstr is not None):
+			row = [identifier, connstr]
+		if row is None:
+			return
+		if row in data:
+			data.remove(row)
+		data = [row] + data
+		self.registry.set(self.REG_PREFIX + "recent", json.dumps(data))
+	
+	def clear_recent_connections(self):
 		
-	def _save_geometry(self, geometry = None):
-		
-		geometry = self._get_geometry()
-		if self.isVisible():
-			if geometry:
-				self.registry.set("window_geometry", geometry)
-		return geometry
-		
-	def _load_window_state(self):
-		
-		state = self.registry.get("widow_maximized")
-		if state:
-			if int(state) == 1:
-				self.showMaximized()
-			else:
-				self.showNormal()
-		
-	def _save_window_state(self):
-		
-		if self.isVisible():
-			self.registry.set("widow_maximized", str(int(self.isMaximized())))
-		
+		self.registry.set(self.REG_PREFIX + "recent", "")
+	
+	
 	# events
 	
 	def exception_event(self, typ, value, tb):
 		
-		text = "Exception: %s: %s\nTraceback: %s" % (str(typ), str(value), "".join(traceback.format_tb(tb)))
+		text = "Exception: %s: %s\nTraceback: %s" % (
+			str(typ), str(value)[:512], "".join(traceback.format_tb(tb))
+		)
 		self.logging.append(text)
-		self.logging.flush()
 		print(text)
+	
 	
 	# overriden QMainWindow methods
 	
@@ -137,34 +124,15 @@ class DView(QtWidgets.QMainWindow):
 		
 		for action in self.findChildren(QtWidgets.QAction):
 			if action.isEnabled() and (
-				action.shortcut() == QtGui.QKeySequence(event.key()+int(event.modifiers()))
+				action.shortcut() == QtGui.QKeySequence(
+					event.key()+int(event.modifiers())
+				)
 			):
 				action.trigger()
 		
 		QtWidgets.QMainWindow.keyPressEvent(self, event)
 	
-	def changeEvent(self, event):
-		
-		QtWidgets.QMainWindow.changeEvent(self, event)
-		if event.type() ==  QtCore.QEvent.WindowStateChange:
-			self._save_window_state()
-			if self.isMaximized():
-				self._save_geometry(self._previous_geometry)
-	
-	def resizeEvent(self, event):
-		
-		self._previous_geometry = self._current_geometry
-		self._current_geometry = self._save_geometry()
-		QtWidgets.QMainWindow.resizeEvent(self, event)
-	
-	def moveEvent(self, event):
-		
-		self._save_geometry()
-		QtWidgets.QMainWindow.moveEvent(self, event)
-	
 	def closeEvent(self, event):
 		
-		self.registry.flush()
-		self.logging.flush()
-		QtWidgets.QMainWindow.closeEvent(self, event)
+		DMainWindow.closeEvent(self, event)
 

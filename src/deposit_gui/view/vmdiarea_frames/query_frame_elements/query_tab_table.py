@@ -211,6 +211,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)
 		
 		self.activated.connect(self.on_activated)
+		self.verticalHeader().sectionDoubleClicked.connect(self.on_row_doubleclicked)
 	
 	def update_query(self):
 		
@@ -235,7 +236,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 	
 	def set_query_item(self, row, column, value):
 		
-		self.table_model.proxy_model.setData(self.table_model.proxy_model.index(row, column), value)
+		self._table_model._proxy_model.setData(self._table_model._proxy_model.index(row, column), value)
 	
 	def get_row_count(self):
 		
@@ -291,6 +292,11 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		item = index.data(QtCore.Qt.UserRole)
 		self._queryframe.on_query_activated(item)
 	
+	@QtCore.Slot(int)
+	def on_row_doubleclicked(self, row):
+		
+		self.on_activated(self._table_model._proxy_model.index(row, 0))
+	
 	def on_selected(self):
 		
 		row_items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedRows()]
@@ -304,4 +310,5 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		QtWidgets.QTableView.selectionChanged(self, *args, **kwargs)
 		
 		self.on_selected()
+
 

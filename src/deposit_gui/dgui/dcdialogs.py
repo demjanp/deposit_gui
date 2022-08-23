@@ -10,11 +10,16 @@ class DCDialogs(AbstractSubcontroller):
 		AbstractSubcontroller.__init__(self, cmain)
 		
 		self._vdialogs = DVDialogs(cview._view)
+		self._dialogs = {}
 		
 		self._vdialogs.signal_process.connect(self.on_dialog_process)
 		self._vdialogs.signal_cancel.connect(self.on_dialog_cancel)
 	
 	def open(self, name, *args, **kwargs):
+		
+		if name in self._dialogs:
+			self._dialogs[name].close()
+			del self._dialogs[name]
 		
 		dialog = self._vdialogs.open(name)
 		dialog._args = args
@@ -27,6 +32,16 @@ class DCDialogs(AbstractSubcontroller):
 			dialog.adjustSize()
 		
 		dialog.show()
+		self._dialogs[name] = dialog
+	
+	def close(self, name):
+		
+		if name in self._dialogs:
+			self._dialogs[name].close()
+	
+	def is_open(self, name):
+		
+		return (name in self._dialogs) and (self._dialogs[name].isVisible())
 	
 	@QtCore.Slot(str, object)
 	def on_dialog_process(self, name, dialog):
@@ -34,6 +49,8 @@ class DCDialogs(AbstractSubcontroller):
 		if hasattr(self, "process_%s" % (name)):
 			getattr(self, "process_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
 		dialog.close()
+		if name in self._dialogs:
+			del self._dialogs[name]
 	
 	@QtCore.Slot(str, object)
 	def on_dialog_cancel(self, name, dialog):
@@ -41,6 +58,8 @@ class DCDialogs(AbstractSubcontroller):
 		if hasattr(self, "cancel_%s" % (name)):
 			getattr(self, "cancel_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
 		dialog.close()
+		if name in self._dialogs:
+			del self._dialogs[name]
 	
 	
 	# ---- Signal handling

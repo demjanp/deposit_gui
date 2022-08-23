@@ -160,7 +160,7 @@ class ClassGraph(QtWidgets.QMainWindow):
 	
 	def on_zoom_reset(self):
 		
-		self._graph_view.reset_scene()
+		self._graph_view.reset_zoom()
 	
 	def on_save_pdf(self):
 		
