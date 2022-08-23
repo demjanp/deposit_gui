@@ -21,7 +21,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="deposit_gui",
-    version="1.4.0",
+    version="1.4.1",
     description="GUI for Deposit: Graph database focused on scientific data collection",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -40,7 +40,6 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     include_package_data=True,
-#	package_data={'':['*.dll', '*.exe', '*.sh', 'config6']},
 	package_data={"":[
 		"*.dll",
 		"*.exe",

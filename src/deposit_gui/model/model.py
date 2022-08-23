@@ -21,11 +21,11 @@ class Model(QtCore.QObject):
 	signal_queries_changed = QtCore.Signal()
 	signal_user_tools_changed = QtCore.Signal()
 	
-	def __init__(self) -> None:
+	def __init__(self, store) -> None:
 		
 		QtCore.QObject.__init__(self)
 		
-		self._store = Store()
+		self._store = Store() if store is None else store
 		self._thumbnail_cache = {}
 		
 		self._store.set_callback_added(self.on_added)
@@ -156,17 +156,26 @@ class Model(QtCore.QObject):
 		
 		self._store.add_saved_query(title, querystr)
 	
-	def add_data_row(self, data, relations = set(), unique = set()):
+	def add_data_row(self, 
+		data: dict, 
+		relations: set = set(), 
+		unique: set = set(), 
+		existing = {}, 
+		return_added = False,
+	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
 		# data = {(Class name, Descriptor name): value, ...}
 		# relations = {(Class name 1, label, Class name 2), ...}
 		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
+		# existing = {Class name: Object, ...}
+		#	use existing object for specified classes (i.e. just update descriptors)
 		#
-		# returns number of added Objects
+		# returns n_added or (n_added, added) if return_added == True
+		#	added = {Class name: Object, ...}
 		
-		return self._store.add_data_row(data, relations, unique)
+		return self._store.add_data_row(data, relations, unique, existing, return_added)
 	
 	def import_store(self, store, unique = set(), progress = None):
 		# unique = {Class name, ...}; always add a new object to classes 
@@ -292,10 +301,6 @@ class Model(QtCore.QObject):
 		
 		self._store.del_user_tool(label)
 	
-	def del_query(self, title):
-		
-		self._store.del_query(title)
-	
 	def del_class_descriptor(self, descr, cls, class_only = True):
 		
 		descr = self.get_class(descr)
@@ -342,4 +347,8 @@ class Model(QtCore.QObject):
 		load_thumbnails(self.get_folder(), self._thumbnail_cache)
 		
 		return True
+	
+	def is_saved(self):
+		
+		return self._store.is_saved()
 

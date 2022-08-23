@@ -101,6 +101,17 @@ class CMDIArea(AbstractSubcontroller):
 		
 		self.add_query("SELECT [%s].*, OBJ(%d).* RELATED OBJ(%d).[%s].[%s]" % (name_tgt, obj_id, obj_id, label, name_tgt))
 	
+	@QtCore.Slot(int, str, str)
+	def on_relation_unlink(self, obj_id, label, name_tgt):
+		
+		obj = self.cmain.cmodel.get_object(obj_id)
+		to_del = []
+		for obj_tgt, label_ in obj.get_relations():
+			if (label_ == label) and obj_tgt.has_class(name_tgt):
+				to_del.append(obj_tgt)
+		for obj_tgt in to_del:
+			obj.del_relation(obj_tgt, label)
+	
 	def get_drag_data(self, event):
 		# returns type, data; type = "query_items" / "url" / None
 		
@@ -214,6 +225,7 @@ class CMDIArea(AbstractSubcontroller):
 		query_frame.signal_relation_selected.connect(self.cmain.on_relation_selected)
 		query_frame.signal_class_link.connect(self.on_class_link)
 		query_frame.signal_relation_link.connect(self.on_relation_link)
+		query_frame.signal_relation_unlink.connect(self.on_relation_unlink)
 		query_frame.signal_add_object.connect(self.on_query_add_object)
 		query_frame.signal_del_object.connect(self.on_query_del_object)
 		query_frame.signal_del_descriptor.connect(self.on_query_del_descriptor)

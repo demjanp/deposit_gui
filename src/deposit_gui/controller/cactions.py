@@ -73,6 +73,7 @@ class CActions(DCActions):
 				("ImportDeposit", "Import from Deposit"),
 				("ExportDeposit", "Export to Deposit"),
 				("LoadExternal", "Load External"),
+				("ExportExternal", "Export Data"),
 				None,
 				("SetLocalFolder", "Set Local Folder"),
 				("ClearLocalFolder", "Clear Local Folder"),
@@ -132,7 +133,7 @@ class CActions(DCActions):
 			icon = "save.svg",
 			help = "Save",
 			checkable = False,
-			enabled = True,
+			enabled = not self.cmain.cmodel.is_saved(),
 		)
 	
 	def on_Save(self, state):
@@ -591,9 +592,6 @@ class CActions(DCActions):
 	def on_About(self, state):
 		
 		self.cmain.cdialogs.open("About")
-
-
-	
 	
 	def on_LogFile(self, state):
 		

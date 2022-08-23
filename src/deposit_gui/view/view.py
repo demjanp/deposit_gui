@@ -3,18 +3,17 @@ from deposit_gui.dgui.dview import DView
 from deposit_gui import __version__, __title__
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
-import json
 
 class View(DView):
 	
 	APP_NAME = __title__
 	VERSION = __version__
 	
-	signal_close = QtCore.Signal()
-	
 	def __init__(self, vnavigator, vmdiarea) -> None:
 		
 		DView.__init__(self)
+		
+		self._close_callback = None
 		
 		central_widget = QtWidgets.QWidget(self)
 		central_widget.setLayout(QtWidgets.QVBoxLayout())
@@ -22,6 +21,7 @@ class View(DView):
 		self.setCentralWidget(central_widget)
 		
 		self._tool_window = QtWidgets.QMainWindow()
+		self._tool_window.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 		central_widget.layout().addWidget(self._tool_window)
 		
 		splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
@@ -37,44 +37,6 @@ class View(DView):
 		
 		self.setWindowIcon(self.get_icon("dep_cube.svg"))
 		
-	def get_recent_dir(self):
-		
-		return self.registry.get("recent_dir")
-	
-	def set_recent_dir(self, path):
-		
-		self.registry.set("recent_dir", path)
-	
-	def get_recent_connections(self):
-		
-		rows = self.registry.get("recent")
-		if rows:
-			return json.loads(rows)
-		return []
-	
-	def add_recent_connection(self, url = None, identifier = None, connstr = None):
-		
-		data = self.get_recent_connections()
-		row = None
-		if url is not None:
-			row = [url]
-		elif (identifier is not None) and (connstr is not None):
-			row = [identifier, connstr]
-		if row is None:
-			return
-		if row in data:
-			data.remove(row)
-		data = [row] + data
-		self.registry.set("recent", json.dumps(data))
-	
-	def clear_recent_connections(self):
-		
-		self.registry.set("recent", "")
-	
-	def update_model_info(self):
-		
-		pass
-	
 	def menuBar(self):
 		# HACK to stop MDI Subwindows move controls to MenuBar when maximized
 		
@@ -92,6 +54,8 @@ class View(DView):
 	
 	def closeEvent(self, event):
 		
-		self.signal_close.emit()
+		if self._close_callback is not None:
+			if not self._close_callback():
+				event.ignore()
+				return
 		DView.closeEvent(self, event)
-

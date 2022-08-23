@@ -10,7 +10,7 @@ from deposit_gui.controller.cusertools import CUserTools
 
 from deposit import Store
 
-from PySide2 import (QtCore)
+from PySide2 import (QtWidgets, QtCore, QtGui)
 import sys
 import os
 
@@ -27,9 +27,9 @@ class Controller(QtCore.QObject):
 		self._selected_relations = []
 		self._selected_queryitems = set()
 		
-		self.store = Store() if store is None else store
+		self._is_subwindow = (store is not None)
 		
-		self.cmodel = CModel(self)
+		self.cmodel = CModel(self, store)
 		self.cnavigator = CNavigator(self)
 		self.cmdiarea = CMDIArea(self)
 		self.cview = CView(self, self.cnavigator, self.cmdiarea)
@@ -39,8 +39,7 @@ class Controller(QtCore.QObject):
 		self.cusertools = CUserTools(self, self.cview)
 		
 		self.cmodel.on_loaded()
-		self.cview.show()
-		self.cdialogs.open("Connect")
+		self.cview.log_message("Deposit GUI started")
 	
 	
 	# ---- Signal handling
@@ -104,7 +103,20 @@ class Controller(QtCore.QObject):
 	
 	def on_close(self):
 		
+		if (not self._is_subwindow) and (not self.cmodel.is_saved()):
+			reply = QtWidgets.QMessageBox.question(self.cview._view, 
+				"Exit", "Save changes to database?",
+				QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
+			)
+			if reply == QtWidgets.QMessageBox.Yes:
+				self.cactions.on_Save(True)
+			elif reply == QtWidgets.QMessageBox.No:
+				pass
+			else:
+				return False
+			
 		self.cusertools.on_close()
+		return True
 	
 	
 	# ---- get/set
@@ -137,3 +149,7 @@ class Controller(QtCore.QObject):
 			if os.path.isfile(path):
 				os.startfile(path)
 
+	
+	def close(self):
+		
+		self.cview.close()

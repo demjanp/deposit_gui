@@ -1,3 +1,4 @@
+from deposit_gui.dgui.dgraphics_view import DGraphicsView
 from deposit_gui.dgui import pygraphviz
 
 from PySide2 import (QtWidgets, QtCore, QtGui, QtPrintSupport)
@@ -564,7 +565,7 @@ class Edge(QtWidgets.QGraphicsItem):
 			y = text_pos.y()
 			painter.drawText(x - self.label_w / 2, y + self.label_h / 4, self.label)
 
-class DGraphView(QtWidgets.QGraphicsView):
+class DGraphView(DGraphicsView):
 	
 	signal_node_activated = QtCore.Signal(object)
 	signal_selected = QtCore.Signal()
@@ -577,32 +578,22 @@ class DGraphView(QtWidgets.QGraphicsView):
 		self._edge_font_family = 16
 		self._edge_font_size = 16
 		
-		QtWidgets.QGraphicsView.__init__(self)
+		DGraphicsView.__init__(self)
 		
-		scene = QtWidgets.QGraphicsScene(self)
-		scene.setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
-		self.setScene(scene)
-		self.setRenderHint(QtGui.QPainter.Antialiasing)
-		self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+		self.scene().setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
 		self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorViewCenter)
 		self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
 		
 		self.setMinimumSize(200, 200)
 		
-		scene.selectionChanged.connect(self.on_selected)
+		self.scene().selectionChanged.connect(self.on_selected)
 	
 	def clear(self):
 		
-		self.scene().clear()
-		self.setSceneRect(QtCore.QRectF())
+		DGraphicsView.clear(self)
+		
 		self._nodes.clear()
 		self._edges.clear()
-	
-	def reset_scene(self):
-		
-		rect = self.scene().itemsBoundingRect().marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
-		self.setSceneRect(rect)
-		self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
 	
 	def calc_positions(self, nodes, edges, gap = 10, x_stretch = 1, y_stretch = 1, move_nodes = None):
 		# nodes = [AbstractNode, node_id, ...]
@@ -744,7 +735,7 @@ class DGraphView(QtWidgets.QGraphicsView):
 			edges_done[key] += 1
 			self.scene().addItem(self._edges[-1])
 		
-		self.reset_scene()
+		self.reset_zoom()
 		self.show()
 	
 	def get_node(self, node_id):
@@ -794,10 +785,6 @@ class DGraphView(QtWidgets.QGraphicsView):
 		
 		self.scene().clearSelection()
 	
-	def scale_view(self, factor):
-		
-		self.scale(factor, factor)
-	
 	def save_pdf(self, path, dpi = 72):
 		
 		self.scene().clearSelection()
@@ -841,10 +828,6 @@ class DGraphView(QtWidgets.QGraphicsView):
 	def on_selected(self):
 		
 		self.signal_selected.emit()
-	
-	def wheelEvent(self, event):
-		
-		self.scale_view(2**(event.delta() / 240.0))
 	
 	def mousePressEvent(self, event):
 		
