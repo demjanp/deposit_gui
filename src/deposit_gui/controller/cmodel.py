@@ -28,6 +28,7 @@ class CModel(AbstractSubcontroller):
 		self._model.signal_local_folder_changed.connect(self.on_local_folder_changed)
 		self._model.signal_queries_changed.connect(self.on_queries_changed)
 		self._model.signal_user_tools_changed.connect(self.on_user_tools_changed)
+		self._model.signal_settings_changed.connect(self.on_settings_changed)
 		
 		self._update_timer = QtCore.QTimer()
 		self._update_timer.setSingleShot(True)
@@ -109,6 +110,11 @@ class CModel(AbstractSubcontroller):
 		self.cmain.cusertools.populate_tools()
 		self.cmain.cactions.update()
 	
+	@QtCore.Slot()
+	def on_settings_changed(self):
+		
+		self.cmain.cactions.update()
+		
 	
 	# ---- get/set
 	# ------------------------------------------------------------------------
@@ -182,11 +188,9 @@ class CModel(AbstractSubcontroller):
 	def update_model_info(self):
 		
 		texts = []
-		texts.append("Data Source: <b>%s</b>" % (str(self._model.get_datasource())))
-		folder = "Not set"
-		if self._model.has_local_folder():
-			folder = str(self._model.get_folder())
-		texts.append("Local Folder: <b>%s</b>" % (folder))
+		datasource = self._model.get_datasource()
+		texts.append("Data Source: <b>%s (%s)</b>" % (datasource.get_name(), str(datasource)))
+		texts.append("Local Folder: <b>%s</b>" % (str(self._model.get_folder())))
 		self.cmain.cmdiarea.set_background_text("".join([("<p>%s</p>" % text) for text in texts]))
 		self.cmain.cview.set_title(self.get_datasource_name())
 	
@@ -288,7 +292,7 @@ class CModel(AbstractSubcontroller):
 			obj2 = self.add_object()
 			for descr in obj.get_descriptors():
 				obj2.set_descriptor(descr, obj.get_descriptor(descr))
-				location = sobj.get_location(descr)
+				location = obj.get_location(descr)
 				if location is not None:
 					obj2.set_location(descr, location)
 			for cls in obj.get_classes():
@@ -471,6 +475,14 @@ class CModel(AbstractSubcontroller):
 	
 	# ---- Persistence
 	# ------------------------------------------------------------------------
+	def has_auto_backup(self):
+		
+		return self._model.has_auto_backup()
+	
+	def set_auto_backup(self, state):
+		
+		self._model.set_auto_backup(state)
+	
 	def get_datasource(self):
 		
 		return self._model.get_datasource()

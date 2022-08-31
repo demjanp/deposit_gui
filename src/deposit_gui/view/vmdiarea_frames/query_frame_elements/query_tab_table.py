@@ -105,8 +105,8 @@ class TableModel(AbstractDragModel, QtCore.QAbstractTableModel):
 			return None
 		
 		if orientation == QtCore.Qt.Vertical: # row headers
+			index = self._proxy_model.index(section, 0)
 			if role == QtCore.Qt.DisplayRole:
-				index = self._proxy_model.index(section, 0)
 				return str(self.get_query_item(index).obj_id_row)
 			elif role == QtCore.Qt.UserRole:
 				return self.get_query_item(index).obj_id_row

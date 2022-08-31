@@ -626,6 +626,8 @@ class DGraphView(DGraphicsView):
 			if move_nodes is None:
 				done.add(node_id)
 		for node_id in done:
+			if node_id not in self._nodes:
+				continue
 			rect = self._nodes[node_id].boundingRect()
 			mul = 0.013  # TODO find a way to calculate
 			w, h = rect.width(), rect.height()

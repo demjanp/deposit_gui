@@ -20,6 +20,7 @@ class Model(QtCore.QObject):
 	signal_local_folder_changed = QtCore.Signal()
 	signal_queries_changed = QtCore.Signal()
 	signal_user_tools_changed = QtCore.Signal()
+	signal_settings_changed = QtCore.Signal()
 	
 	def __init__(self, store) -> None:
 		
@@ -36,6 +37,7 @@ class Model(QtCore.QObject):
 		self._store.set_callback_local_folder_changed(self.on_local_folder_changed)
 		self._store.set_callback_queries_changed(self.on_queries_changed)
 		self._store.set_callback_user_tools_changed(self.on_user_tools_changed)
+		self._store.set_callback_settings_changed(self.on_settings_changed)
 	
 	def _to_objects_and_classes(self, elements):
 		
@@ -47,7 +49,7 @@ class Model(QtCore.QObject):
 			elif isinstance(element, DClass) or isinstance(element, str):
 				classes.append(element)
 		return objects, classes
-		
+	
 	
 	# ---- Signal handling
 	# ------------------------------------------------------------------------
@@ -86,6 +88,9 @@ class Model(QtCore.QObject):
 		
 		self.signal_user_tools_changed.emit()
 	
+	def on_settings_changed(self):
+		
+		self.signal_settings_changed.emit()
 	
 	# ---- General
 	# ------------------------------------------------------------------------
@@ -324,6 +329,14 @@ class Model(QtCore.QObject):
 		# format = Datasource or format
 		
 		return self._store.init_datasource(format)
+	
+	def has_auto_backup(self):
+		
+		return self._store.has_auto_backup()
+	
+	def set_auto_backup(self, state):
+		
+		self._store.set_auto_backup(state)
 	
 	def get_datasource(self):
 		

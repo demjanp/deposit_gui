@@ -1,25 +1,17 @@
-from deposit_gui.dgui.dconnect_tabs.dconnect_tab_recent import DConnectTabRecent
-from deposit_gui.dgui.dconnect_tabs.dconnect_tab_pickle import DConnectTabPickle
-from deposit_gui.dgui.dconnect_tabs.dconnect_tab_json import DConnectTabJSON
 from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db import DConnectTabDB
 from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db_rel import DConnectTabDBRel
-from deposit_gui.dgui.dconnect_tabs.dconnect_tab_memory import DConnectTabMemory
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
 import os
 
-class DConnectFrame(QtWidgets.QFrame):
-	
-	signal_clear_recent = QtCore.Signal()
+class DSaveAsPostgresFrame(QtWidgets.QFrame):
 	
 	def __init__(self, dialog):
 		
 		QtWidgets.QFrame.__init__(self)
 		
 		self._dialog = dialog
-		
-		self._recent_dir = str(Path.home())
 		
 		self.setMinimumWidth(600)
 		self.setMinimumHeight(400)
@@ -30,44 +22,29 @@ class DConnectFrame(QtWidgets.QFrame):
 			QPushButton {margin: 3px 3px 3px 3px; padding: 5px 10px 5px 10px;}
 		''')
 		
-		self._tab_recent = DConnectTabRecent(self)
-		self._tab_pickle = DConnectTabPickle(self)
-		self._tab_json = DConnectTabJSON(self)
 		self._tab_db = DConnectTabDB(self)
 		self._tab_dbrel = DConnectTabDBRel(self)
 		
+		self._tab_db.connect_button.hide()
+		self._tab_db.delete_button.hide()
+		self._tab_dbrel.connect_button.hide()
+		self._tab_dbrel.delete_button.hide()
+		
 		self._tabs = QtWidgets.QTabWidget()
-		self._tabs.addTab(self._tab_recent, "Recent")
-		self._tabs.addTab(self._tab_pickle, "Pickle")
-		self._tabs.addTab(self._tab_json, "JSON")
 		self._tabs.addTab(self._tab_db, "PostgreSQL")
 		self._tabs.addTab(self._tab_dbrel, "PostgreSQL Relational")
-		if self.creating_enabled():
-			self.tab_memory = DConnectTabMemory(self)
-			self._tabs.addTab(self.tab_memory, "Memory")
 		
 		self.layout().addWidget(self._tabs)
 		
-		self._dialog.set_title(self.title())
+		self._dialog.set_title("Save As PostgreSQL")
 		self._dialog.set_frame(self)
 		self._dialog.setModal(True)
-	
-	def set_recent_dir(self, path):
-		
-		self._recent_dir = path
-	
-	def get_recent_dir(self):
-		
-		return self._recent_dir
 	
 	def set_recent_connections(self, data):
 		# data = [[url], [identifier, connstr], ...]
 		
-		self._tab_recent.set_recent_connections(data)
 		self._tab_db.set_recent_connections(data)
 		self._tab_dbrel.set_recent_connections(data)
-		if self._tab_recent.has_items():
-			self._tabs.setCurrentIndex(0)
 	
 	def on_connect(self, identifier = None, connstr = None, url = None, datasource = None):
 		
@@ -80,23 +57,10 @@ class DConnectFrame(QtWidgets.QFrame):
 		
 		self._dialog.accept()
 	
-	def title(self):
-		# re-implement
-		
-		return "Connect"
-	
 	def creating_enabled(self):
-		# re-implement
 		
-		return False
+		return True
 	
 	def connect_caption(self):
-		# re-implement
 		
 		return "Connect"
-	
-	def logo(self):
-		# re-implement
-		
-		return None
-

@@ -30,6 +30,7 @@ class DialogImportStore(QtWidgets.QFrame):
 		for idx, name in enumerate(classes):
 			self._checkboxes.append(QtWidgets.QCheckBox())
 			self._checkboxes[-1]._name = name
+			self._checkboxes[-1].setChecked(True)
 			grid.layout().addWidget(QtWidgets.QLabel(name), idx + 3, 0)
 			grid.layout().addWidget(self._checkboxes[-1], idx + 3, 1)
 	

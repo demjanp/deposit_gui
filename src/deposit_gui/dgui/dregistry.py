@@ -27,6 +27,7 @@ class DRegistry(QtCore.QObject):
 		
 		if var not in self._vars:
 			return ""
+#		print("registry get", var, self._vars[var])  # DEBUG crashes if active
 		return self._vars[var]
 	
 	def set(self, var, value):

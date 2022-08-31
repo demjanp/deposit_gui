@@ -21,7 +21,7 @@ class EditorGroup(QtWidgets.QGroupBox):
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		if user_group is None:
-			user_group = getattr(UserGroups, element)("", "Label")
+			user_group = getattr(user_groups, element)("", "Label")
 		self.group = user_group
 		
 		self.label_edit = QtWidgets.QLineEdit()

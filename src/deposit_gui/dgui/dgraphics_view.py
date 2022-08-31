@@ -8,6 +8,7 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		
 		self._button_zoom_reset = None
 		self._zoomable = True
+		self._zoomed = False
 		
 		scene = QtWidgets.QGraphicsScene(self)
 		self.setScene(scene)
@@ -45,6 +46,10 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		
 		return self._zoomable
 	
+	def is_zoomed(self):
+		
+		return self._zoomed
+	
 	def set_zoomable(self, state):
 		
 		self._zoomable = state
@@ -61,6 +66,7 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 	@QtCore.Slot()
 	def reset_zoom(self):
 		
+		self._zoomed = False
 		rect = self.scene().itemsBoundingRect()
 		if rect.isEmpty():
 			rect.setRect(-100, -100, 200, 200)
@@ -76,9 +82,10 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		
 		if not self._zoomable:
 			return
+		self._zoomed = True
 		self.scale(factor, factor)
 		if self._button_zoom_reset is not None:
-			self._button_zoom_reset.setVisible(self.get_scale_factor() != 1)
+			self._button_zoom_reset.setVisible(self.is_zoomed())
 	
 	def get_scale_factor(self):
 		
