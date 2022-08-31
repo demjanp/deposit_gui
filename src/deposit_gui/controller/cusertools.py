@@ -92,7 +92,7 @@ class CUserTools(AbstractSubcontroller):
 			existing_objs.update(vals)
 		
 		to_unlink = set([])  # {(obj_id1, rel, obj_id2), ...}
-		for obj_id in obj_ids:
+		for obj_id in existing_objs:
 			obj = self.cmain.cmodel.get_object(obj_id)
 			obj_classes = set(obj.get_classes())
 			if unique.intersection(obj_classes):

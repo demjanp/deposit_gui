@@ -2,6 +2,8 @@ from deposit_gui.view.vmdiarea_frames.abstract_mdiarea_frame import AbstractMDIA
 from deposit_gui.dgui.dgraph_view import (DGraphView, NodeWithAttributes, NodeWithSimpleAttributes)
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
+from pathlib import Path
+import os
 
 class ClassGraphFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	
@@ -107,8 +109,10 @@ class ClassGraph(QtWidgets.QMainWindow):
 				nodes.append(NodeWithAttributes(cls.name, cls.name, descriptors))
 			else:
 				nodes.append(NodeWithSimpleAttributes(cls.name, cls.name, [("name", cls.name)]))
-			for cls2, label in cls.get_relations():
+			for cls2, label in cls.get_object_relations(direct_only = True):
 				if label.startswith("~"):
+					continue
+				if cls2 == cls:
 					continue
 				edges.append([cls.name, cls2.name, label])
 		self._graph_view.populate(nodes = nodes, edges = edges, positions = self._positions)

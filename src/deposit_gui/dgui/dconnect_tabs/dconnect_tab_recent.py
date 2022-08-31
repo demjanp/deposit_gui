@@ -26,6 +26,9 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		self.connect_button = QtWidgets.QPushButton(self.parent.connect_caption())
 		self.connect_button.clicked.connect(self.on_connect)
 		
+		self.clear_recent_button = QtWidgets.QPushButton("Clear Recent")
+		self.clear_recent_button.clicked.connect(self.on_clear_recent)
+		
 		self.left.layout().addWidget(self.recent_list)
 		self.left.layout().addWidget(self.connect_button)
 		self.layout().addWidget(self.left)
@@ -33,6 +36,7 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		logo = self.parent.logo()
 		if logo:
 			self.right.layout().addWidget(logo)
+			self.right.layout().addWidget(self.clear_recent_button)
 			self.layout().addWidget(self.right)
 		
 		self.update()
@@ -68,6 +72,7 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		
 		self.update()
 	
+	@QtCore.Slot()
 	def on_connect(self):
 		
 		item = self.recent_list.currentItem()
@@ -83,3 +88,9 @@ class DConnectTabRecent(QtWidgets.QFrame):
 			self.parent.on_connect(identifier = identifier, connstr = connstr)
 			return
 	
+	@QtCore.Slot()
+	def on_clear_recent(self):
+		
+		self.recent_list.clear()
+		self.parent.signal_clear_recent.emit()
+

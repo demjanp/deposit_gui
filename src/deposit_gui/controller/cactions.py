@@ -69,6 +69,9 @@ class CActions(DCActions):
 				("Connect", "Connect"),
 				("Save", "Save"),
 				("SaveAsFile", "Save As File"),
+				("SaveAsPostgres", "Save As PostgreSQL"),
+				None,
+				("AutoBackup", "Backup database after every save"),
 				None,
 				("ImportDeposit", "Import from Deposit"),
 				("ExportDeposit", "Export to Deposit"),
@@ -152,6 +155,33 @@ class CActions(DCActions):
 		self.cmain.cmodel.save(path = path)
 		url = as_url(path)
 		self.cmain.cdialogs.open("ConfirmLoad", url)
+	
+	
+	def update_SaveAsPostgres(self):
+		
+		return dict(
+			help = "Save As PostgreSQL Database",
+			checkable = False,
+			enabled = True,
+		)
+	
+	def on_SaveAsPostgres(self, state):
+		
+		self.cmain.cdialogs.open("SaveAsPostgres")
+	
+	
+	def update_AutoBackup(self):
+		
+		return dict(
+			help = "Backup database after every save",
+			checkable = True,
+			checked = self.cmain.cmodel.has_auto_backup(),
+			enabled = True,
+		)
+	
+	def on_AutoBackup(self, state):
+		
+		self.cmain.cmodel.set_auto_backup(state)
 	
 	
 	def update_ImportDeposit(self):

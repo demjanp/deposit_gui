@@ -240,7 +240,7 @@ class DConnectTabDB(QtWidgets.QFrame):
 				return
 			store.set_local_folder(folder)
 			self.datasource.save(store)
-			self.parent.on_connect(identifier = self.datasource.get_identifier(), connstr = self.datasource.get_connstr())
+			self.parent.on_connect(identifier = self.datasource.get_identifier(), connstr = self.datasource.get_connstr(), datasource = self.datasource)
 			return
 	
 	@QtCore.Slot()

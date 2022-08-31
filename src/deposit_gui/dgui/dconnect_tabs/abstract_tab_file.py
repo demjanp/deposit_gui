@@ -1,4 +1,5 @@
 from deposit.utils.fnc_files import (as_url)
+from deposit import Store
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 import os
@@ -6,6 +7,7 @@ import os
 class AbstractTabFile(QtWidgets.QFrame):
 	
 	EXTENSION = ""  # json, pickle etc.
+	DATASOURCE = None
 	
 	def __init__(self, parent):
 		
@@ -92,6 +94,10 @@ class AbstractTabFile(QtWidgets.QFrame):
 		if (not os.path.isfile(path)) and (not self.parent.creating_enabled()):
 			QtWidgets.QMessageBox.critical(self, "Error", "Could not create database.")
 			return None
+		
+		if not os.path.isfile(path):
+			store = Store(keep_temp = True)
+			store.save(path = path)
 		
 		url = as_url(path)
 		self.parent.on_connect(url = url)

@@ -1,4 +1,5 @@
 from deposit_gui.dgui.dcdialogs import DCDialogs
+from deposit_gui.dgui.dsave_as_postgres_frame import DSaveAsPostgresFrame
 from deposit_gui.dialogs.dialog_connect import DialogConnect
 from deposit_gui.dialogs.dialog_import_source import DialogImportSource
 from deposit_gui.dialogs.dialog_import_store import DialogImportStore
@@ -21,6 +22,10 @@ class CDialogs(DCDialogs):
 	
 	# ---- Signal handling
 	# ------------------------------------------------------------------------
+	@QtCore.Slot()
+	def on_clear_recent(self):
+		
+		self.view.clear_recent_connections()
 	
 	
 	# ---- get/set
@@ -63,6 +68,7 @@ class CDialogs(DCDialogs):
 		connect_frame = DialogConnect(dialog)
 		connect_frame.set_recent_dir(self.view.get_recent_dir())
 		connect_frame.set_recent_connections(self.view.get_recent_connections())
+		connect_frame.signal_clear_recent.connect(self.on_clear_recent)
 	
 	def process_Connect(self, dialog, *args, **kwargs):
 		
@@ -73,6 +79,26 @@ class CDialogs(DCDialogs):
 		datasource = self.cmain.cmodel.get_datasource()
 		if not datasource.is_valid():
 			self.cmain.cmodel.load(datasource = "Memory")
+	
+	
+	def set_up_SaveAsPostgres(self, dialog, *args, **kwargs):
+		
+		frame = DSaveAsPostgresFrame(dialog)
+		frame.set_recent_connections(self.view.get_recent_connections())
+	
+	def process_SaveAsPostgres(self, dialog, *args, **kwargs):
+		
+		data = dialog.get_data()
+		datasource = data["datasource"]
+		self.cmain.cmodel.set_local_folder(datasource.get_local_folder())
+		self.cmain.cmodel.save(**data)
+		
+		reply = QtWidgets.QMessageBox.question(self.cmain.cview._view, 
+			"Load Database?", 
+			"Load database from <b>%s</b>" % (datasource.get_name()),
+		)
+		if reply == QtWidgets.QMessageBox.Yes:
+			self.cmain.cmodel.load(**data)
 	
 	
 	def set_up_ImportStoreSource(self, dialog):
