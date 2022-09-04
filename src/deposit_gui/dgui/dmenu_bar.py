@@ -29,9 +29,9 @@ class DMenuBar(DToolBar):
 					menu.addSeparator()
 				elif isinstance(name[1], str):
 					name, caption = name
-					self.actions[name] = QtWidgets.QAction(caption, self.view)
-					self.actions[name].setData(name)
-					menu.addAction(self.actions[name])
+					self.actions[name].append(QtWidgets.QAction(caption, self.view))
+					self.actions[name][-1].setData(name)
+					menu.addAction(self.actions[name][-1])
 				elif isinstance(name[1], list):
 					submenu = QtWidgets.QMenu(name[0])
 					menu.addMenu(submenu)

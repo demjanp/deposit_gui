@@ -1,4 +1,5 @@
 from PySide2 import (QtWidgets, QtCore, QtGui)
+from collections import defaultdict
 
 class DToolBar(QtCore.QObject):
 	
@@ -12,7 +13,7 @@ class DToolBar(QtCore.QObject):
 		self.view = view
 		
 		self.toolbars = {} # {name: QToolBar, ...}
-		self.actions = {}  # {name: QAction, ...}
+		self.actions = defaultdict(list)  # {name: [QAction, ...], ...}
 	
 	def populate(self, tools):
 		# tools = {toolbar: [(name, caption), None, ...], ...}; if None: add separator
@@ -25,10 +26,10 @@ class DToolBar(QtCore.QObject):
 					self.toolbars[toolbar_name].addSeparator()
 				else:
 					name, caption = name
-					self.actions[name] = QtWidgets.QAction(caption)
-					self.actions[name].setData(name)
-					self.actions[name]._toolbar_name = toolbar_name
-					self.toolbars[toolbar_name].addAction(self.actions[name])
+					self.actions[name].append(QtWidgets.QAction(caption))
+					self.actions[name][-1].setData(name)
+					self.actions[name][-1]._toolbar_name = toolbar_name
+					self.toolbars[toolbar_name].addAction(self.actions[name][-1])
 			self.toolbars[toolbar_name].actionTriggered.connect(self.on_triggered)
 	
 	def get_names(self):
@@ -56,55 +57,62 @@ class DToolBar(QtCore.QObject):
 		if "combo" in data:
 			items = data["combo"]
 			if isinstance(items, list):
-				if not isinstance(self.actions[name], ComboAction):
-					toolbar_name = self.actions[name]._toolbar_name
-					caption = self.actions[name].text()
-					action = ComboAction(name, toolbar_name, self.view)
-					action.currentTextChanged.connect(
-						lambda text: self.on_combo_changed(name, text)
-					)
-					if caption:
-						self.toolbars[toolbar_name].insertWidget(
-							self.actions[name], QtWidgets.QLabel(caption)
+				collect = []
+				for action in self.actions[name]:
+					if not isinstance(action, ComboAction):
+						toolbar_name = action._toolbar_name
+						caption = action.text()
+						action_ = ComboAction(name, toolbar_name, self.view)
+						action_.currentTextChanged.connect(
+							lambda text: self.on_combo_changed(name, text)
 						)
-					self.toolbars[toolbar_name].insertWidget(self.actions[name], action)
-					self.toolbars[toolbar_name].removeAction(self.actions[name])
-					self.actions[name] = action
-				text = self.actions[name].currentText()
-				self.actions[name].blockSignals(True)
-				self.actions[name].clear()
-				self.actions[name].addItems(items)
-				i = self.actions[name].findText(
-					text, flags = QtCore.Qt.MatchExactly|QtCore.Qt.MatchCaseSensitive
-				)
-				if i > -1:
-					self.actions[name].setCurrentIndex(i)
-				elif (text and not clear_combo_text):
-					self.actions[name].setCurrentText(text)
-				if self.actions[name].currentText() != text:
-					self.on_combo_changed(name, self.actions[name].currentText())
-				if "editable" in data:
-					self.actions[name].setEditable(data["editable"])
-				self.actions[name].adjustSize()
-				self.actions[name].blockSignals(False)
-		if "caption" in data:
-			self.actions[name].setText(data["caption"])
-		if ("icon" in data) and data["icon"]:
-			self.actions[name].setIcon(self.view.get_icon(data["icon"]))
-		if "shortcut" in data:
-			self.actions[name].setShortcut(QtGui.QKeySequence(data["shortcut"]))
-			if child_window:
-				self.actions[name].setShortcutContext(QtCore.Qt.WindowShortcut)
-			else:
-				self.actions[name].setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
-		if "help" in data:
-			self.actions[name].setToolTip(data["help"])
-		if "checkable" in data:
-			self.actions[name].setCheckable(data["checkable"])
-		if "checked" in data:
-			self.actions[name].setChecked(data["checked"])
-		if "enabled" in data:
-			self.actions[name].setEnabled(data["enabled"])
+						if caption:
+							self.toolbars[toolbar_name].insertWidget(
+								action, QtWidgets.QLabel(caption)
+							)
+						self.toolbars[toolbar_name].insertWidget(action, action_)
+						self.toolbars[toolbar_name].removeAction(action)
+						collect.append(action_)
+						action = action_
+					text = action.currentText()
+					action.blockSignals(True)
+					action.clear()
+					action.addItems(items)
+					i = action.findText(
+						text, flags = QtCore.Qt.MatchExactly|QtCore.Qt.MatchCaseSensitive
+					)
+					if i > -1:
+						action.setCurrentIndex(i)
+					elif (text and not clear_combo_text):
+						action.setCurrentText(text)
+					if action.currentText() != text:
+						self.on_combo_changed(name, action.currentText())
+					if "editable" in data:
+						action.setEditable(data["editable"])
+					action.adjustSize()
+					action.blockSignals(False)
+				if collect:
+					self.actions[name] = collect
+		
+		for action in self.actions[name]:
+			if "caption" in data:
+				action.setText(data["caption"])
+			if ("icon" in data) and data["icon"]:
+				action.setIcon(self.view.get_icon(data["icon"]))
+			if "shortcut" in data:
+				action.setShortcut(QtGui.QKeySequence(data["shortcut"]))
+				if child_window:
+					action.setShortcutContext(QtCore.Qt.WindowShortcut)
+				else:
+					action.setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
+			if "help" in data:
+				action.setToolTip(data["help"])
+			if "checkable" in data:
+				action.setCheckable(data["checkable"])
+			if "checked" in data:
+				action.setChecked(data["checked"])
+			if "enabled" in data:
+				action.setEnabled(data["enabled"])
 	
 	def set_toolbar_visible(self, name, state):
 		
@@ -116,19 +124,20 @@ class DToolBar(QtCore.QObject):
 		
 		if name not in self.actions:
 			return False
-		return self.actions[name].isChecked()
+		return self.actions[name][0].isChecked()
 	
 	def get_combo_value(self, name):
 		
-		if (name in self.actions) and isinstance(self.actions[name], ComboAction):
-			return self.actions[name].currentText()
+		if (name in self.actions) and isinstance(self.actions[name][0], ComboAction):
+			return self.actions[name][0].currentText()
 	
 	def set_combo_value(self, name, text):
 		
-		if (name in self.actions) and isinstance(self.actions[name], ComboAction):
-			self.actions[name].blockSignals(True)
-			self.actions[name].setCurrentText(text)
-			self.actions[name].blockSignals(False)
+		if (name in self.actions) and isinstance(self.actions[name][0], ComboAction):
+			for action in self.actions[name]:
+				action.blockSignals(True)
+				action.setCurrentText(text)
+				action.blockSignals(False)
 	
 	@QtCore.Slot(QtWidgets.QAction)
 	def on_triggered(self, action):

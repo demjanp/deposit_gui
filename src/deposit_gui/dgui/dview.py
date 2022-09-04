@@ -67,7 +67,7 @@ class DView(AbstractSubview, DMainWindow):
 			self.setWindowTitle(title)
 		else:
 			self.setWindowTitle("%s - %s" % (name, title))
-		
+	
 	def set_icon(self, name):
 		
 		self.setWindowIcon(self.get_icon(name))
@@ -105,6 +105,54 @@ class DView(AbstractSubview, DMainWindow):
 	def clear_recent_connections(self):
 		
 		self.registry.set(self.REG_PREFIX + "recent", "")
+	
+	def get_active_window(self):
+		
+		active = self
+		for window in QtWidgets.QApplication.topLevelWidgets():
+			if not isinstance(window, QtWidgets.QMainWindow):
+				continue
+			if window.isActiveWindow():
+				active = window
+				break
+		return active
+	
+	
+	def show_information(self, caption, text):
+		
+		QtWidgets.QMessageBox.information(
+			self.get_active_window(), caption, text
+		)
+	
+	def show_warning(self, caption, text):
+		
+		QtWidgets.QMessageBox.warning(self.get_active_window(), caption, text)
+	
+	def show_question(self, caption, text):
+		
+		reply = QtWidgets.QMessageBox.question(
+			self.get_active_window(), caption, text
+		)
+		
+		return reply == QtWidgets.QMessageBox.Yes
+	
+	def show_input_dialog(self, caption, text, value = "", **kwargs):
+		
+		text, ok = QtWidgets.QInputDialog.getText(
+			self.get_active_window(), caption, text, text = value, **kwargs
+		)
+		if text and ok:
+			return text
+		return None
+	
+	def show_item_dialog(self, caption, text, items, editable = False):
+		
+		name, ok = QtWidgets.QInputDialog.getItem(
+			self.get_active_window(), caption, text, items, editable
+		)
+		if name and ok:
+			return name
+		return None
 	
 	
 	# events

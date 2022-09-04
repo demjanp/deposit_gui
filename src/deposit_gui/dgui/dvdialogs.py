@@ -14,7 +14,7 @@ class DVDialogs(AbstractSubview):
 	
 	def open(self, name):
 		
-		dialog = DDialog(name, self.vmain)
+		dialog = DDialog(name, self.vmain.get_active_window())
 		
 		dialog.signal_process.connect(self.on_process)
 		dialog.signal_cancel.connect(self.on_cancel)

@@ -313,6 +313,21 @@ class CModel(AbstractSubcontroller):
 		
 		self._model.del_object(obj_id)
 	
+	def del_objects(self, obj_ids):
+		
+		self._model.blockSignals(True)
+		self.cmain.cview.progress.show("Deleting")
+		self.cmain.cview.progress.update_state(value = 0, maximum = len(obj_ids))
+		cnt = 1
+		for obj_id in obj_ids:
+			if self.cmain.cview.progress.cancel_pressed():
+				break
+			self._model.del_object(obj_id)
+			self.cmain.cview.progress.update_state(value = cnt)
+			cnt += 1
+		self._model.blockSignals(False)
+		self._model.signal_deleted.emit(obj_ids, [])
+	
 	
 	# ---- Class
 	# ------------------------------------------------------------------------

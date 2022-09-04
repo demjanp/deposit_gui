@@ -8,6 +8,8 @@ class DProgress(QtWidgets.QProgressDialog):
 	
 	def __init__(self, view):
 		
+		self._view = view
+		
 		QtWidgets.QProgressDialog.__init__(self, "", "Cancel", 0, 0, view, flags = QtCore.Qt.FramelessWindowHint)
 		
 		self.setWindowModality(QtCore.Qt.WindowModal)

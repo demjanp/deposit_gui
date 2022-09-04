@@ -435,15 +435,14 @@ class CDialogs(DCDialogs):
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove the following object%s?" % ("s" if (len(objects) > 1) else "")
 		))
-		frame.layout().addWidget(QtWidgets.QLabel("<b>%s</b>" % ", ".join([str(obj_id) for obj_id in sorted(list(objects))])))
+		frame.layout().addWidget(QtWidgets.QLabel("<b>%s</b>" % ", ".join(sorted([str(obj.id) for obj in objects]))))
 		caption = ""
 		
 		dialog.set_frame(frame)
 	
 	def process_DelObjects(self, dialog, objects):
-	
-		for obj in objects:
-			self.cmain.cmodel.del_object(obj)
+		
+		self.cmain.cmodel.del_objects(objects)
 	
 	
 	def set_up_AddRelation(self, dialog, elements, label):
