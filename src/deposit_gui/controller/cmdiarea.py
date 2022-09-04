@@ -9,6 +9,7 @@ from deposit import externalsource as Externalsource
 from deposit import Store
 
 from PySide2 import (QtWidgets, QtCore)
+import copy
 import json
 import os
 
@@ -59,7 +60,15 @@ class CMDIArea(AbstractSubcontroller):
 	def on_query_activated(self, item):
 		
 		if isinstance(item.value, DResource):
+			value0 = copy.copy(item.value)
 			url = self.cmain.cmodel.get_updated_url(item.value)
+			if url is None:
+				self.cmain.cview.show_warning(
+					"File not found",
+					"Could not locate file:\n%s" % (value0.url),
+				)
+				item.value = value0
+				return
 			self.cmain.open_in_external(url_to_path(url))
 	
 	@QtCore.Slot(object, object)
