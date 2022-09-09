@@ -783,6 +783,11 @@ class DGraphView(DGraphicsView):
 		if node_id in self._nodes:
 			self._nodes[node_id].setSelected(True)
 	
+	def select_all(self):
+		
+		for node_id in self._nodes:
+			self._nodes[node_id].setSelected(True)
+	
 	def deselect_all(self):
 		
 		self.scene().clearSelection()

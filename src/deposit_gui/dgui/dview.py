@@ -28,6 +28,11 @@ from deposit_gui.dgui.dstatus_bar import DStatusBar
 from deposit_gui.dgui.dprogress import DProgress
 from deposit_gui.dgui.dlogging import DLogging
 
+from deposit.utils.fnc_serialize import (
+	encrypt_connstr,
+	decrypt_connstr,
+)
+
 from PySide2 import (QtWidgets, QtCore, QtGui)
 import traceback
 import json
@@ -84,7 +89,15 @@ class DView(AbstractSubview, DMainWindow):
 		
 		rows = self.registry.get(self.REG_PREFIX + "recent")
 		if rows:
-			return json.loads(rows)
+			rows = json.loads(rows)
+			collect = []
+			for row in rows:
+				if len(row) == 2:
+					identifier, connstr = row
+					collect.append([identifier, decrypt_connstr(connstr)])
+				else:
+					collect.append(row)
+			return collect
 		return []
 	
 	def add_recent_connection(self, url = None, identifier = None, connstr = None):
@@ -94,7 +107,7 @@ class DView(AbstractSubview, DMainWindow):
 		if url is not None:
 			row = [url]
 		elif (identifier is not None) and (connstr is not None):
-			row = [identifier, connstr]
+			row = [identifier, encrypt_connstr(connstr)]
 		if row is None:
 			return
 		if row in data:

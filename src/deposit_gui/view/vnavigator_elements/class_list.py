@@ -8,6 +8,8 @@ class ClassList(QtWidgets.QTreeWidget):
 		
 		self._vnavigator = vnavigator
 		
+		self._saved_selection = None
+		
 		self.setHeaderHidden(True)
 		self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 		self.setExpandsOnDoubleClick(False)
@@ -19,7 +21,8 @@ class ClassList(QtWidgets.QTreeWidget):
 	
 	def populate(self, classes):
 		
-		selected = self.get_selected()
+		selected = [(index.row(), index.parent().row()) for index in self.selectedIndexes()]
+		
 		self.clear()
 		icon_obj = self._vnavigator.get_icon("object.svg")
 		icon_cls = self._vnavigator.get_icon("class.svg")
@@ -60,7 +63,19 @@ class ClassList(QtWidgets.QTreeWidget):
 			self.insertTopLevelItems(0, items)	
 		self.expandAll()
 		if selected:
-			self.set_selected(selected)		
+			if len(selected) > 1:
+				self.blockSignals(True)
+				for row, parent in selected[:-1]:
+					parent = self.model().index(parent, 0)
+					index = self.model().index(row, 0, parent)
+					self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+				self.blockSignals(False)
+			row, parent = selected[-1]
+			parent = self.model().index(parent, 0)
+			index = self.model().index(row, 0, parent)
+			self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+			self.scrollTo(index)
+			
 	
 	def get_selected(self):
 		
@@ -82,6 +97,35 @@ class ClassList(QtWidgets.QTreeWidget):
 		if parent is None:
 			return None
 		return parent.data(0, QtCore.Qt.UserRole)
+	
+	def get_items_around_selected(self):
+		
+		indexes = self.selectedIndexes()
+		if not indexes:
+			return None, None
+		
+		above = self.indexAbove(indexes[0]).data(QtCore.Qt.UserRole)
+		below = self.indexBelow(indexes[0]).data(QtCore.Qt.UserRole)
+		
+		return above, below
+	
+	def select_one_above(self):
+		
+		indexes = self.selectedIndexes()
+		if not indexes:
+			return
+		index = self.indexAbove(indexes[0])
+		self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+		self.setCurrentIndex(index)
+	
+	def select_one_below(self):
+		
+		indexes = self.selectedIndexes()
+		if not indexes:
+			return
+		index = self.indexBelow(indexes[0])
+		self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+		self.setCurrentIndex(index)
 	
 	def set_selected(self, names):
 		

@@ -10,8 +10,8 @@ class VNavigator(AbstractSubview, QtWidgets.QFrame):
 	
 	signal_class_selected = QtCore.Signal(list)					# [DClass, ...]
 	signal_class_activated = QtCore.Signal(object, bool, object)# DClass, is_descriptor, parent DClass
-	signal_class_up = QtCore.Signal(object, bool, object)		# DClass, is_descriptor, parent DClass
-	signal_class_down = QtCore.Signal(object, bool, object)		# DClass, is_descriptor, parent DClass
+	signal_class_up = QtCore.Signal(object, object)				# DClass, DClass above
+	signal_class_down = QtCore.Signal(object, object)			# DClass, DClass below
 	signal_class_add = QtCore.Signal(object, bool, object)		# DClass, is_descriptor, parent DClass
 	signal_class_add_descriptor = QtCore.Signal(object, bool, object)	# DClass, is_descriptor, parent DClass
 	signal_class_del_descriptor = QtCore.Signal(object, bool, object)	# DClass, is_descriptor, parent DClass
@@ -96,14 +96,20 @@ class VNavigator(AbstractSubview, QtWidgets.QFrame):
 		
 		cls, is_descriptor, parent_cls = self._get_one_selected_class()
 		if cls:
-			self.signal_class_up.emit(cls, is_descriptor, parent_cls)
+			above, _ = self._classwidget.get_items_around_selected()
+			if above:
+				self._classwidget.select_one_above()
+				self.signal_class_up.emit(cls, above)
 	
 	@QtCore.Slot()
 	def on_class_down(self):
 		
 		cls, is_descriptor, parent_cls = self._get_one_selected_class()
 		if cls:
-			self.signal_class_down.emit(cls, is_descriptor, parent_cls)
+			_, below = self._classwidget.get_items_around_selected()
+			if below:
+				self._classwidget.select_one_below()
+				self.signal_class_down.emit(cls, below)
 	
 	@QtCore.Slot()
 	def on_class_add(self):

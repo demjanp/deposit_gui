@@ -41,15 +41,15 @@ class CNavigator(AbstractSubcontroller):
 			return
 		self.cmain.cmdiarea.add_query(querystr)
 	
-	@QtCore.Slot(object, bool, object)
-	def on_class_up(self, cls, is_descriptor, parent_cls):
+	@QtCore.Slot(object, object)
+	def on_class_up(self, cls, cls_above):
 		
-		self.cmain.cmodel.shift_class(cls, 1)
+		self.cmain.cmodel.switch_order(cls, cls_above)
 	
-	@QtCore.Slot(object, bool, object)
-	def on_class_down(self, cls, is_descriptor, parent_cls):
+	@QtCore.Slot(object, object)
+	def on_class_down(self, cls, cls_below):
 		
-		self.cmain.cmodel.shift_class(cls, -1)
+		self.cmain.cmodel.switch_order(cls, cls_below)
 	
 	@QtCore.Slot(object, bool, object)
 	def on_class_add(self, cls, is_descriptor, parent_cls):

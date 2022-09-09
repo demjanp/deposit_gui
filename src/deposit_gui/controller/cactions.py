@@ -37,9 +37,6 @@ class CActions(DCActions):
 			"Data": [
 				("Connect", "Connect"),
 				("Save", "Save"),
-				None,
-				("ImportDeposit", "Import from Deposit"),
-				("ExportDeposit", "Export to Deposit"),
 			],
 			"Edit": [
 				("Copy", "Copy"),
@@ -56,6 +53,9 @@ class CActions(DCActions):
 				("Duplicate", "Duplicate Row"),
 			],
 			"External": [
+				("ImportDeposit", "Import from Deposit"),
+				("ExportDeposit", "Export to Deposit"),
+				None,
 				("LoadExternal", "Load External Data"),
 				("ImportExternal", "Import Data"),
 				("ExportExternal", "Export Data"),
@@ -513,7 +513,7 @@ class CActions(DCActions):
 			("ESRI Shapefile (*.shp)", "SHP"),
 		]
 		path, format = self.cmain.cview.get_save_path(
-			"Save Database As", ";;".join([format[0] for format in formats])
+			"Save Data As", ";;".join([format[0] for format in formats])
 		)
 		if not path:
 			return

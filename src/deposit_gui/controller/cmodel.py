@@ -373,25 +373,9 @@ class CModel(AbstractSubcontroller):
 		
 		self._model.rename_class_descriptor(descr, cls, name)
 	
-	def shift_class(self, cls, direction):
+	def switch_order(self, cls1, cls2):
 		
-		if direction not in [1, -1]:
-			return
-		classes = self.get_classes()
-		if cls not in classes:
-			return
-		idx = classes.index(cls)
-		cls2 = None
-		if direction == 1:
-			if idx == 0:
-				return
-			cls2 = classes[idx - 1]
-		elif direction == -1:
-			if idx == len(classes) - 1:
-				return
-			cls2 = classes[idx + 1]
-		if cls2 is not None:
-			self._model.switch_order(cls, cls2)
+		self._model.switch_order(cls1, cls2)
 	
 	def del_class(self, name):
 		
@@ -518,6 +502,9 @@ class CModel(AbstractSubcontroller):
 	
 	def load(self, *args, **kwargs):
 		# datasource = Datasource or format
+		
+		if not self.cmain.check_save():
+			return False
 		
 		self.cmain.cview.progress.show("Loading")
 		if self._model.load(progress = self.cmain.cview.progress, *args, **kwargs):

@@ -103,17 +103,8 @@ class Controller(QtCore.QObject):
 	
 	def on_close(self):
 		
-		if (not self._is_subwindow) and (not self.cmodel.is_saved()):
-			reply = QtWidgets.QMessageBox.question(self.cview._view, 
-				"Exit", "Save changes to database?",
-				QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
-			)
-			if reply == QtWidgets.QMessageBox.Yes:
-				self.cactions.on_Save(True)
-			elif reply == QtWidgets.QMessageBox.No:
-				pass
-			else:
-				return False
+		if not self.check_save():
+			return False
 			
 		self.cusertools.on_close()
 		return True
@@ -139,7 +130,24 @@ class Controller(QtCore.QObject):
 	def get_selected_relations(self):
 		
 		return self._selected_relations
-
+	
+	
+	def check_save(self):
+		
+		if (not self._is_subwindow) and (not self.cmodel.is_saved()):
+			reply = QtWidgets.QMessageBox.question(self.cview._view, 
+				"Exit", "Save changes to database?",
+				QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
+			)
+			if reply == QtWidgets.QMessageBox.Yes:
+				self.cactions.on_Save(True)
+			elif reply == QtWidgets.QMessageBox.No:
+				return True
+			else:
+				return False
+		
+		return True
+	
 	
 	def open_in_external(self, path):
 		
