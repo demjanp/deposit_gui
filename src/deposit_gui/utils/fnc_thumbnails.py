@@ -2,6 +2,8 @@ from deposit.utils.fnc_files import (
 	is_local_url, url_to_path, get_temp_path, get_named_path, get_image_format,
 	get_free_subfolder, open_url, get_updated_local_url
 )
+from deposit_gui.utils.fnc_svg import (svg_to_raster)
+
 from PySide2 import (QtCore, QtGui, QtSvg)
 from PIL import Image
 import hashlib
@@ -15,17 +17,9 @@ def make_thumbnail(src_path, tgt_path, size, src_format):
 	ta, tm = stat.st_atime, stat.st_mtime
 	
 	if src_format == "svg":
-		renderer = QtSvg.QSvgRenderer(src_path)
-		rnd_size = renderer.defaultSize()
-		rw, rh = rnd_size.width(), rnd_size.height()
-		scale = max(rw / size, rh / size)
-		w, h = int(round(rw / scale)), int(round(rh / scale))
-		pixmap = QtGui.QPixmap(w, h)
-		pixmap.fill(QtCore.Qt.white)
-		painter = QtGui.QPainter(pixmap)
-		renderer.render(painter)
-		pixmap.save(tgt_path)
-		painter.end()
+		svg_to_raster(
+			src_path, tgt_path, max_side = size, stroke_width = size * 0.004
+		)
 	else:
 		try:
 			icon = Image.open(src_path).convert("RGB")

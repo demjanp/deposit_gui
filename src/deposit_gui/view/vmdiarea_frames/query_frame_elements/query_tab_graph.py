@@ -144,6 +144,14 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 		
 		return len(self._query)
 	
+	def clearSelection(self):
+		
+		self.deselect_all()
+	
+	def selectAll(self):
+		
+		self._graph_view.select_all()
+	
 	def deselect_all(self):
 		
 		self._graph_view.deselect_all()

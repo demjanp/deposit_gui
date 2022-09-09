@@ -123,6 +123,14 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 			if current_index > 0:
 				self.tabs.setCurrentIndex(current_index)
 	
+	def select_all(self):
+		
+		self.get_current_tab().selectAll()
+	
+	def clear_selection(self):
+		
+		self.get_current_tab().clearSelection()
+	
 	def populate_tab_images(self):
 		
 		if isinstance(self.tab_images, QueryTabImages):

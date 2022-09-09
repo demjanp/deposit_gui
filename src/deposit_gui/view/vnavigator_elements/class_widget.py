@@ -37,6 +37,18 @@ class ClassWidget(QtWidgets.QWidget):
 		
 		return self._classlist.get_selected_parent()
 	
+	def get_items_around_selected(self):
+		
+		return self._classlist.get_items_around_selected()
+	
+	def select_one_above(self):
+		
+		self._classlist.select_one_above()
+	
+	def select_one_below(self):
+		
+		self._classlist.select_one_below()
+	
 	def deselect_all(self):
 		
 		self._classlist.clearSelection()
