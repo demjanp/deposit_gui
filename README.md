@@ -1,4 +1,4 @@
-# ![](dep_cube.svg)Deposit GUI
+# <img src="dep_cube.svg" width="32">Deposit GUI
 GUI for [Deposit](https://github.com/demjanp/deposit): Graph database focused on scientific data collection.
 
 Created on 29. 4. 2013
