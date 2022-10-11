@@ -15,19 +15,19 @@ Institute of Archaeology of the Czech Academy of Sciences, Prague, v.v.i.
 
 ## Installation <a name="installation"></a>
 
-To install the latest version of Deposit from GitHub, use the following command:
-```
-pip install -U git+https://github.com/demjanp/deposit_gui
-```
-
-To start the GUI use:
-```
-bin\start_gui.py
-```
-
 For a Windows installer see:
 
 https://github.com/demjanp/deposit_gui/releases/latest
+
+To install the latest version of Deposit GUI as a Python module use:
+```
+pip install deposit_gui
+```
+
+To start the GUI execute:
+
+[bin\start_gui.py](bin\start_gui.py)
+
 
 ## Acknowledgements: <a name="acknowledgements"></a>
 
