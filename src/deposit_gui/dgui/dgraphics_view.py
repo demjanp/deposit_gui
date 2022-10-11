@@ -7,6 +7,7 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		QtWidgets.QGraphicsView.__init__(self)
 		
 		self._button_zoom_reset = None
+		self._button_frame = QtWidgets.QFrame()
 		self._zoomable = True
 		self._zoomed = False
 		
@@ -15,13 +16,18 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		self.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.SmoothPixmapTransform)
 		self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 		self.setBackgroundBrush(QtCore.Qt.white)
+		
+		self.setLayout(QtWidgets.QVBoxLayout())
+		self._button_frame.setLayout(QtWidgets.QHBoxLayout())
+		self.layout().addWidget(self._button_frame)
+		self.layout().addStretch()
+		self.layout().setAlignment(self._button_frame, QtCore.Qt.AlignLeft)
 	
 	def set_button_zoom_reset(self, caption = "Reset Zoom", icon = None):
 		
 		if self._button_zoom_reset is not None:
 			return
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
 		if icon is None:
 			self._button_zoom_reset = QtWidgets.QPushButton(caption)
 		else:
@@ -29,9 +35,7 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 			self._button_zoom_reset.setIconSize(QtCore.QSize(24,24))
 		self._button_zoom_reset.setToolTip(caption)
 		self._button_zoom_reset.hide()
-		self.layout().addWidget(self._button_zoom_reset)
-		self.layout().addStretch()
-		self.layout().setAlignment(self._button_zoom_reset, QtCore.Qt.AlignLeft)
+		self._button_frame.layout().addWidget(self._button_zoom_reset)
 		self._button_zoom_reset.clicked.connect(self.reset_zoom)
 	
 	def remove_button_zoom_reset(self):

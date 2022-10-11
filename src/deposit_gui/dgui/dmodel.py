@@ -1,28 +1,31 @@
+from deposit import Store
 from deposit.store.dobject import DObject
 from deposit.store.dclass import DClass
-from deposit import Store
 
 from deposit_gui.utils.fnc_thumbnails import (load_thumbnails, get_thumbnail)
 from deposit.utils.fnc_files import (get_temp_path, sanitize_filename)
 
-from PySide2 import (QtCore, QtGui)
+from PySide2 import (QtCore)
 import shutil
 import uuid
 import os
 
-class Model(QtCore.QObject):
+class DModel(QtCore.QObject):
 	
-	signal_added = QtCore.Signal(list, list)	# [DObject, ...], [DClass, ...]
-	signal_deleted = QtCore.Signal(list, list)	# [obj_id, name, ...]
-	signal_changed = QtCore.Signal(list, list)	# [DObject, ...], [DClass, ...]
-	signal_saved = QtCore.Signal(object)		# AbstractDatasource
-	signal_loaded = QtCore.Signal()
-	signal_local_folder_changed = QtCore.Signal()
-	signal_queries_changed = QtCore.Signal()
-	signal_user_tools_changed = QtCore.Signal()
-	signal_settings_changed = QtCore.Signal()
+	signal_store_event = QtCore.Signal(int, list, list, object)
+	# event, objects, classes, datasource
 	
-	def __init__(self, store) -> None:
+	EVENT_ADDED =					0x00000000
+	EVENT_DELETED =					0x00000100
+	EVENT_CHANGED =					0x00000200
+	EVENT_SAVED =					0x00000400
+	EVENT_LOADED =					0x00000800
+	EVENT_LOCAL_FOLDER_CHANGED =	0x00001000
+	EVENT_QUERIES_CHANGED =			0x00002000
+	EVENT_USER_TOOLS_CHANGED =		0x00004000
+	EVENT_SETTINGS_CHANGED =		0x00008000
+	
+	def __init__(self, store = None):
 		
 		QtCore.QObject.__init__(self)
 		
@@ -56,41 +59,45 @@ class Model(QtCore.QObject):
 	def on_added(self, elements):
 		# elements = [DObject, DClass, ...]
 		
-		self.signal_added.emit(*self._to_objects_and_classes(elements))
+		objects, classes = self._to_objects_and_classes(elements)
+		self.signal_store_event.emit(self.EVENT_ADDED, objects, classes, None)
 	
 	def on_deleted(self, elements):
 		# elements = [obj_id, name, ...]
 		
-		self.signal_deleted.emit(*self._to_objects_and_classes(elements))
+		objects, classes = self._to_objects_and_classes(elements)
+		self.signal_store_event.emit(self.EVENT_DELETED, objects, classes, None)
 	
 	def on_changed(self, elements):
 		# elements = [DObject, DClass, ...]
 		
-		self.signal_changed.emit(*self._to_objects_and_classes(elements))
+		objects, classes = self._to_objects_and_classes(elements)
+		self.signal_store_event.emit(self.EVENT_CHANGED, objects, classes, None)
 	
 	def on_saved(self, datasource):
 		
-		self.signal_saved.emit(datasource)
+		self.signal_store_event.emit(self.EVENT_SAVED, [], [], datasource)
 	
 	def on_loaded(self):
 		
-		self.signal_loaded.emit()
+		self.signal_store_event.emit(self.EVENT_LOADED, [], [], None)
 	
 	def on_local_folder_changed(self):
 		
-		self.signal_local_folder_changed.emit()
+		self.signal_store_event.emit(self.EVENT_LOCAL_FOLDER_CHANGED, [], [], None)
 	
 	def on_queries_changed(self):
 		
-		self.signal_queries_changed.emit()
+		self.signal_store_event.emit(self.EVENT_QUERIES_CHANGED, [], [], None)
 	
 	def on_user_tools_changed(self):
 		
-		self.signal_user_tools_changed.emit()
+		self.signal_store_event.emit(self.EVENT_USER_TOOLS_CHANGED, [], [], None)
 	
 	def on_settings_changed(self):
 		
-		self.signal_settings_changed.emit()
+		self.signal_store_event.emit(self.EVENT_SETTINGS_CHANGED, [], [], None)
+	
 	
 	# ---- General
 	# ------------------------------------------------------------------------
@@ -128,13 +135,20 @@ class Model(QtCore.QObject):
 		
 		return self._store.open_resource(resource)
 	
-	def get_temp_copy(self, resource):
+	def get_temp_folder(self, name, appdir = "deposit"):
+		
+		return get_temp_path(name, appdir = appdir)
+	
+	def get_temp_copy(self, resource, appdir = "deposit"):
 		
 		source = self.open_resource(resource)
 		if source is None:
 			return None
 		filename = sanitize_filename(resource.filename)
-		tgt_path = os.path.join(get_temp_path(uuid.uuid4().hex), filename)
+		tgt_path = os.path.join(
+			get_temp_path(uuid.uuid4().hex, appdir = appdir),
+			filename,
+		)
 		target = open(tgt_path, "wb")
 		shutil.copyfileobj(source, target)
 		source.close()
@@ -234,6 +248,13 @@ class Model(QtCore.QObject):
 		# return [name, ...]
 		
 		return self._store.get_descriptor_names(ordered)
+	
+	def get_descriptor_values(self, class_name, descriptor_name, direct_only = True) -> list:
+		# direct_only = if True, don't return members of subclasses
+		#
+		# returns [value, ...]
+		
+		return self._store.get_descriptor_values(class_name, descriptor_name, direct_only)
 	
 	
 	def get_user_tools(self):
@@ -364,4 +385,5 @@ class Model(QtCore.QObject):
 	def is_saved(self):
 		
 		return self._store.is_saved()
+
 

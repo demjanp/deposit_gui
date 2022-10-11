@@ -6,6 +6,7 @@ from collections import defaultdict
 import networkx as nx
 import weakref
 import math
+import re
 
 def to_agraph(N):
 	
@@ -101,6 +102,58 @@ class AbstractNode(QtWidgets.QGraphicsItem):
 		self.edges.append(weakref.ref(edge))
 		edge.adjust()
 	
+	def del_edge(self, edge):
+		
+		edge = weakref.ref(edge)
+		if edge in self.edges:
+			self.edges.remove(edge)
+	
+	def has_parent(self):
+		
+		for edge in self.edges:
+			edge = edge()
+			if edge is None:
+				continue
+			if edge.source() != self:
+				return True
+		return False
+	
+	def get_parents(self):
+		
+		parents = set()
+		for edge in self.edges:
+			edge = edge()
+			if edge is None:
+				continue
+			node = edge.source()
+			if node != self:
+				parents.add(node)
+		
+		return parents
+	
+	def has_child(self):
+		
+		for edge in self.edges:
+			edge = edge()
+			if edge is None:
+				continue
+			if edge.target() != self:
+				return True
+		return False
+	
+	def get_children(self):
+		
+		children = set()
+		for edge in self.edges:
+			edge = edge()
+			if edge is None:
+				continue
+			node = edge.target()
+			if node != self:
+				children.add(node)
+		
+		return children
+	
 	def center(self):
 		
 		return self.boundingRect().center()
@@ -146,7 +199,9 @@ class AbstractNode(QtWidgets.QGraphicsItem):
 		
 		if change == QtWidgets.QGraphicsItem.ItemPositionChange:
 			for edge in self.edges:
-				edge().adjust()
+				edge = edge()
+				if edge is not None:
+					edge.adjust()
 			
 			self.on_position_change()
 		
@@ -439,6 +494,7 @@ class Edge(QtWidgets.QGraphicsItem):
 		self.line = None
 		self.edge_path = QtGui.QPainterPath()
 		self.selection_shape = QtGui.QPainterPath()
+		self._line_width = None
 		
 		if self.label != "":
 			rect = QtGui.QFontMetrics(self.font).boundingRect(self.label)
@@ -457,6 +513,10 @@ class Edge(QtWidgets.QGraphicsItem):
 		self.source().add_edge(self)
 		self.target().add_edge(self)
 		self.adjust()
+	
+	def set_line_width(self, value):
+		
+		self._line_width = value
 	
 	def get_angle(self):
 		
@@ -486,7 +546,7 @@ class Edge(QtWidgets.QGraphicsItem):
 		selection_offset = 7
 		
 		if self.is_loop:
-			d = self.arrow_size * 3
+			d = self.arrow_size * 3 if (self.arrow_size > 0) else 3
 			x, y = self.line.p1().x() - d, self.line.p1().y() - d
 			self.edge_path.arcMoveTo(x, y, d, d, 270)
 			self.edge_path.arcTo(x, y, d, d, 270, 360)
@@ -538,8 +598,10 @@ class Edge(QtWidgets.QGraphicsItem):
 			return
 		
 		pen_width = 1
+		if self._line_width is not None:
+			pen_width = self._line_width
 		if option.state & QtWidgets.QStyle.State_Selected:
-			pen_width = 2
+			pen_width *= 2
 		
 		pen = QtGui.QPen(self.color, pen_width, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
 		pen.setCosmetic(True)
@@ -577,6 +639,7 @@ class DGraphView(DGraphicsView):
 		self._mouse_prev = None
 		self._edge_font_family = 16
 		self._edge_font_size = 16
+		self._search_edit = None
 		
 		DGraphicsView.__init__(self)
 		
@@ -587,6 +650,25 @@ class DGraphView(DGraphicsView):
 		self.setMinimumSize(200, 200)
 		
 		self.scene().selectionChanged.connect(self.on_selected)
+	
+	def show_search_box(self, text = "Search", icon = None):
+		
+		if self._search_edit is not None:
+			return
+		self._search_edit = QtWidgets.QLineEdit()
+		if text:
+			self._search_edit.setPlaceholderText(text)
+		self._search_edit.setFixedWidth(100)
+		self._search_edit.textChanged.connect(self.on_search)
+		search_box = QtWidgets.QFrame()
+		search_box.setLayout(QtWidgets.QHBoxLayout())
+		if icon is not None:
+			label = QtWidgets.QLabel()
+			label.setPixmap(icon.pixmap(QtCore.QSize(24, 24)))
+			search_box.layout().addWidget(label)
+		search_box.layout().addWidget(self._search_edit)
+		self.layout().addWidget(search_box)
+		self.layout().setAlignment(search_box, QtCore.Qt.AlignLeft)
 	
 	def clear(self):
 		
@@ -696,7 +778,7 @@ class DGraphView(DGraphicsView):
 			self._nodes[node.node_id] = node
 		
 		node_ids = move_nodes
-		if node_ids is None:
+		if not node_ids:
 			node_ids = list(self._nodes.keys())
 		if False in [(node_id in positions) for node_id in node_ids]:
 			positions_new = self.calc_positions(self._nodes, edges, gap, x_stretch, y_stretch, move_nodes)
@@ -737,8 +819,66 @@ class DGraphView(DGraphicsView):
 			edges_done[key] += 1
 			self.scene().addItem(self._edges[-1])
 		
-		self.reset_zoom()
 		self.show()
+		self.reset_zoom()
+	
+	def add_node(self, node, position = None):
+		# node = AbstractNode
+		# position = (x, y)
+		
+		self._nodes[node.node_id] = node
+		if position is not None:
+			self._nodes[node.node_id].setPos(*position)
+		self.scene().addItem(self._nodes[node.node_id])
+	
+	def add_edge(self, source_id, target_id, label = "", color = None, offset = 0, font_family = "Calibri", font_size = 16, arrow_size = 20):
+		
+		if (source_id not in self._nodes) or (target_id not in self._nodes):
+			return
+		
+		self._edges.append(Edge(self._nodes[source_id], self._nodes[target_id], label, color, offset, font_family, font_size, arrow_size))
+		self.scene().addItem(self._edges[-1])
+	
+	def del_node(self, node_id):
+		
+		if node_id not in self._nodes:
+			return
+		self.scene().removeItem(self._nodes[node_id])
+		del self._nodes[node_id]
+		to_del = []
+		for edge in self._edges:
+			if (edge.source().node_id == node_id) or (edge.target().node_id == node_id):
+				self.scene().removeItem(edge)
+				to_del.append(edge)
+		for edge in to_del:
+			self._edges.remove(edge)
+	
+	def del_edge(self, source_id, target_id):
+		
+		to_del = []
+		for edge in self._edges:
+			if (edge.source().node_id == source_id) and \
+				(edge.target().node_id == target_id):
+					to_del.append(edge)
+		for edge in to_del:
+			edge.source().del_edge(edge)
+			edge.target().del_edge(edge)
+			self._edges.remove(edge)
+			self.scene().removeItem(edge)
+	
+	def del_edges(self, node_ids):
+		# node_ids = [node_id, ...]
+		
+		node_ids = set(node_ids)
+		to_del = []
+		for edge in self._edges:
+			if node_ids.intersection([edge.source().node_id, edge.target().node_id]):
+				to_del.append(edge)
+		for edge in to_del:
+			edge.source().del_edge(edge)
+			edge.target().del_edge(edge)
+			self._edges.remove(edge)
+			self.scene().removeItem(edge)
 	
 	def get_node(self, node_id):
 		
@@ -746,9 +886,14 @@ class DGraphView(DGraphicsView):
 			return self._nodes[node_id]
 		return None
 	
+	def has_nodes(self):
+		
+		return len(self._nodes) > 0
+	
 	def get_nodes(self):
 		
-		return self._nodes
+		for node_id in self._nodes:
+			yield self._nodes[node_id]
 	
 	def get_edges(self):
 		
@@ -792,11 +937,16 @@ class DGraphView(DGraphicsView):
 		
 		self.scene().clearSelection()
 	
-	def save_pdf(self, path, dpi = 72):
+	def save_pdf(self, path, dpi = 72, page_size = QtGui.QPageSize.A4, stroke_width = None):
 		
 		self.scene().clearSelection()
 		
 		scale = self.get_scale()
+		
+		if stroke_width is not None:
+			for item in self.scene().items():
+				if isinstance(item, Edge):
+					item.set_line_width(stroke_width)
 		
 		rect = self.scene().itemsBoundingRect()
 		m = min(rect.width(), rect.height())*0.05
@@ -804,7 +954,7 @@ class DGraphView(DGraphicsView):
 		w, h = rect.width(), rect.height()
 		
 		printer = QtPrintSupport.QPrinter()
-		printer.setWinPageSize(QtGui.QPageSize.A4)
+		printer.setWinPageSize(page_size)
 		printer.setFullPage(True)
 		is_landscape = False
 		if w > h:
@@ -820,8 +970,9 @@ class DGraphView(DGraphicsView):
 		else:
 			pw, ph = size.width(), size.height()
 		scale = min(pw / w, ph / h)
-		printer.setResolution(int(round(dpi / scale)))
-		ph = int(round(h * (pw / w)))
+		printer.setResolution(int(round(dpi)))
+		pw *= scale
+		ph *= scale
 		if is_landscape:
 			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(ph, pw), units = QtGui.QPageSize.Point))
 		else:
@@ -830,11 +981,33 @@ class DGraphView(DGraphicsView):
 		painter = QtGui.QPainter(printer)
 		self.scene().render(painter, source = rect)
 		painter.end()
+		
+		if stroke_width is not None:
+			for item in self.scene().items():
+				if isinstance(item, Edge):
+					item.set_line_width(None)
 	
 	@QtCore.Slot()
 	def on_selected(self):
 		
 		self.signal_selected.emit()
+	
+	@QtCore.Slot(str)
+	def on_search(self, text):
+		
+		node = None
+		for node_id in self._nodes:
+			if re.search(text.strip(), str(self._nodes[node_id].label), re.IGNORECASE):
+				node = self._nodes[node_id]
+				break
+		if node is None:
+			return
+		pos = node.pos()
+		scale = self.get_scale()
+		self.scale_view((1 / scale) * 0.6)
+		self.centerOn(pos)
+		self.deselect_all()
+		self.select_node(node.node_id)
 	
 	def mousePressEvent(self, event):
 		
@@ -845,6 +1018,7 @@ class DGraphView(DGraphicsView):
 			self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
 			self.setCursor(QtCore.Qt.OpenHandCursor)
 			self._mouse_prev = (event.x(), event.y())
+			return
 		
 		QtWidgets.QGraphicsView.mousePressEvent(self, event)
 	

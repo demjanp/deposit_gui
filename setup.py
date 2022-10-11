@@ -21,7 +21,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="deposit_gui",
-    version="1.4.2",
+    version="1.4.3",
     description="GUI for Deposit: Graph database focused on scientific data collection",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -56,11 +56,8 @@ setup(
 	]},
     python_requires=">=3.10, <4",
 	install_requires=[
-		'deposit==1.4.2',
-		'networkx==2.6.3',
-		'natsort==8.1.0',
-		'Pillow==9.1.1',
-		'PySide2==5.15.2.1',	
+		'deposit>=1.4.3, <1.5',
+		'svgelements>=1.8.1, <2',
 	],
 	cmdclass={'bdist_wheel': bdist_wheel},
 )
