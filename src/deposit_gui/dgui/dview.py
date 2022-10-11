@@ -1,27 +1,3 @@
-'''
-DView(DMainWindow).
-	.registry
-		.get(var)
-		.set(var, value)
-		.vars()
-		.flush()
-	.progress
-		.cancel_pressed()
-		.show(text = "")
-		.update_state(text = None, value = None, maximum = None)
-	.statusbar
-		.message(text)
-	.logging
-		.logged = Signal(text: str)
-		.get_log_path()
-		.append(text)
-		.flush()
-	.set_title(name)
-	.set_res_folder(path)
-	.set_icon(name)
-	.get_icon(name)
-'''
-
 from deposit_gui.dgui.abstract_subview import AbstractSubview
 from deposit_gui.dgui.dmain_window import DMainWindow
 from deposit_gui.dgui.dstatus_bar import DStatusBar

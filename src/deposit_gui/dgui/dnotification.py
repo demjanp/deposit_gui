@@ -51,11 +51,12 @@ class DNotification(QtWidgets.QFrame):
 		
 		if delay is not None:
 			self._delay = delay
-		pos = self._parent.mapToGlobal(self._parent.contentsRect().topRight())
 		self.hide_timer.stop()
 		self.label.setText(text)
 		self.adjustSize()
-		self.move(pos - self.rect().topRight() - QtCore.QPoint(5, -5))
+		pos = self._parent.mapToGlobal(self._parent.contentsRect().topLeft())
+		size = self.rect().size()
+		self.move(pos + QtCore.QPoint(5, 5))
 		QtWidgets.QFrame.show(self)
 		self.hide_timer.start(self._delay)
 	

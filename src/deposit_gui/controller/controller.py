@@ -38,6 +38,7 @@ class Controller(QtCore.QObject):
 		self.cquerytoolbar = CQueryToolbar(self, self.cview)
 		self.cusertools = CUserTools(self, self.cview)
 		
+		self.cmodel.set_progress(self.cview.progress)
 		self.cmodel.on_loaded()
 		self.cview.log_message("Deposit GUI started")
 	
