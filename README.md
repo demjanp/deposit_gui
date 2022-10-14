@@ -3,15 +3,16 @@ GUI for [Deposit](https://github.com/demjanp/deposit): Graph database focused on
 
 Created on 29. 4. 2013
 
-### Author of the code:
-Peter Demján (peter.demjan@gmail.com)
+<details>
+<summary>Table of Contents</summary>
 
-Institute of Archaeology of the Czech Academy of Sciences, Prague, v.v.i.
+2. [Installation](#installation)
+3. [Contact](#contact)
+4. [Acknowledgements](#acknowledgements)
+5. [License](#license)
 
-## Table of Contents
-1. [Installation](#installation)
-2. [Acknowledgements](#acknowledgements)
-3. [License](#license)
+</details>
+
 
 ## Installation <a name="installation"></a>
 
@@ -28,11 +29,31 @@ To start the GUI execute:
 
 [bin\start_gui.py](bin\start_gui.py)
 
+## Contact: <a name="contact"></a>
+Peter Demján (peter.demjan@gmail.com)
 
-## Acknowledgements: <a name="acknowledgements"></a>
+Institute of Archaeology of the Czech Academy of Sciences, Prague, v.v.i.
+
+## Acknowledgements <a name="acknowledgements"></a>
 
 Development of this software was supported by OP RDE, MEYS, under the project "Ultra-trace isotope research in social and environmental studies using accelerator mass spectrometry", Reg. No. CZ.02.1.01/0.0/0.0/16_019/0000728.
 
-## License: <a name="license"></a>
+This software uses the following open source packages:
+* [cryptography](https://github.com/pyca/cryptography)
+* [natsort](https://github.com/SethMMorton/natsort)
+* [NetworKit](https://networkit.github.io/)
+* [NetworkX](https://networkx.org/)
+* [openpyxl](https://openpyxl.readthedocs.io/)
+* [Pillow](https://python-pillow.org/)
+* [Psycopg](https://psycopg.org/)
+* [PyShp](https://github.com/GeospatialPython/pyshp)
+* [PySide2](https://www.pyside.org/)
+* [Qt](https://www.qt.io)
+* [Shapely](https://github.com/shapely/shapely)
+* [svgelements](https://github.com/meerk40t/svgelements)
+* [Unidecode](https://github.com/avian2/unidecode)
+* [validators](https://github.com/kvesteri/validators)
+
+## License <a name="license"></a>
 
 This code is licensed under the [GNU GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/gpl-3.0.en.html) - see the [LICENSE](LICENSE) file for details
