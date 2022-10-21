@@ -23,6 +23,7 @@ class DCModel(AbstractSubcontroller):
 		self._model = DModel(store)
 		
 		self._model.signal_store_event.connect(self.on_store_event)
+		self._model.signal_store_error.connect(self.on_error)
 	
 	
 	# ---- Signal handling
@@ -48,6 +49,11 @@ class DCModel(AbstractSubcontroller):
 			self.on_user_tools_changed()
 		elif event == DModel.EVENT_SETTINGS_CHANGED:
 			self.on_settings_changed()
+	
+	@QtCore.Slot(str)
+	def on_error(self, message):
+		
+		pass
 	
 	def on_added(self, objects, classes):
 		# elements = [DObject, DClass, ...]

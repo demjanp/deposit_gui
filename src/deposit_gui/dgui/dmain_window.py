@@ -31,11 +31,14 @@ class DMainWindow(QtWidgets.QMainWindow):
 			return
 		state = self.registry.get(self.REG_PREFIX + "widow_maximized")
 		geometry = self.registry.get(self.REG_PREFIX + "window_geometry")
+		restored = False
 		if geometry:
 			geometry = geometry[1:].strip("'")
-			self.restoreGeometry(QtCore.QByteArray().fromPercentEncoding(
+			restored = self.restoreGeometry(QtCore.QByteArray().fromPercentEncoding(
 				bytearray(geometry, "utf-8"))
 			)
+		if not restored:
+			self.setGeometry(50, 50, 800, 600)
 		if state:
 			if int(state) == 1:
 				self.showMaximized()

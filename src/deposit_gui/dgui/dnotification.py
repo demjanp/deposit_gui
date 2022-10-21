@@ -8,6 +8,7 @@ class DNotification(QtWidgets.QFrame):
 		
 		self._parent = parent
 		self._delay = 2000
+		self._queue = []
 		
 		self.label = QtWidgets.QLabel()
 		
@@ -49,6 +50,15 @@ class DNotification(QtWidgets.QFrame):
 	
 	def show(self, text, delay = None):
 		
+		self._queue.append((text, delay))
+		if not self.hide_timer.isActive():
+			self.show_from_queue()
+	
+	def show_from_queue(self):
+		
+		if not self._queue:
+			return
+		text, delay = self._queue.pop(0)
 		if delay is not None:
 			self._delay = delay
 		self.hide_timer.stop()
@@ -60,6 +70,11 @@ class DNotification(QtWidgets.QFrame):
 		QtWidgets.QFrame.show(self)
 		self.hide_timer.start(self._delay)
 	
+	def hide(self):
+		
+		self.hide_timer.stop()
+		QtWidgets.QFrame.hide(self)
+	
 	@QtCore.Slot()
 	def on_hide_timer(self):
 		
@@ -67,10 +82,12 @@ class DNotification(QtWidgets.QFrame):
 			self.hide_timer.start(self._delay)
 		else:
 			self.hide()
+			self.show_from_queue()
 	
 	@QtCore.Slot()
 	def on_close(self):
 		
+		self._queue = []
 		self.hide_timer.stop()
 		self.hide()
 

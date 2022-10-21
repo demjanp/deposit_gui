@@ -89,7 +89,13 @@ class CModel(DCModel):
 	def on_settings_changed(self):
 		
 		self.cmain.cactions.update()
+	
+	@QtCore.Slot(str)
+	def on_error(self, message):
 		
+		self.cmain.cview.log_message(message)
+		self.cmain.cview.show_warning("Error", message)
+	
 	
 	# ---- get/set
 	# ------------------------------------------------------------------------
