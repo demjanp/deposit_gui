@@ -14,6 +14,7 @@ class DModel(QtCore.QObject):
 	
 	signal_store_event = QtCore.Signal(int, list, list, object)
 	# event, objects, classes, datasource
+	signal_store_error = QtCore.Signal(str)
 	
 	EVENT_ADDED =					0x00000000
 	EVENT_DELETED =					0x00000100
@@ -41,6 +42,7 @@ class DModel(QtCore.QObject):
 		self._store.set_callback_queries_changed(self.on_queries_changed)
 		self._store.set_callback_user_tools_changed(self.on_user_tools_changed)
 		self._store.set_callback_settings_changed(self.on_settings_changed)
+		self._store.set_callback_error(self.on_error)
 	
 	def _to_objects_and_classes(self, elements):
 		
@@ -97,6 +99,10 @@ class DModel(QtCore.QObject):
 	def on_settings_changed(self):
 		
 		self.signal_store_event.emit(self.EVENT_SETTINGS_CHANGED, [], [], None)
+	
+	def on_error(self, message):
+		
+		self.signal_store_error.emit(message)
 	
 	
 	# ---- General
