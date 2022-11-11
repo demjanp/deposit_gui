@@ -71,23 +71,28 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 	def reset_zoom(self):
 		
 		self._zoomed = False
-		rect = self.scene().itemsBoundingRect()
+		rect = self.scene().itemsBoundingRect().marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
 		if rect.isEmpty():
 			rect.setRect(-100, -100, 200, 200)
 			self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
 		else:
-			rect = rect.marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
 			self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
 			self.reset_scene()
 		if self._button_zoom_reset is not None:
 			self._button_zoom_reset.hide()
 	
-	def scale_view(self, factor):
+	def scale_view(self, factor, event = None):
 		
 		if not self._zoomable:
 			return
 		self._zoomed = True
+		if event is not None:
+			pos_old = self.mapToScene(event.pos())
 		self.scale(factor, factor)
+		if event is not None:
+			diff = self.mapToScene(event.pos()) - pos_old
+			self.translate(diff.x(), diff.y())
+		self.setSceneRect(self.mapToScene(self.frameRect()).boundingRect().toRect())
 		if self._button_zoom_reset is not None:
 			self._button_zoom_reset.setVisible(self.is_zoomed())
 	
@@ -98,5 +103,5 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 	
 	def wheelEvent(self, event):
 		
-		self.scale_view(2**(event.delta() / 240.0))
+		self.scale_view(2**(event.delta() / 240.0), event)
 	
