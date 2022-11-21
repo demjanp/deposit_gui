@@ -114,7 +114,15 @@ class ClassGraph(QtWidgets.QMainWindow):
 					continue
 				if cls2 == cls:
 					continue
-				edges.append([cls.name, cls2.name, label])
+				edges.append([cls.name, cls2.name, label, "darkGray"])
+			for cls2, label in cls.get_relations():
+				if label.startswith("~"):
+					continue
+				if cls2 == cls:
+					continue
+				edge = [cls.name, cls2.name, label, "darkGray"]
+				if edge not in edges:
+					edges.append(edge)
 		self._graph_view.populate(nodes = nodes, edges = edges, positions = self._positions)
 	
 	@QtCore.Slot(object)

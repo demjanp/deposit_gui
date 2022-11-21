@@ -815,7 +815,13 @@ class DGraphView(DGraphicsView):
 			if (source_id not in self._nodes) or (target_id not in self._nodes):
 				continue
 			key = tuple(sorted([source_id, target_id]))
-			self._edges.append(Edge(self._nodes[source_id], self._nodes[target_id], label, color, offset = edges_done[key], font_family = edge_font_family, font_size = edge_font_size, arrow_size = edge_arrow_size))
+			self._edges.append(Edge(
+				self._nodes[source_id], self._nodes[target_id], label, color, 
+				offset = edges_done[key], 
+				font_family = edge_font_family, 
+				font_size = edge_font_size, 
+				arrow_size = edge_arrow_size
+			))
 			edges_done[key] += 1
 			self.scene().addItem(self._edges[-1])
 		
