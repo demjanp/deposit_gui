@@ -419,9 +419,12 @@ class DCModel(AbstractSubcontroller):
 		#	specified here, otherwise re-use objects with identical descriptors
 		# progress = DProgress
 		
+		self._model.blockSignals(True)
 		self._model.import_store(
 			store, unique, progress = self._progress
 		)
+		self._model.blockSignals(False)
+		self.on_changed(self._model.get_objects(), self._model.get_classes())
 	
 	
 	# ---- User Tools
