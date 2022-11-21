@@ -92,7 +92,9 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		if event is not None:
 			diff = self.mapToScene(event.pos()) - pos_old
 			self.translate(diff.x(), diff.y())
-		self.setSceneRect(self.mapToScene(self.frameRect()).boundingRect().toRect())
+		rect = self.scene().itemsBoundingRect().marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
+		rect = rect.united(self.mapToScene(self.frameRect()).boundingRect().toRect())
+		self.setSceneRect(rect)
 		if self._button_zoom_reset is not None:
 			self._button_zoom_reset.setVisible(self.is_zoomed())
 	

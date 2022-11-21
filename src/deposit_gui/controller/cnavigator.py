@@ -107,7 +107,9 @@ class CNavigator(AbstractSubcontroller):
 	# ------------------------------------------------------------------------
 	def populate_classes(self):
 		
-		self._vnavigator.populate_classes(self.cmain.cmodel.get_classes())
+		descriptors = self.cmain.cmodel.get_descriptor_names()
+		classes = [cls for cls in self.cmain.cmodel.get_classes() if cls.name not in descriptors]
+		self._vnavigator.populate_classes(classes)
 	
 	def populate_queries(self):
 		
