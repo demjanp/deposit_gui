@@ -7,6 +7,7 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 	def __init__(self, dialog, n_rows, classes, relations):
 		
 		QtWidgets.QFrame.__init__(self)
+		AbstractSubview.__init__(self)
 		
 		self._classes = classes
 		self._checkboxes = []
