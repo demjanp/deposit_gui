@@ -90,9 +90,17 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 			frame.set_value("", None)
 		
 		if idx > 0:
+			
+			# remove HLine after frameset
+			idx_layout = self.controls_frame.layout().indexOf(frameset)
+			line = self.controls_frame.layout().itemAt(idx_layout + 1)
+			if line is not None:
+				line = line.widget()
+				self.controls_frame.layout().removeWidget(line)
+				line.setParent(None)
+			
 			self.controls_frame.layout().removeWidget(frameset)
 			frameset.setParent(None)
-			# TODO remove HLine after frameset
 			del self._framesets[idx]
 		
 		return list(obj_ids)
@@ -118,3 +126,4 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 		
 		obj_ids = self.remove_entry(self.sender().parent().parent())
 		self.entry_removed.emit(obj_ids)
+		

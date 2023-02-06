@@ -8,19 +8,23 @@ from natsort import natsorted
 
 class DialogEntryForm(DialogForm):
 	
-	signal_submit = QtCore.Signal(dict, dict, list, set)	# values, objects_existing, relations, unique
-	signal_unlink = QtCore.Signal(dict, list, set)			# objects_existing, relations, unique
-	signal_remove = QtCore.Signal(dict, set)				# objects_existing, unique
-															#	values = {cls: {idx: {descr: value, ...}, ...}, ...}
-															#	objects_existing = {cls: {idx: obj_id, ...}, ...}
-															#	relations = [[cls1, rel, cls2], ...]
-															#	unique = set(cls, ...)
+	signal_submit = QtCore.Signal(dict, dict, list, set, dict)
+	#	values, objects_existing, relations, unique, objects_loaded
+	signal_unlink = QtCore.Signal(dict, list, set, list)
+	#	objects_existing, relations, unique, obj_ids
+	signal_remove = QtCore.Signal(dict, set)
+	#	objects_existing, unique
+	#		values = {cls: {idx: {descr: value, ...}, ...}, ...}
+	#		objects_existing = {cls: {idx: obj_id, ...}, ...}
+	#		relations = [[cls1, rel, cls2], ...]
+	#		unique = set(cls, ...)
 	
 	def __init__(self, vusertools, form_tool, selected_id):
 		
 		DialogForm.__init__(self, vusertools, form_tool)
 		
 		self.selected_id = selected_id
+		self.objects_loaded = {}
 		
 		if self._vusertools.entry_form_geometry is not None:
 			self.setGeometry(self._vusertools.entry_form_geometry)
@@ -72,7 +76,7 @@ class DialogEntryForm(DialogForm):
 		self.clear()
 		
 		# find all possible relations
-		frames, framesets, relations = self.find_relations()  # [[cls1, rel, cls2], ...]
+		frames, framesets, relations = self.find_relations()
 		collect = []
 		for cls1, rel, cls2 in relations:
 			rel_rev = self._vusertools._cmodel.reverse_relation(rel)
@@ -89,16 +93,18 @@ class DialogEntryForm(DialogForm):
 		# get all relevant objects
 		objects = defaultdict(list)  # {class: [object, ...], ...}
 		obj = self._vusertools._cmodel.get_object(self.selected_id)
-		for cls in obj.get_classes():
-			objects[cls.name].append(obj)
+		if obj is None:
+			return
+		for cls in obj.get_class_names():
+			objects[cls].append(obj)
 		while True:
 			found = False
 			for cls1, rel, cls2 in relations:
 				if cls1 in objects:
 					for obj1 in objects[cls1]:
 						for obj2, rel in obj1.get_relations():
-							classes2 = obj2.get_classes()
-							if set(obj1.get_classes()).intersection(classes2):
+							classes2 = obj2.get_class_names()
+							if set(obj1.get_class_names()).intersection(classes2):
 								continue
 							if (cls2 in classes2) and ((cls2 in multi_classes) or (cls2 not in objects)) and (obj2 not in objects[cls2]):
 								objects[cls2].append(obj2)
@@ -146,6 +152,9 @@ class DialogEntryForm(DialogForm):
 						frame.set_value(frameset_values[obj_id][frame.dclass][frame.descriptor], obj_id)
 				group.add_entry()
 		self.adjust_labels()
+		
+		_, objects_existing, _ = self.get_data()
+		self.objects_loaded = dict([(cls, list(objects_existing[cls].values())) for cls in objects_existing])
 	
 	def get_data(self):
 		
@@ -193,11 +202,9 @@ class DialogEntryForm(DialogForm):
 		
 		if not obj_ids:
 			return
-		if not self.unique:
-			return
 		_, objects_existing, relations = self.get_data()
 		
-		self.signal_unlink.emit(objects_existing, relations, self.unique)
+		self.signal_unlink.emit(objects_existing, relations, self.unique, obj_ids)
 		self.clear()
 		self.populate()
 	
@@ -205,7 +212,7 @@ class DialogEntryForm(DialogForm):
 	def on_submit(self):
 		
 		values, objects_existing, relations = self.get_data()
-		self.signal_submit.emit(values, objects_existing, relations, self.unique)
+		self.signal_submit.emit(values, objects_existing, relations, self.unique, self.objects_loaded)
 		self.clear()
 	
 	@QtCore.Slot()
@@ -219,8 +226,9 @@ class DialogEntryForm(DialogForm):
 		if not self.unique:
 			return
 		_, objects_existing, _ = self.get_data()  # {cls: {idx: obj_id, ...}, ...}
-		self.signal_remove.emit(objects_existing, self.unique)
+		self.selected_id = None
 		self.clear()
+		self.signal_remove.emit(objects_existing, self.unique)
 		self.populate()
 	
 	def closeEvent(self, event):

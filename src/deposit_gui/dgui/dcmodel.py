@@ -151,15 +151,15 @@ class DCModel(AbstractSubcontroller):
 		
 		return self._model.get_updated_url(resource)
 	
-	def get_query(self, querystr):
+	def get_query(self, querystr, silent = False):
 		
-		if self._progress is not None:
+		if (not silent) and (self._progress is not None):
 			self._progress.show("Processing Query")
 		query = self._model.get_query(
 			querystr, 
-			progress = self._progress
+			progress = (None if silent else self._progress)
 		)
-		if self._progress is not None:
+		if (not silent) and (self._progress is not None):
 			self._progress.stop()
 		return query
 	
