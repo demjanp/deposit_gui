@@ -32,15 +32,18 @@ class CUserTools(AbstractSubcontroller):
 		
 		self.cmain.cmdiarea.add_query(querystr)
 	
-	@QtCore.Slot(dict, dict, list, set)
-	def on_entry_submit(self, values, objects_existing, relations, unique):
+	@QtCore.Slot(dict, dict, list, set, dict)
+	def on_entry_submit(
+			self, values, objects_existing, relations, unique, objects_loaded
+		):
 		#	values = {cls: {idx: {descr: value, ...}, ...}, ...}
 		#	objects_existing = {cls: {idx: obj_id, ...}, ...}
 		#	relations = [[cls1, rel, cls2], ...]
 		#	unique = set(cls, ...)
+		#	objects_loaded = {cls: [obj_id, ...], ...}
 		
 		# create / find objects
-		objects = defaultdict(dict) # {cls: {idx: obj_id, ...}, ...}
+		objects = defaultdict(dict) # {cls: {idx: Object, ...}, ...}
 		for cls in values:
 			for idx in values[cls]:
 				if not (True in [(value is not None) for value in values[cls][idx].values()]):
@@ -65,6 +68,10 @@ class CUserTools(AbstractSubcontroller):
 						objects[cls][idx] = self.cmain.cmodel.add_class(cls).add_member()
 					for descr in values[cls][idx]:
 						objects[cls][idx].set_descriptor(descr, values[cls][idx][descr])
+				
+				obj = objects[cls][idx]
+				if (cls in objects_loaded) and (obj.id in objects_loaded[cls]):
+					objects_loaded[cls].remove(obj.id)
 		
 		# create relations
 		for cls1, rel, cls2 in relations:
@@ -77,12 +84,45 @@ class CUserTools(AbstractSubcontroller):
 					if obj1 == obj2:
 						continue
 					obj1.add_relation(obj2, rel)
+					if (cls1 in objects_loaded) and (obj1.id in objects_loaded[cls1]):
+						objects_loaded[cls1].remove(obj1.id)
+					if (cls2 in objects_loaded) and (obj2.id in objects_loaded[cls2]):
+						objects_loaded[cls2].remove(obj2.id)
+		
+		# remove previous relations not present in the current form
+		objects_form = set()
+		for cls in objects:
+			objects_form.update([obj.id for obj in objects[cls].values()])
+		for cls in objects_loaded:
+			objects_form.update(objects_loaded[cls])
+		for cls1, rel, cls2 in relations:
+			if cls1 in objects_loaded:
+				for obj1 in objects_loaded[cls1]:
+					obj1 = self.cmain.cmodel.get_object(obj1)
+					for obj2, rel_ in list(obj1.get_relations()):
+						if rel_ != rel:
+							continue
+						if obj2.id not in objects_form:
+							continue
+						if cls2 in obj2.get_class_names():
+							obj1.del_relation(obj2, rel)
+			if cls2 in objects_loaded:
+				for obj2 in objects_loaded[cls2]:
+					obj2 = self.cmain.cmodel.get_object(obj2)
+					for obj1, rel_ in list(obj2.get_relations()):
+						if self.cmain.cmodel.reverse_relation(rel_) != rel:
+							continue
+						if obj1.id not in objects_form:
+							continue
+						if cls1 in obj1.get_class_names():
+							obj2.del_relation(obj1, rel_)
 	
-	@QtCore.Slot(dict, list, set)
-	def on_entry_unlink(self, objects_existing, relations, unique):
+	@QtCore.Slot(dict, list, set, list)
+	def on_entry_unlink(self, objects_existing, relations, unique, obj_ids):
 		#	objects_existing = {cls: {idx: obj_id, ...}, ...}
 		#	relations = [[cls1, rel, cls2], ...]
 		#	unique = set(cls, ...)
+		#	obj_ids = [obj_id, ...]; objects to be unlinked
 		
 		obj_lookup = defaultdict(set)  # {cls: {obj_id, ...}, ...}
 		existing_objs = set([])
@@ -92,9 +132,9 @@ class CUserTools(AbstractSubcontroller):
 			existing_objs.update(vals)
 		
 		to_unlink = set([])  # {(obj_id1, rel, obj_id2), ...}
-		for obj_id in existing_objs:
+		for obj_id in obj_ids:
 			obj = self.cmain.cmodel.get_object(obj_id)
-			obj_classes = set(obj.get_classes())
+			obj_classes = set(obj.get_class_names())
 			if unique.intersection(obj_classes):
 				self.cmain.cmodel.del_object(obj_id)
 			else:
@@ -103,13 +143,13 @@ class CUserTools(AbstractSubcontroller):
 					obj_relations[rel].add(obj2)
 				
 				for cls1, rel, cls2 in relations:
-					if not ((cls1 in unique) or (cls2 in unique)):
-						continue
 					if (cls2 in obj_classes) and (("~" + rel) in obj_relations):
 						rel = "~" + rel
 						cls1, cls2 = cls2, cls1
 					if (cls1 in obj_classes) and (rel in obj_relations):
-						for obj2 in obj.relations[rel]:
+						for obj2, rel_ in obj.get_relations():
+							if rel_ != rel:
+								continue
 							if obj2 == obj:
 								continue
 							if obj2.id in existing_objs:
@@ -130,7 +170,7 @@ class CUserTools(AbstractSubcontroller):
 			obj_ids.update(objects_existing[cls].values())
 		for obj_id in obj_ids:
 			obj = self.cmain.cmodel.get_object(obj_id)
-			if unique.intersection(obj.get_classes()):
+			if unique.intersection(obj.get_class_names()):
 				self.cmain.cmodel.del_object(obj_id)
 	
 	@QtCore.Slot()

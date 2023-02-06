@@ -61,17 +61,24 @@ class DialogGroup(QtWidgets.QGroupBox):
 	
 	def populate_lookup(self):
 		
+		def str_or_empty(value):
+			
+			if value is None:
+				return ""
+			return str(value)
+		
 		self.lookup_combo.clear()
 		self.lookup_combo_search = {} # {index: {column: value, ...}}
-		columns = ["[%s].[%s]" % (member.dclass, member.descriptor) for member in self.user_group.members]
-		query = self._cmodel.get_query("SELECT %s" % (", ".join(columns)))
+		columns = [(member.dclass, member.descriptor) for member in self.user_group.members]
+		query = self._cmodel.get_query("SELECT %s" % (", ".join(["[%s].[%s]" % (column) for column in columns])), silent = True)
 		rows = []
-		for row in query:
-			data = dict([(column, str(row[i][1])) for i, column in enumerate(columns)])
-			label = ", ".join([data[column] for column in columns])
+		for row in range(len(query)):
+			data = dict([("[%s].[%s]" % (cls, descr), str_or_empty(query[row, cls, descr][1])) for cls, descr in columns])
+			label = ", ".join(list(data.values()))
 			row = [label, data]
 			if row not in rows:
 				rows.append(row)
+		
 		rows = natsorted(rows, key = lambda row: row[0])
 		index = 0
 		for label, data in rows:
@@ -93,7 +100,7 @@ class DialogGroup(QtWidgets.QGroupBox):
 		# data = {Class.Descriptor: value, ...}
 		
 		for frame in self.frames():
-			column = ".".join([frame.user_control.dclass, frame.user_control.descriptor])
+			column = "[%s].[%s]" % (frame.user_control.dclass, frame.user_control.descriptor)
 			if column in data:
 				frame.set_value(data[column])
 	
@@ -118,7 +125,7 @@ class DialogGroup(QtWidgets.QGroupBox):
 		for frame in self.frames():
 			value = frame.get_value()
 			if value != "":
-				column = ".".join([frame.user_control.dclass, frame.user_control.descriptor])
+				column = "[%s].[%s]" % (frame.user_control.dclass, frame.user_control.descriptor)
 				data[column] = value
 		if not data:
 			return

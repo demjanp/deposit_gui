@@ -13,15 +13,19 @@ from PySide2 import (QtWidgets, QtCore, QtGui)
 
 class VUserTools(AbstractSubview):
 	
-	signal_search_submit = QtCore.Signal(str)					# querystr
-	signal_entry_submit = QtCore.Signal(dict, dict, list, set)	# values, objects_existing, relations, unique
-	signal_entry_unlink = QtCore.Signal(dict, list, set)		# objects_existing, relations, unique
-	signal_entry_remove = QtCore.Signal(dict, set)				# objects_existing, unique
+	signal_search_submit = QtCore.Signal(str)
+	#	querystr
+	signal_entry_submit = QtCore.Signal(dict, dict, list, set, dict)
+	#	values, objects_existing, relations, unique, objects_loaded
+	signal_entry_unlink = QtCore.Signal(dict, list, set, list)
+	#	objects_existing, relations, unique, obj_ids
+	signal_entry_remove = QtCore.Signal(dict, set)
+	#	objects_existing, unique
 	signal_import_tool = QtCore.Signal()
-	signal_export_tool = QtCore.Signal(object)					# user_tool
-	signal_add_tool = QtCore.Signal(object)						# user_tool
-	signal_update_tool = QtCore.Signal(str, object)				# label, user_tool
-	signal_del_tool = QtCore.Signal(list)						# [label, ...]
+	signal_export_tool = QtCore.Signal(object)		# user_tool
+	signal_add_tool = QtCore.Signal(object)			# user_tool
+	signal_update_tool = QtCore.Signal(str, object)	# label, user_tool
+	signal_del_tool = QtCore.Signal(list)			# [label, ...]
 	
 	signal_data_changed = QtCore.Signal()  # internal signal
 	signal_tools_changed = QtCore.Signal()  # internal signal
@@ -124,13 +128,13 @@ class VUserTools(AbstractSubview):
 		
 		dialog = DialogEntryForm(self, form_tool, self.get_selected_id())
 		dialog.signal_submit.connect(
-			lambda values, objects_existing, relations, unique: self.signal_entry_submit.emit(
-				values, objects_existing, relations, unique
+			lambda values, objects_existing, relations, unique, objects_loaded: self.signal_entry_submit.emit(
+				values, objects_existing, relations, unique, objects_loaded
 			)
 		)
 		dialog.signal_unlink.connect(
-			lambda objects_existing, relations, unique: self.signal_entry_unlink.emit(
-				objects_existing, relations, unique
+			lambda objects_existing, relations, unique, obj_ids: self.signal_entry_unlink.emit(
+				objects_existing, relations, unique, obj_ids
 			)
 		)
 		dialog.signal_remove.connect(lambda objects_existing, unique: self.signal_entry_remove.emit(
