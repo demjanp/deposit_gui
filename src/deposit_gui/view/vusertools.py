@@ -104,6 +104,13 @@ class VUserTools(AbstractSubview):
 		objects = self._cmodel.cmain.get_selected_objects()
 		if len(objects) == 1:
 			return list(objects)[0].id
+		
+		rows = set()
+		for item in self._cmodel.cmain.get_selected_queryitems():
+			rows.add(item.row)
+		if len(rows) == 1:
+			return item.obj_id_row
+		
 		return None
 	
 	def open_query(self, form_tool):
