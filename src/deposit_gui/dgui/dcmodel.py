@@ -284,9 +284,26 @@ class DCModel(AbstractSubcontroller):
 		
 		return self._model.add_object()
 	
+	def add_object_with_descriptors(self, cls, data, locations = {}, obj = None):
+		# cls = DClass or None
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		
+		return self._model.add_object_with_descriptors(cls, data, locations, obj)
+	
 	def get_object(self, obj_id):
 		
 		return self._model.get_object(obj_id)
+	
+	def find_object_with_descriptors(self, classes, data, locations = {}):
+		# classes = [DClass, None, ...]
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		#
+		# if found object has missing location, it is updated if a location is
+		# supplied via locations
+		
+		return self._model.find_object_with_descriptors(classes, data, locations)
 	
 	def del_object(self, obj_id):
 		

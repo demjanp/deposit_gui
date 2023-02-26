@@ -181,6 +181,13 @@ class DModel(QtCore.QObject):
 		
 		self._store.add_saved_query(title, querystr)
 	
+	def add_object_with_descriptors(self, cls, data, locations = {}, obj = None):
+		# cls = DClass or None
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		
+		return self._store.add_object_with_descriptors(cls, data, locations, obj)
+	
 	def add_data_row(self, 
 		data: dict, 
 		relations: set = set(), 
@@ -225,6 +232,15 @@ class DModel(QtCore.QObject):
 		
 		return self._store.get_object_ids()
 	
+	def find_object_with_descriptors(self, classes, data, locations = {}):
+		# classes = [DClass, None, ...]
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		#
+		# if found object has missing location, it is updated if a location is
+		# supplied via locations
+		
+		return self._store.find_object_with_descriptors(classes, data, locations)
 	
 	def get_class(self, name):
 		
