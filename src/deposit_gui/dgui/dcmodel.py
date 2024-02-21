@@ -11,6 +11,7 @@ from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 from PySide2 import (QtCore)
 from collections import defaultdict
 from natsort import natsorted
+import sys
 
 class DCModel(AbstractSubcontroller):
 	
@@ -191,12 +192,16 @@ class DCModel(AbstractSubcontroller):
 			return
 		classes = set(self.get_class_names())
 		descriptors = set(self.get_descriptor_names())
-		expr, bracketed_selects = remove_bracketed_selects(
-			expr, classes, descriptors
-		)
-		expr, vars = extract_expr_vars(
-			expr.strip(), classes, descriptors, bracketed_selects
-		)
+		try:
+			expr, bracketed_selects = remove_bracketed_selects(
+				expr, classes, descriptors
+			)
+			expr, vars = extract_expr_vars(
+				expr.strip(), classes, descriptors, bracketed_selects
+			)
+		except:
+			self.on_error("Error Parsing Expression: \"%s\"" % (expr))
+			return
 		for obj_id in rows:
 			obj = self.get_object(obj_id)
 			values = dict(
@@ -206,7 +211,22 @@ class DCModel(AbstractSubcontroller):
 			)
 			for name in vars:
 				values[name] = rows[obj_id].get(vars[name], None)
-			value = eval(expr, values)
+			value = None
+			failed = False
+			try:
+				value = eval(expr, values)
+			except:
+				_, exc_value, _ = sys.exc_info()
+				failed = True
+			
+			if failed:
+				self.on_error(
+					'''Error Calculating Expression: "%s"\n
+					at Object %d:
+					%s''' % (expr, obj_id, str(exc_value))
+				)
+				return
+			
 			if value is not None:
 				obj.set_descriptor(target, value)
 	

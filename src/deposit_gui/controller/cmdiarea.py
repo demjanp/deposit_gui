@@ -56,6 +56,34 @@ class CMDIArea(AbstractSubcontroller):
 			obj = self.cmain.cmodel.get_object(item.obj_id)
 			obj.del_descriptor(item.descriptor_name)
 	
+	@QtCore.Slot()
+	def on_query_add_class(self):
+		
+		objects = self.cmain.get_selected_objects()
+		if objects:
+			self.cmain.cdialogs.open("AddClassToObjects", objects)
+
+	
+	@QtCore.Slot()
+	def on_query_del_class(self, query):
+		
+		cls = query.main_class
+		if cls == "*":
+			return
+		if cls is None:
+			return
+		
+		objects = self.cmain.get_selected_objects()
+		if not objects:
+			return
+		
+		cls = self.cmain.cmodel.get_class(cls)
+		if not cls:
+			return
+		
+		self.cmain.cdialogs.open("DelClassFromObjects", cls, objects)
+		
+	
 	@QtCore.Slot(object)
 	def on_query_activated(self, item):
 		
@@ -238,6 +266,8 @@ class CMDIArea(AbstractSubcontroller):
 		query_frame.signal_add_object.connect(self.on_query_add_object)
 		query_frame.signal_del_object.connect(self.on_query_del_object)
 		query_frame.signal_del_descriptor.connect(self.on_query_del_descriptor)
+		query_frame.signal_add_class.connect(self.on_query_add_class)
+		query_frame.signal_del_class.connect(self.on_query_del_class)
 		query_frame.signal_edited.connect(self.on_query_edited)
 		query_frame.signal_drop_url.connect(self.on_query_drop_url)
 		self.cmain.cquerytoolbar.set_query_text(querystr)
