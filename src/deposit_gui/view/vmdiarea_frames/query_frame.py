@@ -12,9 +12,11 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	signal_query_activated = QtCore.Signal(object)	# QueryItem
 	signal_object_selected = QtCore.Signal(list)	# [DObject, ...]
 	signal_relation_selected = QtCore.Signal(list)	# [(Source, Target, label), ...]
-	signal_add_object = QtCore.Signal(object)	# Query
+	signal_add_object = QtCore.Signal(object)		# Query
 	signal_del_object = QtCore.Signal()
 	signal_del_descriptor = QtCore.Signal()
+	signal_add_class = QtCore.Signal()
+	signal_del_class = QtCore.Signal(object)		# Query
 	signal_edited = QtCore.Signal(object, object)	# QueryItem, value
 	signal_drop_url = QtCore.Signal(object, str)	# QueryItem, url
 	
@@ -232,6 +234,16 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		self.signal_del_descriptor.emit()
 	
+	@QtCore.Slot()
+	def on_add_class(self):
+		
+		self.signal_add_class.emit()
+	
+	@QtCore.Slot()
+	def on_del_class(self):
+		
+		self.signal_del_class.emit(self._query)
+	
 	@QtCore.Slot(int)
 	def on_to_object(self, obj_id):
 		
@@ -268,6 +280,8 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 			self.relation_frame.populate()
 		
 		self.footer.set_del_descriptor_enabled(has_descriptor)
+		self.footer.set_add_class_enabled(found)
+		self.footer.set_del_class_enabled(found)
 	
 	def on_object_activated(self, obj_id):
 		
@@ -337,6 +351,15 @@ class QueryFooter(QtWidgets.QFrame):
 		self.add_object_button.clicked.connect(self._queryframe.on_add_object)
 		self.layout().addWidget(self.add_object_button, 0, 0)
 		
+		self.add_class_button = QtWidgets.QToolButton()
+		self.add_class_button.setIcon(self._queryframe.get_icon("add_class.svg"))
+		self.add_class_button.setIconSize(QtCore.QSize(24, 24))
+		self.add_class_button.setAutoRaise(True)
+		self.add_class_button.setToolTip("Add To Class")
+		self.add_class_button.setContentsMargins(0, 0, 0, 0)
+		self.add_class_button.clicked.connect(self._queryframe.on_add_class)
+		self.layout().addWidget(self.add_class_button, 0, 1)
+		
 		self.del_object_button = QtWidgets.QToolButton()
 		self.del_object_button.setIcon(self._queryframe.get_icon("remove_object.svg"))
 		self.del_object_button.setIconSize(QtCore.QSize(24, 24))
@@ -344,7 +367,7 @@ class QueryFooter(QtWidgets.QFrame):
 		self.del_object_button.setToolTip("Remove Object")
 		self.del_object_button.setContentsMargins(0, 0, 0, 0)
 		self.del_object_button.clicked.connect(self._queryframe.on_del_object)
-		self.layout().addWidget(self.del_object_button, 0, 1)
+		self.layout().addWidget(self.del_object_button, 0, 2)
 		
 		self.del_descriptor_button = QtWidgets.QToolButton()
 		self.del_descriptor_button.setIcon(self._queryframe.get_icon("remove_descriptor.svg"))
@@ -353,20 +376,29 @@ class QueryFooter(QtWidgets.QFrame):
 		self.del_descriptor_button.setToolTip("Remove Descriptor")
 		self.del_descriptor_button.setContentsMargins(0, 0, 5, 0)
 		self.del_descriptor_button.clicked.connect(self._queryframe.on_del_descriptor)
-		self.layout().addWidget(self.del_descriptor_button, 0, 2)
+		self.layout().addWidget(self.del_descriptor_button, 0, 3)
+		
+		self.del_class_button = QtWidgets.QToolButton()
+		self.del_class_button.setIcon(self._queryframe.get_icon("remove_class.svg"))
+		self.del_class_button.setIconSize(QtCore.QSize(24, 24))
+		self.del_class_button.setAutoRaise(True)
+		self.del_class_button.setToolTip("Remove From Class")
+		self.del_class_button.setContentsMargins(0, 0, 5, 0)
+		self.del_class_button.clicked.connect(self._queryframe.on_del_class)
+		self.layout().addWidget(self.del_class_button, 0, 4)
 		
 		filter_label = QtWidgets.QLabel("Filter:")
 		filter_label.setContentsMargins(5, 0, 0, 0)
-		self.layout().addWidget(filter_label, 0, 3)
+		self.layout().addWidget(filter_label, 0, 5)
 
 		self._filter_edit = QtWidgets.QLineEdit()
 		self._filter_edit.setContentsMargins(5, 0, 5, 0)
 		self._filter_edit.textEdited.connect(self._queryframe.on_filter)
-		self.layout().addWidget(self._filter_edit, 0, 4)
+		self.layout().addWidget(self._filter_edit, 0, 6)
 
 		self._count_label = QtWidgets.QLabel("Found: %s")
 		self._count_label.setContentsMargins(0, 0, 5, 0)
-		self.layout().addWidget(self._count_label, 0, 5)
+		self.layout().addWidget(self._count_label, 0, 7)
 		
 		self._count_text = self._count_label.text()
 	
@@ -383,6 +415,10 @@ class QueryFooter(QtWidgets.QFrame):
 		self.add_object_button.setVisible(state)
 		self.del_object_button.setVisible(state)
 	
+	def set_add_class_enabled(self, state):
+		
+		self.add_class_button.setEnabled(state)
+	
 	def set_del_object_enabled(self, state):
 		
 		self.del_object_button.setEnabled(state)
@@ -390,4 +426,8 @@ class QueryFooter(QtWidgets.QFrame):
 	def set_del_descriptor_enabled(self, state):
 		
 		self.del_descriptor_button.setEnabled(state)
+	
+	def set_del_class_enabled(self, state):
+		
+		self.del_class_button.setEnabled(state)
 
