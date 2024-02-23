@@ -11,6 +11,7 @@ from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 from PySide2 import (QtCore)
 from collections import defaultdict
 from natsort import natsorted
+import sys
 
 class DCModel(AbstractSubcontroller):
 	
@@ -191,12 +192,16 @@ class DCModel(AbstractSubcontroller):
 			return
 		classes = set(self.get_class_names())
 		descriptors = set(self.get_descriptor_names())
-		expr, bracketed_selects = remove_bracketed_selects(
-			expr, classes, descriptors
-		)
-		expr, vars = extract_expr_vars(
-			expr.strip(), classes, descriptors, bracketed_selects
-		)
+		try:
+			expr, bracketed_selects = remove_bracketed_selects(
+				expr, classes, descriptors
+			)
+			expr, vars = extract_expr_vars(
+				expr.strip(), classes, descriptors, bracketed_selects
+			)
+		except:
+			self.on_error("Error Parsing Expression: \"%s\"" % (expr))
+			return
 		for obj_id in rows:
 			obj = self.get_object(obj_id)
 			values = dict(
@@ -206,7 +211,22 @@ class DCModel(AbstractSubcontroller):
 			)
 			for name in vars:
 				values[name] = rows[obj_id].get(vars[name], None)
-			value = eval(expr, values)
+			value = None
+			failed = False
+			try:
+				value = eval(expr, values)
+			except:
+				_, exc_value, _ = sys.exc_info()
+				failed = True
+			
+			if failed:
+				self.on_error(
+					'''Error Calculating Expression: "%s"\n
+					at Object %d:
+					%s''' % (expr, obj_id, str(exc_value))
+				)
+				return
+			
 			if value is not None:
 				obj.set_descriptor(target, value)
 	
@@ -284,9 +304,26 @@ class DCModel(AbstractSubcontroller):
 		
 		return self._model.add_object()
 	
+	def add_object_with_descriptors(self, cls, data, locations = {}, obj = None):
+		# cls = DClass or None
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		
+		return self._model.add_object_with_descriptors(cls, data, locations, obj)
+	
 	def get_object(self, obj_id):
 		
 		return self._model.get_object(obj_id)
+	
+	def find_object_with_descriptors(self, classes, data, locations = {}):
+		# classes = [DClass, None, ...]
+		# data = {descriptor_name: value, ...}
+		# locations = {descriptor_name: location, ...}
+		#
+		# if found object has missing location, it is updated if a location is
+		# supplied via locations
+		
+		return self._model.find_object_with_descriptors(classes, data, locations)
 	
 	def del_object(self, obj_id):
 		

@@ -280,7 +280,7 @@ class Node(AbstractNode):
 	
 class NodeWithAttributes(AbstractNode):
 	
-	def __init__(self, node_id, label = "", descriptors = [], font_family = "Calibri", font_size = 14, max_width = 256):
+	def __init__(self, node_id, label = "", descriptors = [], font_family = "Calibri", font_size = 14, max_width = 512):
 		# descriptors = [(name, value), ...]
 		
 		AbstractNode.__init__(self, node_id, label, font_family, font_size)

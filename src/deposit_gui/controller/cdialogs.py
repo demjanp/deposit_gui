@@ -313,7 +313,6 @@ class CDialogs(DCDialogs):
 			"Remove the following class%s?" % ("es" if (len(names) > 1) else "")
 		))
 		frame.layout().addWidget(QtWidgets.QLabel("<b>%s</b>" % ", ".join(names)))
-		caption = ""
 		frame.superclasses = set()
 		for cls in classes:
 			frame.superclasses.update(set(cls.get_superclasses()))
@@ -436,13 +435,76 @@ class CDialogs(DCDialogs):
 			"Remove the following object%s?" % ("s" if (len(objects) > 1) else "")
 		))
 		frame.layout().addWidget(QtWidgets.QLabel("<b>%s</b>" % ", ".join(sorted([str(obj.id) for obj in objects]))))
-		caption = ""
-		
+				
 		dialog.set_frame(frame)
 	
 	def process_DelObjects(self, dialog, objects):
 		
 		self.cmain.cmodel.del_objects(objects)
+	
+	
+	def set_up_AddClassToObjects(self, dialog, objects):
+		
+		dialog.set_title("Add to Class")
+		dialog.set_button_box(True, True)
+		dialog.setModal(True)
+		
+		
+		classes = self.cmain.cmodel.get_class_names(ordered = True)
+		descriptors = self.cmain.cmodel.get_descriptor_names()
+		classes = [name for name in classes if name not in descriptors]
+		
+		frame = QtWidgets.QFrame()
+		frame.setMinimumWidth(300)
+		frame.setLayout(QtWidgets.QVBoxLayout())
+		
+		frame.class_combo = QtWidgets.QComboBox()
+		frame.class_combo.addItems([""] + classes)
+		frame.class_combo.setEditable(True)
+		
+		frame.layout().addWidget(QtWidgets.QLabel(
+			"Add Object%s to Class:" % "s" if (len(objects) > 1) else "",
+		))
+		frame.layout().addWidget(frame.class_combo)
+				
+		dialog.set_frame(frame)
+	
+	def process_AddClassToObjects(self, dialog, objects):
+		
+		frame = dialog.get_frame()
+		name = frame.class_combo.currentText().strip()
+		if not name:
+			return
+		cls = self.cmain.cmodel.add_class(name)
+		
+		for obj in objects:
+			cls.add_member(obj)
+	
+	
+	def set_up_DelClassFromObjects(self, dialog, cls, objects):
+		
+		dialog.set_title("Remove from Class")
+		dialog.set_button_box(True, True)
+		dialog.setModal(True)
+		
+		frame = QtWidgets.QFrame()
+		frame.setMinimumWidth(300)
+		frame.setLayout(QtWidgets.QVBoxLayout())
+		
+		frame.layout().addWidget(QtWidgets.QLabel(
+			"Remove the following object%s from Class %s?" % (
+				"s" if (len(objects) > 1) else "",
+				cls.name
+			)
+		))
+		frame.layout().addWidget(QtWidgets.QLabel("<b>%s</b>" % ", ".join(sorted([str(obj.id) for obj in objects]))))
+		
+		dialog.set_frame(frame)
+	
+	def process_DelClassFromObjects(self, dialog, cls, objects):
+		
+		for obj in objects:
+			cls.del_member(obj)
 	
 	
 	def set_up_AddRelation(self, dialog, elements, label):
