@@ -1,5 +1,5 @@
 from deposit_gui.dgui.dgraphics_view import DGraphicsView
-from deposit_gui.dgui import pygraphviz
+import pygraphviz
 
 from PySide2 import (QtWidgets, QtCore, QtGui, QtPrintSupport)
 from collections import defaultdict
