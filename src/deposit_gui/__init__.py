@@ -1,8 +1,8 @@
-version_info = (1, 4, 40)
+version_info = (1, 4, 41)
 
 __version__ = '.'.join(map(str, version_info))
 __title__ = 'Deposit'
-__date__ = "21.2.2024"
+__date__ = "28.2.2024"
 
 from deposit_gui.dgui_main import DGUIMain
 
