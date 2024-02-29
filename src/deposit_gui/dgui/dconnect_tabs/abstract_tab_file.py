@@ -19,20 +19,21 @@ class AbstractTabFile(QtWidgets.QFrame):
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		homedir = self.parent.get_recent_dir()
+		rootdir, _ = os.path.splitdrive(homedir)
+		if not rootdir:
+			rootdir = homedir
 		
 		self.fs_model = QtWidgets.QFileSystemModel()
-		self.fs_model.setRootPath(homedir)
+		self.fs_model.setRootPath(rootdir)
 		self.fs_model.setNameFilters(["*.%s" % self.EXTENSION])
 		self.fs_model.setNameFilterDisables(False)
 		self.tree = FileTree()
 		self.tree.setModel(self.fs_model)
-		for i in range(1, self.fs_model.columnCount()):
-			self.tree.hideColumn(i)
-		self.tree.setCurrentIndex(self.fs_model.index(homedir))
-		self.tree.setExpanded(self.fs_model.index(homedir), True)
+		self.set_current_dir(homedir)
 		self.tree.setAnimated(False)
 		self.tree.setIndentation(20)
 		self.tree.setSortingEnabled(True)
+		self.tree.sortByColumn(0, QtCore.Qt.AscendingOrder)
 		self.tree.selected.connect(self.on_selected)
 		self.tree.activated.connect(self.on_connect)
 		
@@ -47,7 +48,14 @@ class AbstractTabFile(QtWidgets.QFrame):
 		self.layout().addWidget(self.connect_button)
 		
 		self.update()
-
+	
+	def set_current_dir(self, path):
+		
+		for i in range(1, self.fs_model.columnCount()):
+			self.tree.hideColumn(i)
+		self.tree.setCurrentIndex(self.fs_model.index(path))
+		self.tree.setExpanded(self.fs_model.index(path), True)
+	
 	def get_path(self):
 		
 		path = self.path_edit.text().strip()

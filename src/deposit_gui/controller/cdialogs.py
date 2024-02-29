@@ -110,8 +110,10 @@ class CDialogs(DCDialogs):
 	def process_ImportStoreSource(self, dialog):
 		
 		self.cmain.cview.progress.show("Loading")
+		kwargs = dialog.get_data()
 		store = Store(keep_temp = True)
-		store.load(progress = self.cmain.cview.progress, **dialog.get_data())
+		store.load(progress = self.cmain.cview.progress, **kwargs)
+		self.cmain.cmodel.update_recent(kwargs)
 		self.cmain.cview.progress.stop()
 		if not store.get_objects():
 			return

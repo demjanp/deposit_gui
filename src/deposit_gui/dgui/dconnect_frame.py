@@ -55,6 +55,8 @@ class DConnectFrame(QtWidgets.QFrame):
 	def set_recent_dir(self, path):
 		
 		self._recent_dir = path
+		self._tab_pickle.set_current_dir(self._recent_dir)
+		self._tab_json.set_current_dir(self._recent_dir)
 	
 	def get_recent_dir(self):
 		
