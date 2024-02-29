@@ -1355,10 +1355,18 @@ class AGraph:
             raise ValueError(f"Program {prog} is not one of: {', '.join(progs)}.")
 		
         # MODIFIED by Deposit GUI
-        path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz", prog + ".exe")))
-        if not os.path.isfile(path):
-            raise ValueError(f"Program {prog} not found in path.")
-        return path
+        if sys.platform == "win32":
+            path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz", prog + ".exe")))
+        elif sys.platform == "linux":
+            print("Program sa vykonáva na Linux systéme.")
+        elif sys.platform == "darwin":
+            try:  # user must pick one of the graphviz programs...
+                path = self._which(prog)
+            except:
+                raise ValueError(f"Program {prog} not found in path.")
+        else:
+            print("Program sa vykonáva na inom operačnom systéme.")
+
 
     def _run_prog(self, prog="nop", args=""):
         """Apply graphviz program to graph and return the result as a string.

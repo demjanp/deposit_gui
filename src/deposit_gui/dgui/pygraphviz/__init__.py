@@ -10,10 +10,18 @@ See pygraphviz.AGraph for detailed documentation.
 
 import deposit_gui.dgui
 import os
-#import sys
+import sys
 
-path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz")))
-os.add_dll_directory(path)
+if sys.platform == "win32":
+    path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz")))
+    os.add_dll_directory(path)
+elif sys.platform == "linux":
+    print("Program sa vykonáva na Linux systéme.")
+elif sys.platform == "darwin":
+    print("Program sa vykonáva na macOS systéme.")
+else:
+    print("Program sa vykonáva na inom operačnom systéme.")
+
 
 __version__ = "1.9"
 
