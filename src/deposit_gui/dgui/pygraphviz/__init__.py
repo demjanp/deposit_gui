@@ -12,15 +12,17 @@ import deposit_gui.dgui
 import os
 import sys
 
+# MODIFIED by Deposit GUI
+
 if sys.platform == "win32":
     path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz")))
     os.add_dll_directory(path)
 elif sys.platform == "linux":
-    print("Program sa vykonáva na Linux systéme.")
+    print("Running on Linux")
 elif sys.platform == "darwin":
-    print("Program sa vykonáva na macOS systéme.")
+    print("Running on macOS.")
 else:
-    print("Program sa vykonáva na inom operačnom systéme.")
+    print("Running on other OS.")
 
 
 __version__ = "1.9"
