@@ -152,6 +152,12 @@ class DCModel(AbstractSubcontroller):
 		
 		return self._model.get_updated_url(resource)
 	
+	def update_recent(self, kwargs):
+		# re-implement
+		# kwargs = dict(identifier, connstr, url, datasource)
+		
+		pass
+	
 	def get_query(self, querystr, silent = False):
 		
 		if (not silent) and (self._progress is not None):

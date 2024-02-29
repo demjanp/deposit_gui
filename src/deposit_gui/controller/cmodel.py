@@ -2,7 +2,7 @@ from deposit_gui.dgui.dcmodel import DCModel
 
 from deposit.datasource import AbstractDatasource
 
-from deposit.utils.fnc_files import (as_url)
+from deposit.utils.fnc_files import (as_url, is_local_url, url_to_path)
 
 from PySide2 import (QtCore)
 
@@ -130,6 +130,9 @@ class CModel(DCModel):
 			identifier = kwargs.get("identifier", None),
 			connstr = kwargs.get("connstr", None),
 		)
+		if is_local_url(url):
+			path = url_to_path(url)
+			self.cmain.cview.set_recent_dir(path)
 	
 	def load(self, *args, **kwargs):
 		# datasource = Datasource or format
