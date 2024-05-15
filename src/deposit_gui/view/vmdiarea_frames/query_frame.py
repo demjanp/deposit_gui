@@ -150,7 +150,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		if isinstance(self.tab_graph, QueryTabGraph):
 			return
-		self.tab_graph = QueryTabGraph(self, set([self._cmodel.get_object(obj_id) for obj_id in self.tab_table.get_obj_ids()]))
+		self.tab_graph = QueryTabGraph(self)
 		self.tabs.blockSignals(True)
 		self.tabs.insertTab(2, self.tab_graph, "Graph")
 		self.tabs.removeTab(3)
@@ -173,7 +173,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	def get_item(self, row, col):
 		# pass to deposit.AbstractExternalsource to provide data from QueryTabTable
 		
-		return self.tab_table._table_model.index(row, col).data(QtCore.Qt.UserRole)
+		return self.tab_table.get_item(row, col)
 	
 	def get_row_count(self):
 		
@@ -183,6 +183,24 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		return self.tab_table.get_column_count()
 	
+	def get_object(self, obj_id):
+		
+		return self._cmodel.get_object(obj_id)
+	
+	def get_data(self):
+		# returns data = {obj_id: {(class, descriptor): value, ...}, ...}
+		
+		data = {}
+		for row in range(self.get_row_count()):
+			obj_id = self.get_item(row, 0).obj_id_row
+			if obj_id is None:
+				continue
+			data[obj_id] = {}
+			for col in range(self.get_column_count()):
+				item = self.get_item(row, col)
+				data[obj_id][(item.class_name, item.descriptor_name)] = item.value
+		return data
+		
 	@QtCore.Slot(int)
 	def on_tab_changed(self, index):
 		
@@ -211,7 +229,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		if isinstance(self.tab_images, QueryTabImages):
 			self.tab_images.apply_filter(self.tab_table.get_item_order())
 		if isinstance(self.tab_graph, QueryTabGraph):
-			self.tab_graph.apply_filter(set([self._cmodel.get_object(obj_id) for obj_id in self.tab_table.get_obj_ids()]))
+			self.tab_graph.apply_filter()
 		self.update_count()
 	
 	@QtCore.Slot()

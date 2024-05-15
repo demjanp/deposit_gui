@@ -363,21 +363,13 @@ class CActions(DCActions):
 		frame = self.cmain.cmdiarea.get_current_frame()
 		if not isinstance(frame, QueryFrame):
 			return
-		rows = {}
-		for row in range(frame.get_row_count()):
-			obj_id = frame.get_item(row, 0).obj_id_row
-			if obj_id is None:
-				continue
-			rows[obj_id] = {}
-			for col in range(frame.get_column_count()):
-				item = frame.get_item(row, col)
-				rows[obj_id][(item.class_name, item.descriptor_name)] = item.value
+		data = frame.get_data()
 		descriptor_name = None
 		items = self.cmain.get_selected_queryitems()
 		if items:
 			descriptor_name = list(items)[0].descriptor_name
-		if rows:
-			self.cmain.cdialogs.open("FieldCalculator", rows, descriptor_name)
+		if data:
+			self.cmain.cdialogs.open("FieldCalculator", data, descriptor_name)
 	
 	
 	def update_MergeRows(self):

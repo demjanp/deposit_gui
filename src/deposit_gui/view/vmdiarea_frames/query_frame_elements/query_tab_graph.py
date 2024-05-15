@@ -25,7 +25,7 @@ class QueryTabGraphLazy(AbstractQueryTab, QtWidgets.QWidget):
 	
 class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 	
-	def __init__(self, queryframe, objects):
+	def __init__(self, queryframe):
 		
 		QtWidgets.QMainWindow.__init__(self)
 		
@@ -35,7 +35,6 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 		self._actions = {} # {name: QAction, ...}
 		self._positions = {}  # {node_id: (x, y), ...}
 		self._show_attributes = 1  # 0 = show nodes only; 1 = show descriptor values; 2 = show descriptor names and values
-		self._objects = objects
 		
 		self._graph_view = DGraphView()
 		self._graph_view.signal_node_activated.connect(self.on_activated)
@@ -88,19 +87,20 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 		
 		self._graph_view.clear()
 		
-		if self._objects is None:
+		data = self._queryframe.get_data()
+		if data is None:
 			return
 		
 		self._queryframe._cview.progress.show("Drawing Tree")
 		
 		nodes = []  # [AbstractNode, ...]
 		edges = []  # [[source_id, target_id, label], ...]
-		for obj in self._objects:
-			
+		
+		for obj_id in data:
 			descriptors = []
 			if self._show_attributes > 0:
-				for descr in obj.get_descriptors():
-					value = obj.get_descriptor(descr)
+				for cls_name, descr_name in data[obj_id]:
+					value = data[obj_id][(cls_name, descr_name)]
 					if value.__class__.__name__ == "DDateTime":
 						value = value.isoformat
 					elif value.__class__.__name__ == "DGeometry":
@@ -109,28 +109,28 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 						value = value.filename
 					else:
 						value = str(value)
-					descriptors.append([descr.name, value])
+					descriptors.append([".".join([cls_name, descr_name]), value])
 			
 			if self._show_attributes == 0:
-				nodes.append(Node(obj.id, str(obj.id)))
+				nodes.append(Node(obj_id, str(obj_id)))
 			elif self._show_attributes == 1:
-				nodes.append(NodeWithSimpleAttributes(obj.id, str(obj.id), descriptors))
+				nodes.append(NodeWithSimpleAttributes(obj_id, str(obj_id), descriptors))
 			elif self._show_attributes == 2:
-				nodes.append(NodeWithAttributes(obj.id, str(obj.id), descriptors))
+				nodes.append(NodeWithAttributes(obj_id, str(obj_id), descriptors))
 			
+			obj = self._queryframe.get_object(obj_id)
 			for obj_tgt, label in obj.get_relations():
 				if label.startswith("~"):
 					continue
-				if obj_tgt in self._objects:
-					edges.append([obj.id, obj_tgt.id, label])
+				if obj_tgt.id in data:
+					edges.append([obj_id, obj_tgt.id, label])
 		
 		self._graph_view.populate(nodes = nodes, edges = edges, positions = self._positions, progress = self._queryframe._cview.progress)
 		
 		self._queryframe._cview.progress.stop()
 	
-	def apply_filter(self, objects):
+	def apply_filter(self):
 		
-		self._objects = objects
 		if self.isVisible():
 			self.populate_graph()
 	
