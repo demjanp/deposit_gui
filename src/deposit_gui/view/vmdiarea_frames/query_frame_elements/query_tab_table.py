@@ -234,6 +234,11 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 				self.selectRow(row)
 				return
 	
+	def get_item(self, row, col):
+		
+		index = self._table_model._proxy_model.index(row, col)
+		return self._table_model._proxy_model.mapToSource(index).data(QtCore.Qt.UserRole)
+	
 	def set_query_item(self, row, column, value):
 		
 		self._table_model._proxy_model.setData(self._table_model._proxy_model.index(row, column), value)

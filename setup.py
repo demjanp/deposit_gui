@@ -6,6 +6,17 @@ from setuptools import setup, find_packages
 
 import pathlib
 
+import ast
+import os
+
+def get_version():
+	with open(os.path.join(os.path.dirname(__file__), 'src', 'deposit_gui', '__init__.py')) as f:
+		tree = ast.parse(f.read())
+		for node in tree.body:
+			if isinstance(node, ast.Assign):
+				if node.targets[0].id == 'version_info':
+					return '.'.join(map(str, ast.literal_eval(node.value)))
+
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
     class bdist_wheel(_bdist_wheel):
@@ -21,7 +32,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="deposit_gui",
-    version="1.4.44",
+    version=get_version(),
     description="GUI for Deposit: Graph database focused on scientific data collection",
     long_description=long_description,
     long_description_content_type="text/markdown",
