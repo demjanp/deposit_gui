@@ -136,7 +136,7 @@ class CMDIArea(AbstractSubcontroller):
 	@QtCore.Slot(int, str, str)
 	def on_relation_link(self, obj_id, label, name_tgt):
 		
-		self.add_query("SELECT [%s].*, OBJ(%d).* RELATED OBJ(%d).[%s].[%s]" % (name_tgt, obj_id, obj_id, label, name_tgt))
+		self.add_query("SELECT [%s].* WHERE RELATED(OBJ(%d), [%s], '%s')" % (name_tgt, obj_id, name_tgt, label))
 	
 	@QtCore.Slot(int, str, str)
 	def on_relation_unlink(self, obj_id, label, name_tgt):
