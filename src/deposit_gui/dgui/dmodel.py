@@ -104,6 +104,11 @@ class DModel(QtCore.QObject):
 		
 		self.signal_store_error.emit(message)
 	
+	def blockSignals(self, state):
+		
+		QtCore.QObject.blockSignals(self, state)
+		self._store.set_callbacks_paused(state)
+	
 	
 	# ---- General
 	# ------------------------------------------------------------------------

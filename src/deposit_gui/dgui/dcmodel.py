@@ -445,6 +445,7 @@ class DCModel(AbstractSubcontroller):
 		#
 		# returns number of imported Objects
 		
+		self._model.blockSignals(True)
 		n_added = 0
 		for row in range(n_rows):
 			data_row = {}  # {(Class name, Descriptor name): value, ...}
@@ -455,6 +456,8 @@ class DCModel(AbstractSubcontroller):
 				data_row[targets[col]] = value
 			if data_row:
 				n_added += self._model.add_data_row(data_row, relations, unique)
+		self._model.blockSignals(False)
+		self.on_changed(self._model.get_objects(), self._model.get_classes())
 		return n_added
 	
 	def import_store(self, store, unique = set()):
