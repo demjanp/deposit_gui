@@ -199,6 +199,7 @@ class DModel(QtCore.QObject):
 		unique: set = set(), 
 		existing = {}, 
 		return_added = False,
+		exact_match = False,
 	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
@@ -208,18 +209,22 @@ class DModel(QtCore.QObject):
 		#	specified here, otherwise re-use objects with identical descriptors
 		# existing = {Class name: Object, ...}
 		#	use existing object for specified classes (i.e. just update descriptors)
+		# exact_match = True/False
+		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns n_added or (n_added, added) if return_added == True
 		#	added = {Class name: Object, ...}
 		
-		return self._store.add_data_row(data, relations, unique, existing, return_added)
+		return self._store.add_data_row(data, relations, unique, existing, return_added, exact_match)
 	
-	def import_store(self, store, unique = set(), progress = None):
+	def import_store(self, store, unique=set(), exact_match=False, progress=None):
 		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
+		# exact_match = True/False
+		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		# progress = DProgress
 		
-		self._store.import_store(store, unique, progress)
+		self._store.import_store(store, unique, exact_match, progress)
 	
 	
 	# ---- Read
@@ -237,15 +242,32 @@ class DModel(QtCore.QObject):
 		
 		return self._store.get_object_ids()
 	
-	def find_object_with_descriptors(self, classes, data, locations = {}):
-		# classes = [DClass, None, ...]
-		# data = {descriptor_name: value, ...}
-		# locations = {descriptor_name: location, ...}
-		#
-		# if found object has missing location, it is updated if a location is
-		# supplied via locations
+	def find_object_with_descriptors(self, classes, data, locations = {}, related_data={}):
+		"""
+		Finds an object that meets specified criteria within given classes, descriptors,
+		locations, and related objects.
+
+		Parameters:
+		-----------
+		classes : [DClass, None, ...]
+			A list of class objects to search within. Use `None` to include all objects
+			with any class.
+		data : {descriptor_name: value, ...}
+			A dictionary mapping descriptor names to their required values for the search.
+		locations : {descriptor_name: location, ...}, optional
+			A dictionary specifying the locations for each descriptor.
+		related_data : {(class_name_1, label, class_name_2, descriptor_name): value, ...}, optional
+			A dictionary defining the relationships to other objects that must be checked.
+			Specifies which class, descriptor, and label are required in the related objects.
+
+		Returns:
+		--------
+		object or None
+			The first object that meets all specified criteria. Returns `None` if no such
+			object is found.
+		"""
 		
-		return self._store.find_object_with_descriptors(classes, data, locations)
+		return self._store.find_object_with_descriptors(classes, data, locations, related_data)
 	
 	def get_class(self, name):
 		

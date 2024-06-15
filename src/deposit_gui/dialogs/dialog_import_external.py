@@ -42,8 +42,11 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 			self._checkboxes[-1]._name = name
 			grid.layout().addWidget(QtWidgets.QLabel(name), idx + 3, 0)
 			grid.layout().addWidget(self._checkboxes[-1], idx + 3, 1)
-		grid.layout().addWidget(QtWidgets.QLabel(), idx + 4, 0)
-		grid.layout().addWidget(QtWidgets.QLabel("<b>Relations:</b>"), idx + 5, 0)
+		self._exact_match = QtWidgets.QCheckBox("Exact Match")
+		self._exact_match.setToolTip("If checked, match also empty Descriptors, otherwise add them.")
+		grid.layout().addWidget(self._exact_match, idx + 4, 0)
+		grid.layout().addWidget(QtWidgets.QLabel(), idx + 5, 0)
+		grid.layout().addWidget(QtWidgets.QLabel("<b>Relations:</b>"), idx + 6, 0)
 		
 		self.form = QtWidgets.QFrame()
 		self.form.setLayout(QtWidgets.QGridLayout())
@@ -144,7 +147,12 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 			if label and (src in self._classes) and (tgt in self._classes):
 				relations.add((src, label, tgt))
 		return relations
-
+	
+	def get_exact_match(self):
+		
+		if self._exact_match.isChecked():
+			return True
+		return False
 
 
 class RemoveButton(QtWidgets.QToolButton):

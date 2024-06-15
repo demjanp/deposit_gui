@@ -33,6 +33,9 @@ class DialogImportStore(QtWidgets.QFrame):
 			self._checkboxes[-1].setChecked(True)
 			grid.layout().addWidget(QtWidgets.QLabel(name), idx + 3, 0)
 			grid.layout().addWidget(self._checkboxes[-1], idx + 3, 1)
+		self._exact_match = QtWidgets.QCheckBox("Exact Match")
+		self._exact_match.setToolTip("If checked, match also empty Descriptors, otherwise add them.")
+		grid.layout().addWidget(self._exact_match, idx + 4, 0)
 	
 	def get_unique(self):
 		
@@ -41,5 +44,11 @@ class DialogImportStore(QtWidgets.QFrame):
 			if checkbox.isChecked():
 				unique.add(checkbox._name)
 		return unique
+	
+	def get_exact_match(self):
+		
+		if self._exact_match.isChecked():
+			return True
+		return False
 
 
