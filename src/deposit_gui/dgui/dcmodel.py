@@ -321,15 +321,32 @@ class DCModel(AbstractSubcontroller):
 		
 		return self._model.get_object(obj_id)
 	
-	def find_object_with_descriptors(self, classes, data, locations = {}):
-		# classes = [DClass, None, ...]
-		# data = {descriptor_name: value, ...}
-		# locations = {descriptor_name: location, ...}
-		#
-		# if found object has missing location, it is updated if a location is
-		# supplied via locations
+	def find_object_with_descriptors(self, classes, data, locations = {}, related_data={}):
+		"""
+		Finds an object that meets specified criteria within given classes, descriptors,
+		locations, and related objects.
+
+		Parameters:
+		-----------
+		classes : [DClass, None, ...]
+			A list of class objects to search within. Use `None` to include all objects
+			with any class.
+		data : {descriptor_name: value, ...}
+			A dictionary mapping descriptor names to their required values for the search.
+		locations : {descriptor_name: location, ...}, optional
+			A dictionary specifying the locations for each descriptor.
+		related_data : {(class_name_1, label, class_name_2, descriptor_name): value, ...}, optional
+			A dictionary defining the relationships to other objects that must be checked.
+			Specifies which class, descriptor, and label are required in the related objects.
+
+		Returns:
+		--------
+		object or None
+			The first object that meets all specified criteria. Returns `None` if no such
+			object is found.
+		"""
 		
-		return self._model.find_object_with_descriptors(classes, data, locations)
+		return self._model.find_object_with_descriptors(classes, data, locations, related_data)
 	
 	def del_object(self, obj_id):
 		
@@ -420,6 +437,7 @@ class DCModel(AbstractSubcontroller):
 		unique: set = set(), 
 		existing = {}, 
 		return_added = False,
+		exact_match = False,
 	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
@@ -429,19 +447,23 @@ class DCModel(AbstractSubcontroller):
 		#	specified here, otherwise re-use objects with identical descriptors
 		# existing = {Class name: Object, ...}
 		#	use existing object for specified classes (i.e. just update descriptors)
+		# exact_match = True/False
+		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns n_added or (n_added, added) if return_added == True
 		#	added = {Class name: Object, ...}
 		
 		return self._model.add_data_row(
-			data, relations, unique, existing, return_added
+			data, relations, unique, existing, return_added, exact_match
 		)
 	
-	def import_data(self, get_data, n_rows, targets, relations, unique):
+	def import_data(self, get_data, n_rows, targets, relations, unique, exact_match):
 		# get_data(row, col) = value
 		# targets = {col: (class_name, descriptor_name), ...}
 		# relations = {(Class name 1, label, Class name 2), ...}
 		# unique = {Class, ...}
+		# exact_match = True/False
+		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns number of imported Objects
 		
@@ -452,22 +474,23 @@ class DCModel(AbstractSubcontroller):
 			for col in targets:
 				value = try_numeric(get_data(row, col))
 				if (value is None) or (value == ""):
-					continue
+					value = None
 				data_row[targets[col]] = value
 			if data_row:
-				n_added += self._model.add_data_row(data_row, relations, unique)
+				n_added += self._model.add_data_row(data_row, relations, unique, exact_match=exact_match)
 		self._model.blockSignals(False)
 		self.on_changed(self._model.get_objects(), self._model.get_classes())
 		return n_added
 	
-	def import_store(self, store, unique = set()):
+	def import_store(self, store, unique = set(), exact_match = False):
 		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
-		# progress = DProgress
+		# exact_match = True/False
+		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		
 		self._model.blockSignals(True)
 		self._model.import_store(
-			store, unique, progress = self._progress
+			store, unique, exact_match, progress = self._progress
 		)
 		self._model.blockSignals(False)
 		self.on_changed(self._model.get_objects(), self._model.get_classes())
