@@ -78,7 +78,6 @@ class DialogGroup(QtWidgets.QGroupBox):
 			row = [label, data]
 			if row not in rows:
 				rows.append(row)
-		
 		rows = natsorted(rows, key = lambda row: row[0])
 		index = 0
 		for label, data in rows:
