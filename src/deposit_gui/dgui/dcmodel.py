@@ -437,7 +437,7 @@ class DCModel(AbstractSubcontroller):
 		unique: set = set(), 
 		existing = {}, 
 		return_added = False,
-		exact_match = False,
+		match_empty = False,
 	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
@@ -447,22 +447,22 @@ class DCModel(AbstractSubcontroller):
 		#	specified here, otherwise re-use objects with identical descriptors
 		# existing = {Class name: Object, ...}
 		#	use existing object for specified classes (i.e. just update descriptors)
-		# exact_match = True/False
+		# match_empty = True/False
 		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns n_added or (n_added, added) if return_added == True
 		#	added = {Class name: Object, ...}
 		
 		return self._model.add_data_row(
-			data, relations, unique, existing, return_added, exact_match
+			data, relations, unique, existing, return_added, match_empty
 		)
 	
-	def import_data(self, get_data, n_rows, targets, relations, unique, exact_match):
+	def import_data(self, get_data, n_rows, targets, relations, unique, match_empty):
 		# get_data(row, col) = value
 		# targets = {col: (class_name, descriptor_name), ...}
 		# relations = {(Class name 1, label, Class name 2), ...}
 		# unique = {Class, ...}
-		# exact_match = True/False
+		# match_empty = True/False
 		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns number of imported Objects
@@ -477,20 +477,20 @@ class DCModel(AbstractSubcontroller):
 					value = None
 				data_row[targets[col]] = value
 			if data_row:
-				n_added += self._model.add_data_row(data_row, relations, unique, exact_match=exact_match)
+				n_added += self._model.add_data_row(data_row, relations, unique, match_empty=match_empty)
 		self._model.blockSignals(False)
 		self.on_changed(self._model.get_objects(), self._model.get_classes())
 		return n_added
 	
-	def import_store(self, store, unique = set(), exact_match = False):
+	def import_store(self, store, unique = set(), match_empty = False):
 		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
-		# exact_match = True/False
+		# match_empty = True/False
 		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		
 		self._model.blockSignals(True)
 		self._model.import_store(
-			store, unique, exact_match, progress = self._progress
+			store, unique, match_empty, progress = self._progress
 		)
 		self._model.blockSignals(False)
 		self.on_changed(self._model.get_objects(), self._model.get_classes())

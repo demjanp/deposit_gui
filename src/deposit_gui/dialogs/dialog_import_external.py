@@ -42,9 +42,9 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 			self._checkboxes[-1]._name = name
 			grid.layout().addWidget(QtWidgets.QLabel(name), idx + 3, 0)
 			grid.layout().addWidget(self._checkboxes[-1], idx + 3, 1)
-		self._exact_match = QtWidgets.QCheckBox("Exact Match")
-		self._exact_match.setToolTip("If checked, match also empty Descriptors, otherwise add them.")
-		grid.layout().addWidget(self._exact_match, idx + 4, 0)
+		self._match_empty = QtWidgets.QCheckBox("Match Empty Descriptors")
+		self._match_empty.setToolTip("If checked, match also empty Descriptors, otherwise add them.")
+		grid.layout().addWidget(self._match_empty, idx + 4, 0)
 		grid.layout().addWidget(QtWidgets.QLabel(), idx + 5, 0)
 		grid.layout().addWidget(QtWidgets.QLabel("<b>Relations:</b>"), idx + 6, 0)
 		
@@ -148,9 +148,9 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 				relations.add((src, label, tgt))
 		return relations
 	
-	def get_exact_match(self):
+	def get_match_empty(self):
 		
-		if self._exact_match.isChecked():
+		if self._match_empty.isChecked():
 			return True
 		return False
 

@@ -199,7 +199,7 @@ class DModel(QtCore.QObject):
 		unique: set = set(), 
 		existing = {}, 
 		return_added = False,
-		exact_match = False,
+		match_empty = False,
 	):
 		# add multiple objects with classes at once & automatically add relations 
 		#	based on class relations or as specified in the relations attribute
@@ -209,22 +209,22 @@ class DModel(QtCore.QObject):
 		#	specified here, otherwise re-use objects with identical descriptors
 		# existing = {Class name: Object, ...}
 		#	use existing object for specified classes (i.e. just update descriptors)
-		# exact_match = True/False
+		# match_empty = True/False
 		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		#
 		# returns n_added or (n_added, added) if return_added == True
 		#	added = {Class name: Object, ...}
 		
-		return self._store.add_data_row(data, relations, unique, existing, return_added, exact_match)
+		return self._store.add_data_row(data, relations, unique, existing, return_added, match_empty)
 	
-	def import_store(self, store, unique=set(), exact_match=False, progress=None):
+	def import_store(self, store, unique=set(), match_empty=False, progress=None):
 		# unique = {Class name, ...}; always add a new object to classes 
 		#	specified here, otherwise re-use objects with identical descriptors
-		# exact_match = True/False
+		# match_empty = True/False
 		#   If True, check missing locations and descriptors. If False, add missing locations and descriptors
 		# progress = DProgress
 		
-		self._store.import_store(store, unique, exact_match, progress)
+		self._store.import_store(store, unique, match_empty, progress)
 	
 	
 	# ---- Read
