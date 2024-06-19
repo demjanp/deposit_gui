@@ -9,6 +9,7 @@ from deposit_gui.controller.cusertools import CUserTools
 
 
 from deposit import Store
+from deposit.store.dclass import DClass
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 import sys
@@ -60,6 +61,7 @@ class Controller(QtCore.QObject):
 	@QtCore.Slot(list)
 	def on_class_selected(self, classes):
 		
+		classes = set([cls for cls in classes if isinstance(cls, DClass)])
 		self._selected_queryitems = set()
 		self._selected_objects = set()
 		self._selected_classes = set(classes)

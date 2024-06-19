@@ -130,8 +130,8 @@ class CDialogs(DCDialogs):
 	def process_ImportStore(self, dialog, store):
 		
 		unique = dialog.get_frame().get_unique()
-		exact_match = dialog.get_frame().get_exact_match()
-		self.cmain.cmodel.import_store(store, unique, exact_match)
+		match_empty = dialog.get_frame().get_match_empty()
+		self.cmain.cmodel.import_store(store, unique, match_empty)
 	
 	
 	def set_up_ImportExternal(self, dialog, external_frame):
@@ -162,10 +162,10 @@ class CDialogs(DCDialogs):
 		frame = dialog.get_frame()
 		unique = frame.get_unique()
 		relations = frame.get_relations()
-		exact_match = frame.get_exact_match()
+		match_empty = frame.get_match_empty()
 		n_rows = external_frame.get_row_count()
 		targets = external_frame.get_targets()
-		n_imported = self.cmain.cmodel.import_data(external_frame.get_data, n_rows, targets, relations, unique, exact_match)
+		n_imported = self.cmain.cmodel.import_data(external_frame.get_data, n_rows, targets, relations, unique, match_empty)
 		self.cmain.cview.show_information("Import Successful", "Imported %d Objects" % (n_imported))
 	
 	

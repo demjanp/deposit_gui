@@ -68,7 +68,7 @@ setup(
 	]},
     python_requires=">=3.10, <4",
 	install_requires=[
-		'deposit>=1.5.1, <2',
+		'deposit>=1.5.2, <2',
 		'svgelements>=1.8.1, <2',
 	],
 	cmdclass={'bdist_wheel': bdist_wheel},
