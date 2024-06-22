@@ -21,6 +21,7 @@ class DDialog(QtWidgets.QDialog):
 		
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setWindowFlags(self.windowFlags() |  QtCore.Qt.WindowStaysOnTopHint)
 		
 		self.accepted.connect(self.on_accepted)
 		self.rejected.connect(self.on_rejected)
