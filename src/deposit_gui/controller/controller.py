@@ -12,6 +12,7 @@ from deposit import Store
 from deposit.store.dclass import DClass
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
+import subprocess
 import sys
 import os
 
@@ -134,7 +135,6 @@ class Controller(QtCore.QObject):
 		
 		return self._selected_relations
 	
-	
 	def check_save(self):
 		
 		if (not self._is_subwindow) and (not self.cmodel.is_saved()):
@@ -151,15 +151,19 @@ class Controller(QtCore.QObject):
 		
 		return True
 	
-	
 	def open_in_external(self, path):
-		
-		if sys.platform in ["linux", "linux2", "darwin"]:
-			return # TODO		
-		if sys.platform.startswith("win"):
-			if os.path.isfile(path):
+		if os.path.isfile(path):
+			if sys.platform in ["linux", "linux2"]:
+				# Linux
+				subprocess.call(["xdg-open", path])
+			elif sys.platform == "darwin":
+				# macOS
+				subprocess.call(["open", path])
+			elif sys.platform.startswith("win"):
+				# Windows
 				os.startfile(path)
-
+		else:
+			raise FileNotFoundError(f"The file {path} does not exist.")	
 	
 	def close(self):
 		

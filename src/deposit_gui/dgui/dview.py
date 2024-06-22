@@ -9,7 +9,7 @@ from deposit.utils.fnc_serialize import (
 	decrypt_connstr,
 )
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide2 import (QtWidgets, QtCore, QtGui, QtMacExtras)
 import traceback
 import json
 import sys
@@ -44,10 +44,22 @@ class DView(AbstractSubview, DMainWindow):
 	def set_title(self, name: str = None) -> None:
 		
 		title = self.APP_NAME
-		if name is None:
-			self.setWindowTitle(title)
-		else:
-			self.setWindowTitle("%s - %s" % (name, title))
+		
+		if name is not None:
+			title = f"{name} - {title}"
+		
+		app = QtWidgets.QApplication.instance()
+		app.setApplicationName(self.APP_NAME)
+		app.setApplicationDisplayName(self.APP_NAME)
+		self.setWindowTitle(title)
+		
+		if sys.platform == "darwin":
+			from Foundation import NSBundle
+			bundle = NSBundle.mainBundle()
+			if bundle:
+				app_info = bundle.localizedInfoDictionary() or bundle.infoDictionary()
+				if app_info:
+					app_info['CFBundleName'] = self.APP_NAME
 	
 	def set_icon(self, name):
 		

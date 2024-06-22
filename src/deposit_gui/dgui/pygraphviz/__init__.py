@@ -13,16 +13,17 @@ import os
 import sys
 
 # MODIFIED by Deposit GUI
-
 if sys.platform == "win32":
-    path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz")))
+    path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_win")))
     os.add_dll_directory(path)
-elif sys.platform == "linux":
-    print("Running on Linux")
+elif sys.platform in ["linux", "linux2"]:
+    path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_linux")))
+    print("Running on Linux") # TODO implement linux version
 elif sys.platform == "darwin":
-    print("Running on macOS.")
+    path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_macos")))
+    os.environ["DYLD_LIBRARY_PATH"] = f"{path}:{os.environ.get('DYLD_LIBRARY_PATH', '')}"
 else:
-    print("Running on other OS.")
+    raise Exception("Incompatible OS detected")
 
 
 __version__ = "1.9"

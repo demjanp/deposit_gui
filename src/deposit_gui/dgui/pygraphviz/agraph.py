@@ -1357,14 +1357,11 @@ class AGraph:
         # MODIFIED by Deposit GUI
         path = ""
         if sys.platform == "win32":
-            path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz", prog + ".exe")))
-        elif sys.platform == "linux":
-            print("Running on Linux.")
+            path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_win", prog + ".exe")))
+        elif sys.platform in ["linux", "linux2"]:
+            path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_linux", prog)))
         elif sys.platform == "darwin":
-            try:  # user must pick one of the graphviz programs...
-                path = self._which(prog)
-            except:
-                raise ValueError(f"Program {prog} not found in path.")
+            path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "graphviz_macos", prog)))
         else:
             print("Running on other OS.")
         
@@ -1806,23 +1803,8 @@ class AGraph:
             fh = path.open(mode=mode)
         else:
             raise TypeError("path must be a string, path, or file handle.")
-        return fh
-
-    def _which(self, name):
-        """Searches for name in exec path and returns full path"""
-        import glob
-        import platform
-
-        if platform.system() == "Windows":
-            name += ".exe"
-
-        paths = os.environ["PATH"]
-        for path in paths.split(os.pathsep):
-            match = glob.glob(os.path.join(path, name))
-            if match:
-                return match[0]
-        raise ValueError(f"No prog {name} in path.")
-
+        return fh    
+    
     def _update_handle_references(self):
         try:
             self.graph_attr.handle = self.handle

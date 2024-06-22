@@ -17,26 +17,20 @@ class DRegistry(QtCore.QObject):
         self._n_writes = 0
         
         if sys.platform == "win32":
-            # Kód pre Windows
             import winreg
             self.key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\%s" % self.app_name)
             for i in range(winreg.QueryInfoKey(self.key)[1]):
                 var, value, _ = winreg.EnumValue(self.key, i)
                 self._vars[var] = value
-        elif sys.platform == "darwin":
-            # Kód pre macOS
+        elif sys.platform in ["darwin", "linux", "linux2"]:
             self.preferences = QtCore.QSettings("LAP 4")
             self.preferences.beginGroup(self.app_name)
             keys = self.preferences.allKeys()
             for key in keys:
                 self._vars[key] = self.preferences.value(key)
             self.preferences.endGroup()
-        elif sys.platform.startswith("linux"):
-            # Kód pre Linux
-            print("Spustam kód pre Linux")
         else:
-            # Kód pre iné operačné systémy
-            print("Spustam kód pre iný operačný systém")
+            raise Exception("Incompatible OS detected")
 	
     def get(self, var):
         if var not in self._vars:
@@ -58,11 +52,13 @@ class DRegistry(QtCore.QObject):
             import winreg
             for var in self._set_data:
                 winreg.SetValueEx(self.key, var, 0, winreg.REG_SZ, self._set_data[var])
-        elif sys.platform == "darwin":
+        elif sys.platform in ["darwin", "linux", "linux2"]:
             self.preferences.beginGroup(self.app_name)
             for var in self._set_data:
                 self.preferences.setValue(var, self._set_data[var])
             self.preferences.endGroup()
+        else:
+            raise Exception("Incompatible OS detected")
         
         self._set_data = {}
         self._n_writes = 0

@@ -22,7 +22,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-	'deposit>=1.6.0, <2',
+	'deposit>=1.6.2, <2',
 	'svgelements>=1.8.1, <2',
 ]
 

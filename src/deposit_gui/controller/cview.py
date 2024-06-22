@@ -42,9 +42,21 @@ class CView(AbstractSubcontroller):
 	def get_save_path(self, caption, filter):
 		# returns path, format
 		
-		path, format = QtWidgets.QFileDialog.getSaveFileName(self._view, dir = self.get_default_folder(), caption = caption, filter = filter)
+		path, selected_filter = QtWidgets.QFileDialog.getSaveFileName(
+			self._view,
+			dir=self.get_default_folder(),
+			caption=caption,
+			filter=filter
+		)
 		
-		return path, format
+		default_extension = ""
+		if "(*." in selected_filter:
+			default_extension = selected_filter.split("(*.")[-1].split(")")[0]
+		
+		if not path.endswith(f".{default_extension}"):
+			path += f".{default_extension}"
+		
+		return path, selected_filter
 	
 	def get_load_path(self, caption, filter):
 		
