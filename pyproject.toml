@@ -1,3 +1,54 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=66.1.0", "wheel", "setuptools_scm[toml]>=6.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "deposit_gui"
+description = "GUI for Deposit - Graph database for scientific data collection"
+readme = "README.md"
+requires-python = ">=3.10, <4"
+license = {text = "GNU General Public License v3 (GPLv3)"}
+authors = [
+    {name = "Peter Demján", email = "peter.demjan@gmail.com"}
+]
+keywords = ["database", "graph"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Database",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: Microsoft :: Windows :: Windows 10"
+]
+dynamic = ["version"]
+dependencies = [
+	'deposit>=1.6.0, <2',
+	'svgelements>=1.8.1, <2',
+]
+
+[project.urls]
+homepage = "https://github.com/demjanp/deposit_gui"
+
+[tool.setuptools]
+packages = ["deposit_gui"]
+include-package-data = true
+
+[tool.setuptools_scm]
+write_to = "src/deposit_gui/_version.py"
+
+[tool.setuptools.package-data]
+"deposit_gui" = [
+    "*.dll",
+    "*.exe",
+    "*.sh",
+    "config6",
+    "*.c",
+    "*.i",
+    "INSTALLER",
+    "LICENSE",
+    "METADATA",
+    "*.pyd",
+    "*.so",
+    "*.png",
+    "*.svg",
+]
