@@ -29,6 +29,7 @@ class DMainWindow(QtWidgets.QMainWindow):
 		
 		if not self.isVisible():
 			return
+		
 		state = self.registry.get(self.REG_PREFIX + "widow_maximized")
 		geometry = self.registry.get(self.REG_PREFIX + "window_geometry")
 		restored = False
@@ -52,7 +53,7 @@ class DMainWindow(QtWidgets.QMainWindow):
 	def _save_geometry(self, geometry = None):
 		
 		geometry = self._get_geometry()
-		if self.isVisible():
+		if self._loaded and self.isVisible():
 			if geometry:
 				self.registry.set(self.REG_PREFIX + "window_geometry", geometry)
 		return geometry
