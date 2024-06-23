@@ -15,6 +15,16 @@ import json
 import sys
 import os
 
+if sys.platform == "darwin":
+	from Foundation import NSBundle
+	import objc
+	from Cocoa import NSObject, NSApplication
+	
+	class AppDelegate(NSObject):
+		def applicationSupportsSecureRestorableState_(self, app):
+			return True
+	
+
 class DView(AbstractSubview, DMainWindow):
 	
 	APP_NAME = "DView"
@@ -54,12 +64,14 @@ class DView(AbstractSubview, DMainWindow):
 		self.setWindowTitle(title)
 		
 		if sys.platform == "darwin":
-			from Foundation import NSBundle
 			bundle = NSBundle.mainBundle()
 			if bundle:
 				app_info = bundle.localizedInfoDictionary() or bundle.infoDictionary()
 				if app_info:
 					app_info['CFBundleName'] = self.APP_NAME
+			cocoa_app = NSApplication.sharedApplication()
+			delegate = AppDelegate.alloc().init()
+			cocoa_app.setDelegate_(delegate)
 	
 	def set_icon(self, name):
 		
