@@ -9,7 +9,8 @@ from deposit.utils.fnc_serialize import (
 	decrypt_connstr,
 )
 
-from PySide2 import (QtWidgets, QtCore, QtGui, QtMacExtras)
+from PySide2 import (QtWidgets, QtCore, QtGui)
+import subprocess
 import traceback
 import json
 import sys
@@ -73,9 +74,49 @@ class DView(AbstractSubview, DMainWindow):
 			delegate = AppDelegate.alloc().init()
 			cocoa_app.setDelegate_(delegate)
 	
+	def set_app_icon(self, name):
+		
+		icon = self.get_icon(name)
+		
+		self.setWindowIcon(icon)
+		
+		app = QtWidgets.QApplication.instance()
+		app.setWindowIcon(icon)
+	
 	def set_icon(self, name):
 		
 		self.setWindowIcon(self.get_icon(name))
+	
+	def update_style(self, path=None):
+
+		def _check_dark_mode():
+			result = subprocess.run(
+				["defaults", "read", "-g", "AppleInterfaceStyle"], 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE, 
+				text=True
+			)
+			if "Dark" in result.stdout:
+				return True
+			return False
+		
+		style = ""
+		
+		if sys.platform == "darwin":
+			if _check_dark_mode():
+				import deposit_gui.dgui
+				qss_path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "qss", "dark.qss")))
+				with open(qss_path, 'r') as f:
+					style = f.read()
+		
+		if path is not None:
+			with open(path, 'r') as f:
+				style += f.read()
+		
+		if style:
+			app = QtWidgets.QApplication.instance()
+			app.setStyleSheet(style)
+		
 	
 	def get_recent_dir(self):
 		

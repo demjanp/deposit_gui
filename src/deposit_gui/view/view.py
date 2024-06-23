@@ -3,6 +3,7 @@ from deposit_gui.dgui.dview import DView
 from deposit_gui import __version__, __title__
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
+import sys
 
 class View(DView):
 	
@@ -35,7 +36,16 @@ class View(DView):
 		splitter.addWidget(vnavigator)
 		splitter.addWidget(vmdiarea)
 		
-		self.setWindowIcon(self.get_icon("dep_cube.svg"))
+		if sys.platform == "win32":
+			self.set_icon("dep_cube.svg")
+		elif sys.platform == "darwin":
+			self.set_app_icon("deposit_icon.icns")
+		elif sys.platform in ["linux", "linux2"]:
+			raise Exception("Linux version not implemented")
+		else:
+			raise Exception("Operating system not supported")
+		
+		self.update_style()
 		
 	def menuBar(self):
 		# HACK to stop MDI Subwindows move controls to MenuBar when maximized

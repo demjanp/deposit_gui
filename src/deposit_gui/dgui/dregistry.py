@@ -23,7 +23,7 @@ class DRegistry(QtCore.QObject):
                 var, value, _ = winreg.EnumValue(self.key, i)
                 self._vars[var] = value
         elif sys.platform in ["darwin", "linux", "linux2"]:
-            self.preferences = QtCore.QSettings("LAP 4")
+            self.preferences = QtCore.QSettings(self.app_name)
             self.preferences.beginGroup(self.app_name)
             keys = self.preferences.allKeys()
             for key in keys:
@@ -57,6 +57,7 @@ class DRegistry(QtCore.QObject):
             for var in self._set_data:
                 self.preferences.setValue(var, self._set_data[var])
             self.preferences.endGroup()
+            self.preferences.sync()
         else:
             raise Exception("Incompatible OS detected")
         
