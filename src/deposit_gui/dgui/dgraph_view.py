@@ -1,12 +1,17 @@
 from deposit_gui.dgui.dgraphics_view import DGraphicsView
-from deposit_gui.dgui import pygraphviz
 
 from PySide2 import (QtWidgets, QtCore, QtGui, QtPrintSupport)
 from collections import defaultdict
 import networkx as nx
 import weakref
 import math
+import sys
 import re
+
+if sys.platform == "win32":
+	from deposit_gui.dgui import pygraphviz
+else:
+	import pygraphviz
 
 def to_agraph(N):
 	
