@@ -22,7 +22,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-	'deposit>=1.6.4, <2',
+	'deposit>=1.6.5, <2',
 	'PySide2>=5.15.2.1, <6',
 	'svgelements>=1.8.1, <2',
 	'pyobjc>=10.3.1, <11; sys_platform == "darwin"',
@@ -38,20 +38,3 @@ include-package-data = true
 
 [tool.setuptools_scm]
 write_to = "src/deposit_gui/_version.py"
-
-[tool.setuptools.package-data]
-"deposit_gui" = [
-    "*.dll",
-    "*.exe",
-    "*.sh",
-    "config6",
-    "*.c",
-    "*.i",
-    "INSTALLER",
-    "LICENSE",
-    "METADATA",
-    "*.pyd",
-    "*.so",
-    "*.png",
-    "*.svg",
-]
