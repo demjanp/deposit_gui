@@ -1,7 +1,7 @@
 @echo off
 if "%~1"=="" (
 	echo Error: Setup file directory not provided.
-	echo Usage: scriptname ^<setup file directory^>
+	echo Usage: build.bat ^<setup file directory^>
 	exit /b 1
 )
 
