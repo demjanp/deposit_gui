@@ -1,5 +1,8 @@
 from ._meta import title as __title__, date as __date__, __version__
 
+from deposit_gui.utils.download_libs import download_libs
+download_libs()
+
 from deposit_gui.dgui_main import DGUIMain
 
 from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller

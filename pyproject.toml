@@ -25,6 +25,8 @@ dependencies = [
 	'deposit>=1.6.7, <2',
 	'PySide2>=5.15.2.1, <6',
 	'svgelements>=1.8.1, <2',
+	'tqdm>=4.66.4, <5; sys_platform == "win32"',
+	'requests>=2.32.3, <3; sys_platform == "win32"',
 	'pyobjc>=10.3.1, <11; sys_platform == "darwin"',
 	'pygraphviz>=1.13, <2; sys_platform == "darwin"',
 ]

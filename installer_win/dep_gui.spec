@@ -1,6 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.building.datastruct import TOC
 
+from deposit_gui.utils.download_libs import download_libs
+download_libs()
+
 block_cipher = None
 
 path = 'installer_win\\hiddenimports.py'
