@@ -7,7 +7,7 @@ ftemplate = "installer_mac/deposit_gui.pkgproj.tpl"
 
 installer_path = os.path.dirname(os.path.normpath(os.path.abspath(ftemplate)))
 
-fout = os.path.join(installer_path, 'deposit_gui.pkgproj')
+fout = os.path.join(installer_path, '..', 'dist', 'deposit_gui.pkgproj')
 
 with open(ftemplate, "r", encoding = "utf-8-sig") as f:
 	text = f.read()

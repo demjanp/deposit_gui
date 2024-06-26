@@ -38,7 +38,7 @@
 									<key>GID</key>
 									<integer>80</integer>
 									<key>PATH</key>
-									<string>../dist/Deposit GUI.app</string>
+									<string>Deposit GUI.app</string>
 									<key>PATH_TYPE</key>
 									<integer>3</integer>
 									<key>PERMISSIONS</key>
@@ -503,7 +503,7 @@
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
-				<string>Deposit_%(version_underscored)s</string>
+				<string>Deposit_GUI</string>
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>PAYLOAD_SIZE</key>
@@ -548,7 +548,7 @@
 						<key>BACKGROUND_PATH</key>
 						<dict>
 							<key>PATH</key>
-							<string>dep_installer_mac.png</string>
+							<string>../installer_mac/dep_installer_mac.png</string>
 							<key>PATH_TYPE</key>
 							<integer>3</integer>
 						</dict>
@@ -563,7 +563,7 @@
 				<key>BACKGROUND_PATH</key>
 				<dict>
 					<key>PATH</key>
-					<string>dep_installer_mac.png</string>
+					<string>../installer_mac/dep_installer_mac.png</string>
 					<key>PATH_TYPE</key>
 					<integer>3</integer>
 				</dict>
@@ -687,7 +687,7 @@
 						<key>VALUE</key>
 						<dict>
 							<key>PATH</key>
-							<string>LICENSE.TXT</string>
+							<string>../installer_mac/LICENSE.TXT</string>
 							<key>PATH_TYPE</key>
 							<integer>3</integer>
 						</dict>
@@ -735,7 +735,7 @@
 			<key>BUILD_PATH</key>
 			<dict>
 				<key>PATH</key>
-				<string>../dist</string>
+				<string>.</string>
 				<key>PATH_TYPE</key>
 				<integer>3</integer>
 			</dict>
@@ -908,7 +908,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>Deposit GUI</string>
+			<string>Deposit_%(version_underscored)s</string>
 			<key>PAYLOAD_ONLY</key>
 			<false/>
 			<key>TREAT_MISSING_PRESENTATION_DOCUMENTS_AS_WARNING</key>
