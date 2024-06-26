@@ -1,0 +1,22 @@
+from deposit_gui import (__version__)
+import codecs
+import sys
+import os
+
+ftemplate = "installer_mac/deposit_gui.pkgproj.tpl"
+
+installer_path = os.path.dirname(os.path.normpath(os.path.abspath(ftemplate)))
+
+fout = os.path.join(installer_path, 'deposit_gui.pkgproj')
+
+with open(ftemplate, "r", encoding = "utf-8-sig") as f:
+	text = f.read()
+
+vars = dict(
+	version = __version__,
+)
+
+text = text % vars
+
+with open(fout, "w", encoding = "utf-8-sig") as f:
+	f.write(text)

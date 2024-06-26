@@ -2,11 +2,21 @@
 
 cd ..
 
-rm -rf build/dep_gui
-rm -rf dist/deposit_gui
+rm -rf build
+rm -rf dist
 
 source .venv/bin/activate
 
-python -m build
+python installer_mac/make_pkgproj.py
+
+brew install graphviz
 
 pyinstaller installer_mac/dep_gui.spec
+
+if [ ! -d "Frameworks" ]; then
+    bash installer_mac/collect_frameworks.sh
+fi
+
+cp -R 'Frameworks' 'dist'
+
+python installer_mac/create_app.py

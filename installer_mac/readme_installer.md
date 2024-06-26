@@ -1,2 +1,2 @@
-### Build a MacOS  installer for Deposit GUI
+### Build a MacOS installer for Deposit GUI
 

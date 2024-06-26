@@ -4,7 +4,7 @@ block_cipher = None
 
 a = Analysis(
     ['../bin/start_gui.py'],
-    pathex=['../.venv/lib/python3.10/site-packages'],
+    pathex=['/.venv/lib/python3.10/site-packages'],
     binaries=[],
     datas=[
         ('../src/deposit_gui/res', 'deposit_gui/res'),
@@ -63,20 +63,3 @@ coll = COLLECT(
     excludes=['../src/deposit_gui/dgui/pygraphviz', '../src/deposit_gui/dgui/graphviz_win'],
 )
 
-from deposit_gui import (__version__)
-
-app = BUNDLE(
-    coll,
-    name='Deposit GUI.app',
-    icon='../src/deposit_gui/res/deposit_icon.icns',
-    bundle_identifier='com.thelapteam.depositgui',
-    info_plist={
-        'CFBundleName': 'DepositGUI',
-        'CFBundleDisplayName': 'Deposit GUI',
-        'CFBundleVersion': __version__,
-        'CFBundleShortVersionString': ".".join(__version__.split(".")[:2]),
-        'NSHighResolutionCapable': 'True',
-        'CFBundleDevelopmentRegion': 'English',
-        'LSMinimumSystemVersion': '11',
-    }
-)

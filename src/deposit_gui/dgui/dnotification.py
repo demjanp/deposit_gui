@@ -23,6 +23,7 @@ class DNotification(QtWidgets.QFrame):
 		QLabel { 
 			margin: 0px 10px 10px 10px; 
 			font-size: 14px;
+			color: #000000;
 		}
 		''')
 		self.label.setOpenExternalLinks(True)

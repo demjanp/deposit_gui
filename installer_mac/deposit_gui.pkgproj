@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -515,7 +515,7 @@
 				<key>USE_HFS+_COMPRESSION</key>
 				<false/>
 				<key>VERSION</key>
-				<string>1.6.5</string>
+				<string>1.6.6.dev1+g293c9ba.d20240625</string>
 			</dict>
 			<key>TYPE</key>
 			<integer>0</integer>
@@ -687,9 +687,9 @@
 						<key>VALUE</key>
 						<dict>
 							<key>PATH</key>
-							<string>/Users/Demi/LAP_v4_3/deposit_gui/installer_mac/LICENSE.TXT</string>
+							<string>LICENSE.TXT</string>
 							<key>PATH_TYPE</key>
-							<integer>0</integer>
+							<integer>3</integer>
 						</dict>
 					</dict>
 				</array>
