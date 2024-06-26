@@ -2,6 +2,8 @@ _version.py
 .DS_Store
 *.pkgproj
 Frameworks/
+graphviz_win/
+pygraphviz/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
