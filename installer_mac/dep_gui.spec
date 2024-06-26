@@ -2,9 +2,15 @@
 
 block_cipher = None
 
+path = 'installer_mac/hiddenimports.py'
+with open(path, 'r') as file:
+    file_content = file.read()
+imports = []
+exec(file_content)
+
 a = Analysis(
     ['../bin/start_gui.py'],
-    pathex=['/.venv/lib/python3.10/site-packages'],
+    pathex=['.venv/lib/python3.10/site-packages'],
     binaries=[],
     datas=[
         ('../src/deposit_gui/res', 'deposit_gui/res'),
@@ -18,7 +24,7 @@ a = Analysis(
         'networkit.helpers',
         'networkit.traversal',
         'scipy.io',
-    ],
+    ] + imports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

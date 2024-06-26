@@ -12,8 +12,11 @@ fout = os.path.join(installer_path, 'deposit_gui.pkgproj')
 with open(ftemplate, "r", encoding = "utf-8-sig") as f:
 	text = f.read()
 
+version_underscored = "_".join(__version__.split("."))
+
 vars = dict(
 	version = __version__,
+	version_underscored = version_underscored,
 )
 
 text = text % vars

@@ -7,13 +7,14 @@ ftemplate = "installer_win/dep_gui_installer.tpl"
 fdist = "dist/deposit_gui"
 
 args = sys.argv[1:]
-if len(args) != 2:
-	raise Exception("Invalid number of arguments.\nCorrect use: make_ifp.py <deposit root dir> <setup file dir>")
+if len(args) != 1:
+	raise Exception("Invalid number of arguments.\nCorrect use: make_ifp.py <deposit root dir>")
 
-root_path, installer_path = args
+root_path, = args
 
 root_path = os.path.normpath(os.path.abspath(root_path))
-installer_path = os.path.normpath(os.path.abspath(installer_path))
+
+installer_path = os.path.join(root_path, 'dist')
 
 fout = os.path.join(installer_path, 'deposit_installer.ifp')
 

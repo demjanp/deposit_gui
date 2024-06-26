@@ -3,10 +3,15 @@ from PyInstaller.building.datastruct import TOC
 
 block_cipher = None
 
+path = 'installer_win\\hiddenimports.py'
+with open(path, 'r') as file:
+    file_content = file.read()
+imports = []
+exec(file_content)
 
 a = Analysis(
 	['..\\bin\\start_gui.py'],
-	pathex=['..\\.venv\\Lib\\site-packages'],
+	pathex=['.venv\\Lib\\site-packages'],
 	binaries=[],
 	datas=[
 			('..\\src\\deposit_gui\\dgui\\graphviz_win', 'deposit_gui\\dgui\\graphviz_win'),
@@ -21,7 +26,7 @@ a = Analysis(
 		'networkit.helpers',
 		'networkit.traversal',
 		'scipy.io',
-	],
+	] + imports,
 	hookspath=[],
 	hooksconfig={},
 	runtime_hooks=[],
