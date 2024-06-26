@@ -1,6 +1,5 @@
 import os
 import sys
-import requests
 import zipfile
 import tempfile
 
@@ -15,6 +14,7 @@ def download_libs():
 		return
 	
 	from tqdm import tqdm
+	import requests
 	
 	url = "https://laseraidedprofiler.com/dist/thirdparty/deposit_gui.zip"
 	extract_to = os.path.abspath(os.path.join(script_dir, '..', '..'))
