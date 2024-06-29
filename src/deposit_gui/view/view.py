@@ -38,10 +38,10 @@ class View(DView):
 		
 		if sys.platform == "win32":
 			self.set_app_icon("dep_cube.svg")
+		elif sys.platform in ["linux", "linux2"]:
+			self.set_app_icon("deposit_icon.png")
 		elif sys.platform == "darwin":
 			self.set_app_icon("deposit_icon.icns")
-		elif sys.platform in ["linux", "linux2"]:
-			raise Exception("Linux version not implemented")
 		else:
 			raise Exception("Operating system not supported")
 		

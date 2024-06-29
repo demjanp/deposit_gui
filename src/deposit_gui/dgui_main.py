@@ -15,6 +15,8 @@ if sys.platform == "darwin":
 			dyld_items.append(os.path.join(frameworks_path, framework, 'lib'))
 		os.environ['PATH'] = os.environ.get('PATH', '') + ":" + ':'.join(path_items)
 		os.environ['DYLD_LIBRARY_PATH'] = os.environ.get('DYLD_LIBRARY_PATH', '') + ":" + ':'.join(dyld_items)
+elif sys.platform in ["linux", "linux2"]:
+	os.environ['QT_QPA_PLATFORM'] = 'wayland'
 
 class DGUIMain(object):
 	
