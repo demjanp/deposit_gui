@@ -1,7 +1,7 @@
 from deposit_gui.controller.controller import Controller
 from deposit.utils.fnc_files import (clear_temp_dir)
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 import sys
 import os
 
@@ -19,7 +19,7 @@ class DGUIMain(object):
 		self.controller = Controller(store)
 		self.controller.cview.show()
 		self.controller.cdialogs.open("Connect")
-		
+
 		app.exec_()
 	
 	def __del__(self):

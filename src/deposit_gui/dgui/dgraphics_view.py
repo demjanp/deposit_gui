@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DGraphicsView(QtWidgets.QGraphicsView):
 	
@@ -17,8 +17,10 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 		self.setBackgroundBrush(QtCore.Qt.white)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
-		self._button_frame.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
+		layout_button_frame = QtWidgets.QHBoxLayout()
+		self._button_frame.setLayout(layout_button_frame)
 		self.layout().addWidget(self._button_frame)
 		self.layout().addStretch()
 		self.layout().setAlignment(self._button_frame, QtCore.Qt.AlignLeft)

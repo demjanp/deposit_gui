@@ -2,7 +2,7 @@
 Generic class to be re-used also by Deposit in the future
 '''
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DProgress(QtWidgets.QProgressDialog):
 	

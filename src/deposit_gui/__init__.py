@@ -1,9 +1,14 @@
 from ._meta import title as __title__, date as __date__, __version__
 
+import os
 import sys
+
 if sys.platform == "darwin":
 	import shutil
 	from .utils.download_libs import download_mac_libs
+	
+	os.environ["PATH"] += os.pathsep + "/usr/local/bin"
+	
 	found_graphviz = (shutil.which("dot") is not None)
 	if not found_graphviz:
 		found_graphviz = download_mac_libs(["graphviz"])
@@ -12,6 +17,7 @@ if sys.platform == "darwin":
 
 elif sys.platform == "win32":
 	from deposit_gui.utils.download_libs import download_win_libs
+	
 	download_win_libs()
 
 from deposit_gui.dgui_main import DGUIMain

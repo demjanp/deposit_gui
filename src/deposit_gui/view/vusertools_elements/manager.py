@@ -5,7 +5,7 @@ from deposit_gui.view.vusertools_elements.user_elements.search_form import (Sear
 from deposit_gui.view.vusertools_elements.user_elements.entry_form import (EntryForm)
 from deposit_gui.view.vusertools_elements.user_elements.query import (Query)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class Manager(QtWidgets.QDialog):
 	
@@ -25,13 +25,15 @@ class Manager(QtWidgets.QDialog):
 		self.setWindowTitle("User Tool Manager")
 		self.setMinimumWidth(300)
 		self.setModal(True)
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.tool_list = QtWidgets.QListWidget()
 		self.tool_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 		self.controls = QtWidgets.QFrame()
-		self.controls.setLayout(QtWidgets.QVBoxLayout())
+		controls_layout = QtWidgets.QVBoxLayout()
+		self.controls.setLayout(controls_layout)
 		self.controls.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.button_add_query = QtWidgets.QPushButton("Add Query")

@@ -1,6 +1,6 @@
 from deposit_gui.dgui.dgraphics_view import DGraphicsView
 
-from PySide2 import (QtWidgets, QtCore, QtGui, QtPrintSupport)
+from PySide6 import (QtWidgets, QtCore, QtGui, QtPrintSupport)
 from collections import defaultdict
 import networkx as nx
 import weakref
@@ -99,7 +99,7 @@ class AbstractNode(QtWidgets.QGraphicsItem):
 		self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
 		self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 		self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
-		self.setCacheMode(self.DeviceCoordinateCache)
+		self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
 		self.setZValue(-1)
 	
 	def add_edge(self, edge):
@@ -512,7 +512,7 @@ class Edge(QtWidgets.QGraphicsItem):
 		self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
 		self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 		self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
-		self.setCacheMode(self.DeviceCoordinateCache)
+		self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
 		self.setZValue(-2)
 		
 		self.source().add_edge(self)
@@ -666,7 +666,8 @@ class DGraphView(DGraphicsView):
 		self._search_edit.setFixedWidth(100)
 		self._search_edit.textChanged.connect(self.on_search)
 		search_box = QtWidgets.QFrame()
-		search_box.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		search_box.setLayout(layout)
 		if icon is not None:
 			label = QtWidgets.QLabel()
 			label.setPixmap(icon.pixmap(QtCore.QSize(24, 24)))

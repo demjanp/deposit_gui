@@ -2,7 +2,7 @@ from deposit_gui.view.vusertools_elements.editor import editor_controls as Edito
 
 from deposit.utils.fnc_serialize import (select_to_class_descr)
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class EditorFrame(QtWidgets.QFrame):
 	
@@ -15,8 +15,9 @@ class EditorFrame(QtWidgets.QFrame):
 		self.form_editor = form_editor
 		
 		QtWidgets.QFrame.__init__(self)
-		
-		self.setLayout(QtWidgets.QFormLayout())
+
+		layout = QtWidgets.QFormLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.ctrl = getattr(EditorControls, element)(user_control)

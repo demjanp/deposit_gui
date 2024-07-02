@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DNotification(QtWidgets.QFrame):
 	
@@ -33,7 +33,8 @@ class DNotification(QtWidgets.QFrame):
 			QtWidgets.QStyle.SP_TitleBarCloseButton)
 		)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(2, 2, 2, 2)
 		self.layout().setSpacing(0)
 		self.layout().addWidget(close_button)

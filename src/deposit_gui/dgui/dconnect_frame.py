@@ -5,7 +5,7 @@ from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db import DConnectTabDB
 from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db_rel import DConnectTabDBRel
 from deposit_gui.dgui.dconnect_tabs.dconnect_tab_memory import DConnectTabMemory
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
 import os
 
@@ -23,7 +23,8 @@ class DConnectFrame(QtWidgets.QFrame):
 		
 		self.setMinimumWidth(600)
 		self.setMinimumHeight(400)
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.setStyleSheet('''

@@ -1,6 +1,6 @@
 from deposit.utils.fnc_serialize import (value_to_str)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DialogControl(object):
 	

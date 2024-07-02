@@ -1,7 +1,7 @@
 from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller
 from deposit_gui.view.view import View
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
 import os
 

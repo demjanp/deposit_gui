@@ -2,7 +2,7 @@ from deposit_gui.dgui.dview import DView
 
 from deposit_gui import __version__, __title__
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import sys
 
 class View(DView):
@@ -17,21 +17,23 @@ class View(DView):
 		self._close_callback = None
 		
 		central_widget = QtWidgets.QWidget(self)
-		central_widget.setLayout(QtWidgets.QVBoxLayout())
-		central_widget.layout().setContentsMargins(0, 0, 0, 0)
+		central_widget_layout = QtWidgets.QVBoxLayout()
+		central_widget.setLayout(central_widget_layout)
+		central_widget_layout.setContentsMargins(0, 0, 0, 0)
 		self.setCentralWidget(central_widget)
 		
 		self._tool_window = QtWidgets.QMainWindow()
 		self._tool_window.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-		central_widget.layout().addWidget(self._tool_window)
+		central_widget_layout.addWidget(self._tool_window)
 		
 		splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
 		splitter.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-		central_widget.layout().addWidget(splitter)
+		central_widget_layout.addWidget(splitter)
 		
 		left_frame = QtWidgets.QFrame()
-		left_frame.setLayout(QtWidgets.QVBoxLayout())
-		left_frame.layout().setContentsMargins(0, 0, 0, 0)
+		left_frame_layout = QtWidgets.QVBoxLayout()
+		left_frame.setLayout(left_frame_layout)
+		left_frame_layout.setContentsMargins(0, 0, 0, 0)
 		
 		splitter.addWidget(vnavigator)
 		splitter.addWidget(vmdiarea)

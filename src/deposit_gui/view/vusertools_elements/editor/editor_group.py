@@ -1,7 +1,7 @@
 from deposit_gui.view.vusertools_elements.user_elements import user_groups
 from deposit_gui.view.vusertools_elements.editor.editor_frame import (EditorFrame)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class EditorGroup(QtWidgets.QGroupBox):
 	
@@ -17,7 +17,8 @@ class EditorGroup(QtWidgets.QGroupBox):
 		
 		QtWidgets.QGroupBox.__init__(self, self.element)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		if user_group is None:
@@ -30,13 +31,15 @@ class EditorGroup(QtWidgets.QGroupBox):
 		else:
 			self.label_edit.setText(self.group.label)
 		form = QtWidgets.QFrame()
-		form.setLayout(QtWidgets.QFormLayout())
+		form_layout = QtWidgets.QFormLayout()
+		form.setLayout(form_layout)
 		form.layout().setContentsMargins(0, 0, 0, 0)
 		form.layout().addRow("Label:", self.label_edit)
 		self.layout().addWidget(form)
 		
 		self.controls_frame = QtWidgets.QFrame()
-		self.controls_frame.setLayout(QtWidgets.QVBoxLayout())
+		controls_frame_layout = QtWidgets.QVBoxLayout()
+		self.controls_frame.setLayout(controls_frame_layout)
 		self.controls_frame.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().addWidget(self.controls_frame)
 		

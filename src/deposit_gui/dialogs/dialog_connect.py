@@ -3,7 +3,7 @@ from deposit_gui.dgui.dclickable_logo import DClickableLogo
 
 import deposit_gui
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import os
 
 class DialogConnect(DConnectFrame):
@@ -25,7 +25,8 @@ class DialogConnect(DConnectFrame):
 		path = os.path.join(os.path.dirname(deposit_gui.__file__), "res/dep_installer.svg")
 		
 		logo_frame = QtWidgets.QFrame()
-		logo_frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		logo_frame.setLayout(layout)
 		logo_frame.layout().setContentsMargins(0, 0, 0, 0)
 		logo_frame.layout().addStretch()
 		logo_frame.layout().addWidget(DClickableLogo(path, "https://github.com/demjanp/deposit", alignment = QtCore.Qt.AlignCenter))

@@ -3,7 +3,7 @@ from deposit import Store
 
 from deposit.utils.fnc_serialize import (parse_connstr)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from collections import defaultdict
 from natsort import natsorted
 import os
@@ -24,9 +24,11 @@ class DConnectTabDB(QtWidgets.QFrame):
 		self.parent = parent
 		
 		self.form = QtWidgets.QWidget()
-		self.form.setLayout(QtWidgets.QFormLayout())
-		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout_form = QtWidgets.QFormLayout()
+		self.form.setLayout(layout_form)
+
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.host_combo = QtWidgets.QComboBox()
@@ -69,7 +71,8 @@ class DConnectTabDB(QtWidgets.QFrame):
 		self.form.layout().addRow("Identifier:", self.identifier_combo)
 		
 		button_container = QtWidgets.QWidget()
-		button_container.setLayout(QtWidgets.QHBoxLayout())
+		layout_button_container = QtWidgets.QHBoxLayout()
+		button_container.setLayout(layout_button_container)
 		button_container.layout().setContentsMargins(0, 0, 0, 0)
 		button_container.layout().addStretch()
 		button_container.layout().addWidget(self.connect_button)

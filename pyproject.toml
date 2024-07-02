@@ -22,8 +22,8 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-	'deposit>=1.6.8, <2',
-	'PySide2>=5.15.2.1, <6',
+	'deposit>=1.6.9, <2',
+	'PySide6>=6.7.2, <7',
 	'svgelements>=1.8.1, <2',
 	'tqdm>=4.66.4, <5; sys_platform == "win32"',
 	'requests>=2.32.3, <3; sys_platform == "win32"',

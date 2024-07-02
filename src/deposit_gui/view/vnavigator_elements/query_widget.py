@@ -1,6 +1,6 @@
 from deposit_gui.view.vnavigator_elements.query_list import QueryList
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class QueryWidget(QtWidgets.QWidget):
 	
@@ -11,8 +11,9 @@ class QueryWidget(QtWidgets.QWidget):
 		self._vnavigator = vnavigator
 		self._querylist = QueryList(self._vnavigator)
 		self._footer = QueryFooter(self._vnavigator)
-		
-		self.setLayout(QtWidgets.QVBoxLayout())
+
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.layout().addWidget(self._querylist)
@@ -44,7 +45,8 @@ class QueryFooter(QtWidgets.QFrame):
 
 		self._vnavigator = vnavigator
 		
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(6)
 		

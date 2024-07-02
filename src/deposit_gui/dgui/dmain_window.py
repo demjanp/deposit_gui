@@ -8,7 +8,7 @@ DMainWindow(QtWidgets.QMainWindow)
 '''
 from deposit_gui.dgui.dregistry import DRegistry
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DMainWindow(QtWidgets.QMainWindow):
 	

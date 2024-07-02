@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements.user_element_list import (UserElementList)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 
 class EntryForm(UserElementList):
 	

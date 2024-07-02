@@ -8,7 +8,7 @@ from deposit import DResource
 from deposit import externalsource as Externalsource
 from deposit import Store
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 import copy
 import json
 import os

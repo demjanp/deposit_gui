@@ -4,7 +4,7 @@ from deposit.datasource import AbstractDatasource
 
 from deposit.utils.fnc_files import (as_url, is_local_url, url_to_path)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 
 class CModel(DCModel):
 	

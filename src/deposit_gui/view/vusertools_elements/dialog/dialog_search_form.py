@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.dialog.dialog_form import (DialogForm)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 
 class DialogSearchForm(DialogForm):
 	

@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements.user_controls import (Unique)
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class EditorUnique(QtWidgets.QFrame):
 	
@@ -18,7 +18,8 @@ class EditorUnique(QtWidgets.QFrame):
 		self.user_unique = user_unique
 
 		self.setStyleSheet("%s:hover {background: grey;}" % (self.__class__.__name__))
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.unique = QtWidgets.QLineEdit()

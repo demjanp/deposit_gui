@@ -2,7 +2,7 @@ from deposit_gui.view.vmdiarea_frames.query_frame_elements.abstract_query_tab im
 from deposit_gui.view.vmdiarea_frames.query_frame_elements.abstract_drag_model import AbstractDragModel
 from deposit_gui.view.vmdiarea_frames.query_frame_elements.query_item import QueryItem
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class ImageDelegate(QtWidgets.QStyledItemDelegate):
 	
@@ -272,7 +272,8 @@ class ListHeader(QtWidgets.QFrame):
 		
 		self.setFrameShape(QtWidgets.QFrame.StyledPanel)
 		self.setFrameShadow(QtWidgets.QFrame.Raised)
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(5, 0, 0, 0)
 		self.layout().setSpacing(0)
 		
@@ -359,7 +360,8 @@ class QueryTabImages(AbstractQueryTab, QtWidgets.QFrame):
 		self._list_header = ListHeader(queryframe)
 		self._list_view = ListView(queryframe, self._list_header, images, item_order, cmodel, icon_size)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(0)
 		self.layout().addWidget(self._list_header)

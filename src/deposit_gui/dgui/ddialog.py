@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DDialog(QtWidgets.QDialog):
 	
@@ -6,7 +6,7 @@ class DDialog(QtWidgets.QDialog):
 	signal_cancel = QtCore.Signal(str, object)
 	
 	def __init__(self, name, view):
-		
+
 		QtWidgets.QDialog.__init__(self, view)
 		
 		self._name = name
@@ -15,10 +15,8 @@ class DDialog(QtWidgets.QDialog):
 		self._args = []
 		self._kwargs = {}
 		self._button_box = None
-		
-		self.setLayout(QtWidgets.QVBoxLayout())
-		self.layout().setContentsMargins(0, 0, 0, 0)
-		
+
+
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 		self.setWindowFlags(self.windowFlags() |  QtCore.Qt.WindowStaysOnTopHint)
@@ -33,7 +31,7 @@ class DDialog(QtWidgets.QDialog):
 	def set_frame(self, frame):
 		
 		self._frame = frame
-		self.layout().addWidget(self._frame)
+		self.setLayout(self._frame.layout())
 	
 	def get_frame(self):
 		
@@ -58,7 +56,8 @@ class DDialog(QtWidgets.QDialog):
 		else:
 			flags = QtWidgets.QDialogButtonBox.Cancel
 		self._button_box = QtWidgets.QFrame()
-		self._button_box.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self._button_box.setLayout(layout)
 		buttons = QtWidgets.QDialogButtonBox(flags, QtCore.Qt.Horizontal)
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)

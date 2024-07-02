@@ -8,7 +8,7 @@ from deposit_gui.dialogs.dialog_add_relation import DialogAddRelation
 from deposit_gui.dialogs.dialog_about import DialogAbout
 from deposit import Store
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from natsort import (natsorted)
 import os
 
@@ -177,7 +177,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.layout().addWidget(QtWidgets.QLabel("Load database from <b>%s</b>?" % (os.path.split(url)[-1])))
 		
 		dialog.set_frame(frame)
@@ -195,7 +196,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.name_edit = QtWidgets.QLineEdit()
 		frame.name_edit.setPlaceholderText("Class name")
 		caption = ""
@@ -228,7 +230,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.name_edit = QtWidgets.QLineEdit()
 		frame.name_edit.setPlaceholderText("Descriptor name")
 		frame.layout().addWidget(frame.name_edit)
@@ -252,7 +255,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove descriptor <b>%s</b> from class <b>%s</b>?" % (descr.name, cls.name)
 		))
@@ -276,7 +280,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.name_edit = QtWidgets.QLineEdit()
 		frame.name_edit.setText(cls.name)
 		caption = ""
@@ -310,7 +315,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		names = [cls.name for cls in classes]
 		frame.layout().addWidget(QtWidgets.QLabel(
@@ -349,7 +355,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.title_edit = QtWidgets.QLineEdit()
 		frame.title_edit.setPlaceholderText("Title")
 		frame.querystr_edit = QtWidgets.QPlainTextEdit()
@@ -381,7 +388,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		frame.title_edit = QtWidgets.QLineEdit()
 		frame.title_edit.setText(title)
 		frame.querystr_edit = QtWidgets.QPlainTextEdit()
@@ -410,7 +418,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove the following %s?" % ("queries" if len(titles) > 1 else "query")
@@ -433,7 +442,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove the following object%s?" % ("s" if (len(objects) > 1) else "")
@@ -460,7 +470,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		frame.class_combo = QtWidgets.QComboBox()
 		frame.class_combo.addItems([""] + classes)
@@ -493,7 +504,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove the following object%s from Class %s?" % (
@@ -536,7 +548,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(300)
-		frame.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		frame.setLayout(layout)
 		
 		frame.layout().addWidget(QtWidgets.QLabel(
 			"Remove the selected relation%s?" % ("s" if (len(relations) > 1) else "")
@@ -558,7 +571,8 @@ class CDialogs(DCDialogs):
 		
 		frame = QtWidgets.QFrame()
 		frame.setMinimumWidth(600)
-		frame.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		frame.setLayout(layout)
 		frame.target_edit = QtWidgets.QLineEdit()
 		if descriptor_name is None:
 			frame.target_edit.setPlaceholderText("Descriptor name")

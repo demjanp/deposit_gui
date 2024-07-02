@@ -10,7 +10,7 @@ from deposit_gui.controller.cusertools import CUserTools
 from deposit import Store
 from deposit.store.dclass import DClass
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import subprocess
 import sys
 import os

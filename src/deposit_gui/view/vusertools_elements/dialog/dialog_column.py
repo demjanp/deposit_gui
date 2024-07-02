@@ -1,5 +1,5 @@
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DialogColumn(QtWidgets.QFrame):
 	
@@ -7,7 +7,8 @@ class DialogColumn(QtWidgets.QFrame):
 		
 		QtWidgets.QFrame.__init__(self)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().addStretch()

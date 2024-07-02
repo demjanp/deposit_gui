@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 from deposit_gui import res as icon_resources
 import deposit_gui

@@ -3,7 +3,7 @@ from deposit_gui.view.vmdiarea_frames.query_frame import QueryFrame
 from deposit_gui.view.vmdiarea_frames.external_frame import ExternalFrame
 from deposit_gui.view.vmdiarea_frames.class_graph_frame import ClassGraphFrame
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class VMDIArea(AbstractSubview, QtWidgets.QFrame):
 	
@@ -17,7 +17,8 @@ class VMDIArea(AbstractSubview, QtWidgets.QFrame):
 		self._outside_frames = []
 		self._mdiarea = MDIArea(on_drag_enter, on_drag_move, on_drop)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self._mdiarea.subWindowActivated.connect(self.on_window_activated)

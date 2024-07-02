@@ -1,6 +1,6 @@
 from deposit_gui.dgui.abstract_subview import AbstractSubview
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 	
@@ -18,11 +18,13 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 		dialog.set_button_box(True, True)
 		
 		self.setMinimumWidth(256)
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		frame = QtWidgets.QFrame()
-		frame.setLayout(QtWidgets.QHBoxLayout())
+		frame_layout = QtWidgets.QHBoxLayout()
+		frame.setLayout(frame_layout)
 		frame.layout().setContentsMargins(0, 0, 0, 0)
 		
 		grid = QtWidgets.QFrame()
@@ -30,7 +32,8 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 		frame.layout().addWidget(grid)
 		frame.layout().addStretch()
 		
-		grid.setLayout(QtWidgets.QGridLayout())
+		grid_layout = QtWidgets.QGridLayout()
+		grid.setLayout(grid_layout)
 		grid.layout().addWidget(QtWidgets.QLabel("<b>Rows:</b>"), 0, 0)
 		grid.layout().addWidget(QtWidgets.QLabel("%d" % (n_rows)), 0, 1)
 		grid.layout().addWidget(QtWidgets.QLabel(), 1, 0)
@@ -49,7 +52,8 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 		grid.layout().addWidget(QtWidgets.QLabel("<b>Relations:</b>"), idx + 6, 0)
 		
 		self.form = QtWidgets.QFrame()
-		self.form.setLayout(QtWidgets.QGridLayout())
+		form_layout = QtWidgets.QGridLayout()
+		self.form.setLayout(form_layout)
 		margins = self.form.layout().contentsMargins()
 		margins.setTop(0)
 		self.form.layout().setContentsMargins(margins)
@@ -87,7 +91,8 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 		button_add.clicked.connect(self.on_add)
 		
 		frame = QtWidgets.QFrame()
-		frame.setLayout(QtWidgets.QHBoxLayout())
+		frame_layout = QtWidgets.QHBoxLayout()
+		frame.setLayout(frame_layout)
 		frame.layout().addStretch()
 		frame.layout().addWidget(button_add)
 		frame.layout().addStretch()

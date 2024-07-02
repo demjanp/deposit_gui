@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DConnectTabMemory(QtWidgets.QFrame):
 	
@@ -8,7 +8,8 @@ class DConnectTabMemory(QtWidgets.QFrame):
 		
 		self.parent = parent
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		label = QtWidgets.QLabel("Create a new database in memory.\n\n")

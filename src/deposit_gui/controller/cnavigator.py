@@ -1,7 +1,7 @@
 from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller
 from deposit_gui.view.vnavigator import VNavigator
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 
 class CNavigator(AbstractSubcontroller):
 	

@@ -1,5 +1,5 @@
 from deposit_gui.view.vmdiarea_frames.abstract_mdiarea_frame import AbstractMDIAreaFrame
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from natsort import (natsorted)
 from urllib.parse import (urlencode, parse_qsl)
 
@@ -16,7 +16,8 @@ class RelationFrame(QtWidgets.QFrame):
 		
 		self._obj = None
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 		self.setStyleSheet('''
 			QFrame {
@@ -25,7 +26,8 @@ class RelationFrame(QtWidgets.QFrame):
 		''')
 		
 		form_header = QtWidgets.QWidget()
-		form_header.setLayout(QtWidgets.QFormLayout())
+		form_header_layout = QtWidgets.QFormLayout()
+		form_header.setLayout(form_header_layout)
 		form_header.layout().setContentsMargins(0, 0, 0, 0)
 		self.label_obj_id = QtWidgets.QLabel("None")
 		self.label_obj_id.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
@@ -37,7 +39,8 @@ class RelationFrame(QtWidgets.QFrame):
 		form_header.layout().addRow("<b>Classes:</b>", self.label_classes)
 		
 		self.list_related = QtWidgets.QWidget()
-		self.list_related.setLayout(QtWidgets.QFormLayout())
+		list_related_layout = QtWidgets.QFormLayout()
+		self.list_related.setLayout(list_related_layout)
 		self.list_related.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.layout().addWidget(form_header)

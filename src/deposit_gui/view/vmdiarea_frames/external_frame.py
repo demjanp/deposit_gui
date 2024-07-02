@@ -3,7 +3,7 @@ from deposit import externalsource as Externalsource
 from deposit import DGeometry
 from deposit.query.parse import (remove_bracketed_all, replace_bracketed)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class ExternalFrame(AbstractMDIAreaFrame, QtWidgets.QWidget):
 	
@@ -14,11 +14,11 @@ class ExternalFrame(AbstractMDIAreaFrame, QtWidgets.QWidget):
 		
 		self.tabs = None
 		self.sheet = None
-		
-		self.setLayout(QtWidgets.QVBoxLayout())
+
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(0)
-		self.setLayout(QtWidgets.QVBoxLayout())
 		
 		if not hasattr(Externalsource, source):
 			raise Exception("External source not supported: %s" % (source))

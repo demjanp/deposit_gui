@@ -11,7 +11,7 @@ from deposit_gui.view.vusertools_elements.user_elements.user_controls import (Us
 from deposit_gui.view.vusertools_elements.user_elements.column_break import (ColumnBreak)
 from deposit_gui.view.vusertools_elements.user_elements.user_groups import (Group)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class EditorForm(QtWidgets.QMainWindow):
 	
@@ -31,11 +31,13 @@ class EditorForm(QtWidgets.QMainWindow):
 		self.setWindowModality(QtCore.Qt.ApplicationModal)
 		
 		self.central_widget = QtWidgets.QWidget(self)
-		self.central_widget.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.central_widget.setLayout(layout)
 		self.setCentralWidget(self.central_widget)
 		
 		self.title_frame = QtWidgets.QFrame()
-		self.title_frame.setLayout(QtWidgets.QHBoxLayout())
+		title_frame_layout = QtWidgets.QHBoxLayout()
+		self.title_frame.setLayout(title_frame_layout)
 		self.title_frame.layout().setContentsMargins(0, 0, 0, 0)
 		self.title_frame.layout().addWidget(QtWidgets.QLabel("Title:"))
 		self.title_edit = QtWidgets.QLineEdit()
@@ -43,7 +45,8 @@ class EditorForm(QtWidgets.QMainWindow):
 		self.central_widget.layout().addWidget(self.title_frame)
 		
 		self.controls_frame = QtWidgets.QFrame()
-		self.controls_frame.setLayout(QtWidgets.QHBoxLayout())
+		controls_frame_layout = QtWidgets.QHBoxLayout()
+		self.controls_frame.setLayout(controls_frame_layout)
 		self.controls_frame.layout().setContentsMargins(10, 10, 10, 10)
 		
 		scroll_area = QtWidgets.QScrollArea()
@@ -53,7 +56,8 @@ class EditorForm(QtWidgets.QMainWindow):
 		self.central_widget.layout().addWidget(scroll_area)
 		
 		self.selects_frame = QtWidgets.QFrame()
-		self.selects_frame.setLayout(QtWidgets.QHBoxLayout())
+		selects_frame_layout = QtWidgets.QHBoxLayout()
+		self.selects_frame.setLayout(selects_frame_layout)
 		self.selects_frame.layout().setContentsMargins(10, 10, 10, 10)
 		if not self.entry:
 			self.selects_frame.layout().addWidget(QtWidgets.QLabel("SELECT"))
@@ -61,7 +65,8 @@ class EditorForm(QtWidgets.QMainWindow):
 		self.central_widget.layout().addWidget(self.selects_frame)
 		
 		self.unique_frame = QtWidgets.QFrame()
-		self.unique_frame.setLayout(QtWidgets.QHBoxLayout())
+		unique_frame_layout = QtWidgets.QHBoxLayout()
+		self.unique_frame.setLayout(unique_frame_layout)
 		self.unique_frame.layout().setContentsMargins(10, 10, 10, 10)
 		
 		button_unique = QtWidgets.QToolButton()
@@ -95,7 +100,8 @@ class EditorForm(QtWidgets.QMainWindow):
 			self.toolbar.addAction(action(self))
 		
 		button_frame = QtWidgets.QFrame()
-		button_frame.setLayout(QtWidgets.QHBoxLayout())
+		button_frame_layout = QtWidgets.QHBoxLayout()
+		button_frame.setLayout(button_frame_layout)
 		button_frame.layout().setContentsMargins(5, 5, 5, 5)
 		button_frame.layout().addStretch()
 		button_save = QtWidgets.QPushButton("Save")

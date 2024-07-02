@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements.column_break import (ColumnBreak)
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class EditorColumn(QtWidgets.QFrame):
 	
@@ -8,7 +8,8 @@ class EditorColumn(QtWidgets.QFrame):
 		
 		QtWidgets.QFrame.__init__(self)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.setStyleSheet("EditorColumn {border: 1px solid gray;}")

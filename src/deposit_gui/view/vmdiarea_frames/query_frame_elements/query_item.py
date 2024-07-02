@@ -1,6 +1,6 @@
 from deposit.utils.fnc_serialize import (dtype_to_dict, value_to_dtype)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class QueryItem(object):
 	

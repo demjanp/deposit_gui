@@ -2,7 +2,7 @@ from deposit_gui.view.vmdiarea_frames.query_frame_elements.abstract_query_tab im
 from deposit_gui.dgui.dgraph_view import (DGraphView, Node, NodeWithAttributes, NodeWithSimpleAttributes)
 from deposit.utils.fnc_files import (sanitize_filename)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
 import os
 
@@ -41,7 +41,8 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 		self._graph_view.signal_selected.connect(self.on_graph_selected)
 		
 		central_widget = QtWidgets.QWidget(self)
-		central_widget.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		central_widget.setLayout(layout)
 		central_widget.layout().setContentsMargins(0, 0, 0, 0)
 		self.setCentralWidget(central_widget)
 		central_widget.layout().addWidget(self._graph_view)
@@ -64,7 +65,7 @@ class QueryTabGraph(AbstractQueryTab, QtWidgets.QMainWindow):
 			if name == "#separator":
 				self.toolbar.addSeparator()
 			else:
-				self._actions[name] = QtWidgets.QAction(self._queryframe.get_icon(icon), text, self)
+				self._actions[name] = QtGui.QAction(self._queryframe.get_icon(icon), text, self)
 				self._actions[name].setData(name)
 				self.toolbar.addAction(self._actions[name])
 		

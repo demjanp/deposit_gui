@@ -4,7 +4,7 @@ from deposit_gui.view.vmdiarea_frames.query_frame_elements.query_tab_table impor
 from deposit_gui.view.vmdiarea_frames.query_frame_elements.query_tab_images import (QueryTabImagesLazy, QueryTabImages)
 from deposit_gui.view.vmdiarea_frames.query_frame_elements.query_tab_graph import (QueryTabGraphLazy, QueryTabGraph)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	
@@ -36,7 +36,8 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		self._cmodel = cmodel
 		self._cview = cview
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(0)
 		
@@ -62,7 +63,8 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		self.layout().addWidget(splitter)
 		
 		frame_left = QtWidgets.QFrame()
-		frame_left.setLayout(QtWidgets.QVBoxLayout())
+		frame_left_layout = QtWidgets.QVBoxLayout()
+		frame_left.setLayout(frame_left_layout)
 		frame_left.layout().setContentsMargins(0, 0, 0, 0)
 		frame_left.layout().setSpacing(0)
 		frame_left.layout().addWidget(self.tabs)
@@ -355,7 +357,8 @@ class QueryFooter(QtWidgets.QFrame):
 		self.setFrameShape(QtWidgets.QFrame.StyledPanel)
 		self.setFrameShadow(QtWidgets.QFrame.Raised)
 
-		self.setLayout(QtWidgets.QGridLayout())
+		layout = QtWidgets.QGridLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(5, 0, 0, 0)
 		self.layout().setSpacing(0)
 		

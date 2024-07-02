@@ -1,6 +1,6 @@
 from deposit_gui.dgui.dtool_bar import DToolBar
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DMenuBar(DToolBar):
 	
@@ -29,7 +29,7 @@ class DMenuBar(DToolBar):
 					menu.addSeparator()
 				elif isinstance(name[1], str):
 					name, caption = name
-					self.actions[name].append(QtWidgets.QAction(caption, self.view))
+					self.actions[name].append(QtGui.QAction(caption, self.view))
 					self.actions[name][-1].setData(name)
 					menu.addAction(self.actions[name][-1])
 				elif isinstance(name[1], list):

@@ -9,7 +9,7 @@ from deposit.utils.fnc_serialize import (
 	decrypt_connstr,
 )
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import subprocess
 import traceback
 import json
@@ -224,7 +224,7 @@ class DView(AbstractSubview, DMainWindow):
 	
 	def keyPressEvent(self, event):
 		
-		for action in self.findChildren(QtWidgets.QAction):
+		for action in self.findChildren(QtGui.QAction):
 			if action.isEnabled() and (
 				action.shortcut() == QtGui.QKeySequence(
 					event.key()+int(event.modifiers())

@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DialogImportStore(QtWidgets.QFrame):
 	
@@ -14,11 +14,13 @@ class DialogImportStore(QtWidgets.QFrame):
 		
 		self.setMinimumWidth(256)
 		
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		grid = QtWidgets.QFrame()
-		grid.setLayout(QtWidgets.QGridLayout())
+		grid_layout = QtWidgets.QGridLayout()
+		grid.setLayout(grid_layout)
 		self.layout().addWidget(grid)
 		self.layout().addStretch()
 		

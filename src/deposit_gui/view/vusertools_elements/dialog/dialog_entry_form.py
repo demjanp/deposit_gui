@@ -2,7 +2,7 @@ from deposit_gui.view.vusertools_elements.dialog.dialog_form import (DialogForm)
 
 from deposit.utils.fnc_serialize import (value_to_str)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 from collections import defaultdict
 from natsort import natsorted
 

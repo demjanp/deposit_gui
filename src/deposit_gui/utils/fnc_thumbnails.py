@@ -4,7 +4,7 @@ from deposit.utils.fnc_files import (
 )
 from deposit_gui.utils.fnc_svg import (svg_to_raster)
 
-from PySide2 import (QtCore, QtGui, QtSvg)
+from PySide6 import (QtCore, QtGui, QtSvg)
 from PIL import Image
 import hashlib
 import shutil

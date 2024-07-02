@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements import user_controls as UserControls
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class EditorControl(object):
 	
@@ -71,7 +71,8 @@ class CheckBox(EditorControl, QtWidgets.QFrame):
 		EditorControl.__init__(self, user_control)
 		QtWidgets.QFrame.__init__(self)
 		
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		
 		dclass, descriptor = self.user_control.dclass, self.user_control.descriptor
 		self.select = QtWidgets.QLineEdit()

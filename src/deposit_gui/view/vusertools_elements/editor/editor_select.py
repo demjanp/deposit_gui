@@ -2,7 +2,7 @@ from deposit_gui.view.vusertools_elements.user_elements.user_controls import (Se
 
 from deposit.utils.fnc_serialize import (select_to_class_descr)
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class EditorSelect(QtWidgets.QFrame):
 	
@@ -20,7 +20,8 @@ class EditorSelect(QtWidgets.QFrame):
 		self.user_select = user_select
 		
 		self.setStyleSheet("%s:hover {background: grey;}" % (self.__class__.__name__))
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		dclass, descriptor = self.user_select.dclass, self.user_select.descriptor

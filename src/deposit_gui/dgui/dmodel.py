@@ -5,7 +5,7 @@ from deposit.store.dclass import DClass
 from deposit_gui.utils.fnc_thumbnails import (load_thumbnails, get_thumbnail)
 from deposit.utils.fnc_files import (get_temp_path, sanitize_filename)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 import shutil
 import uuid
 import os

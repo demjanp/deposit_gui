@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DConnectTabRecent(QtWidgets.QFrame):
 	
@@ -8,14 +8,17 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		
 		self.parent = parent
 		
-		self.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.left = QtWidgets.QFrame()
-		self.left.setLayout(QtWidgets.QVBoxLayout())
+		layout_left = QtWidgets.QVBoxLayout()
+		self.left.setLayout(layout_left)
 		self.left.layout().setContentsMargins(0, 0, 0, 0)
 		self.right = QtWidgets.QFrame()
-		self.right.setLayout(QtWidgets.QVBoxLayout())
+		layout_right = QtWidgets.QVBoxLayout()
+		self.right.setLayout(layout_right)
 		self.right.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.recent_list = QtWidgets.QListWidget()

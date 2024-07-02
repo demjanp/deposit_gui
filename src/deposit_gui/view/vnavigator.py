@@ -2,7 +2,7 @@ from deposit_gui.dgui.abstract_subview import AbstractSubview
 from deposit_gui.view.vnavigator_elements.class_widget import ClassWidget
 from deposit_gui.view.vnavigator_elements.query_widget import QueryWidget
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class VNavigator(AbstractSubview, QtWidgets.QFrame):
 	
@@ -28,7 +28,8 @@ class VNavigator(AbstractSubview, QtWidgets.QFrame):
 		AbstractSubview.__init__(self)
 		QtWidgets.QFrame.__init__(self)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
 		

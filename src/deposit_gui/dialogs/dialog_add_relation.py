@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DialogAddRelation(QtWidgets.QFrame):
 	
@@ -18,9 +18,11 @@ class DialogAddRelation(QtWidgets.QFrame):
 		self._dialog.set_enabled(False)
 		
 		self.setMinimumWidth(256)
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		labels = QtWidgets.QWidget()
-		labels.setLayout(QtWidgets.QHBoxLayout())
+		labels_layout = QtWidgets.QHBoxLayout()
+		labels.setLayout(labels_layout)
 		self.label_source = QtWidgets.QLabel("")
 		self.label_relation = QtWidgets.QLineEdit(label)
 		if not label:

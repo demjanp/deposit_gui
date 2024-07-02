@@ -8,7 +8,7 @@ from deposit.utils.fnc_files import (as_url)
 from deposit.utils.fnc_serialize import (try_numeric, value_to_str)
 from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 from collections import defaultdict
 from natsort import natsorted
 import sys

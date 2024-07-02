@@ -4,7 +4,7 @@
 from deposit_gui import __version__, __date__
 import deposit_gui
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import os
 
 class DialogAbout(QtWidgets.QFrame):
@@ -14,10 +14,12 @@ class DialogAbout(QtWidgets.QFrame):
 		QtWidgets.QFrame.__init__(self)
 		
 		self.setMinimumWidth(400)
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		
 		content = QtWidgets.QFrame()
-		content.setLayout(QtWidgets.QHBoxLayout())
+		layout = QtWidgets.QHBoxLayout()
+		content.setLayout(layout)
 		self.layout().addWidget(content)
 		
 		logo = QtWidgets.QLabel()

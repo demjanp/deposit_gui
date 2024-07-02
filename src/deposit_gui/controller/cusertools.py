@@ -3,7 +3,7 @@ from deposit_gui.view.vusertools import VUserTools
 
 from deposit.utils.fnc_serialize import (load_user_tool, value_to_str)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 from collections import defaultdict
 
 class CUserTools(AbstractSubcontroller):

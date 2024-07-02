@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui, QtSvg)
+from PySide6 import (QtWidgets, QtCore, QtGui, QtSvg)
 from svgelements import (
 	SVG, Group, Image, Path, Polygon, Polyline, Line
 )

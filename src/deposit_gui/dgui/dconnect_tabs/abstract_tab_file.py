@@ -1,7 +1,7 @@
 from deposit.utils.fnc_files import (as_url)
 from deposit import Store
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 import os
 
 class AbstractTabFile(QtWidgets.QFrame):
@@ -15,7 +15,8 @@ class AbstractTabFile(QtWidgets.QFrame):
 		
 		self.parent = parent
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		homedir = self.parent.get_recent_dir()

@@ -1,7 +1,7 @@
 from deposit_gui.view.vmdiarea_frames.abstract_mdiarea_frame import AbstractMDIAreaFrame
 from deposit_gui.dgui.dgraph_view import (DGraphView, NodeWithAttributes, NodeWithSimpleAttributes)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
 import os
 
@@ -18,7 +18,8 @@ class ClassGraphFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		
 		self._graph = ClassGraph(self, cmodel, cview)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(0)
 		self.layout().addWidget(self._graph)
@@ -59,7 +60,8 @@ class ClassGraph(QtWidgets.QMainWindow):
 		self._graph_view.signal_selected.connect(self.on_selected)
 		
 		central_widget = QtWidgets.QWidget(self)
-		central_widget.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		central_widget.setLayout(layout)
 		central_widget.layout().setContentsMargins(0, 0, 0, 0)
 		self.setCentralWidget(central_widget)
 		central_widget.layout().addWidget(self._graph_view)
@@ -80,7 +82,7 @@ class ClassGraph(QtWidgets.QMainWindow):
 			if name == "#separator":
 				self.toolbar.addSeparator()
 			else:
-				self._actions[name] = QtWidgets.QAction(self._frame.get_icon(icon), text, self)
+				self._actions[name] = QtGui.QAction(self._frame.get_icon(icon), text, self)
 				self._actions[name].setData(name)
 				self.toolbar.addAction(self._actions[name])
 		

@@ -1,14 +1,14 @@
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
-class UserTool(QtWidgets.QAction):
+class UserTool(QtGui.QAction):
 	
 	def __init__(self, label, vusertools):
 		
 		self.label = label
 		self._vusertools = vusertools
 		
-		QtWidgets.QAction.__init__(self, self._vusertools.vmain)
+		QtGui.QAction.__init__(self, self._vusertools.vmain)
 		
 		self.setText(self.label)
 		self.triggered.connect(self.on_triggered)

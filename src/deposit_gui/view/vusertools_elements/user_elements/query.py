@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements.user_tool import (UserTool)
 
-from PySide2 import (QtCore)
+from PySide6 import (QtCore)
 
 class Query(UserTool):
 	

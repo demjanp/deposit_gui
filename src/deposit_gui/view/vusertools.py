@@ -9,7 +9,7 @@ from deposit_gui.view.vusertools_elements.manager import (Manager)
 from deposit_gui.view.vusertools_elements.dialog.dialog_search_form import (DialogSearchForm)
 from deposit_gui.view.vusertools_elements.dialog.dialog_entry_form import (DialogEntryForm)
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class VUserTools(AbstractSubview, QtCore.QObject):
 	
@@ -47,7 +47,7 @@ class VUserTools(AbstractSubview, QtCore.QObject):
 		
 		self._toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 		
-		self.action_manage = QtWidgets.QAction("User Tools")
+		self.action_manage = QtGui.QAction("User Tools")
 		self.action_manage.setToolTip("Manage User Tools")
 		self.action_manage.triggered.connect(self.on_manage)
 	

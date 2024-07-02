@@ -6,7 +6,7 @@ from deposit_gui.view.vusertools_elements.user_elements.user_groups import (Grou
 from deposit_gui.view.vusertools_elements.user_elements.user_controls import (UserControl, Select, Unique)
 from deposit_gui.view.vusertools_elements.user_elements.column_break import (ColumnBreak)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class DialogForm(QtWidgets.QDialog):
 
@@ -28,12 +28,14 @@ class DialogForm(QtWidgets.QDialog):
 		self.setWindowTitle(self.form_tool.label)
 		self.setModal(False)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.controls_frame = QtWidgets.QFrame()
-		self.controls_frame.setLayout(QtWidgets.QGridLayout())
+		controls_frame_layout = QtWidgets.QGridLayout()
+		self.controls_frame.setLayout(controls_frame_layout)
 		self.controls_frame.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.scroll_area = VerticalScrollArea(self.controls_frame)
@@ -41,7 +43,8 @@ class DialogForm(QtWidgets.QDialog):
 		self.layout().addWidget(self.scroll_area)
 		
 		self.button_frame = QtWidgets.QFrame()
-		self.button_frame.setLayout(QtWidgets.QHBoxLayout())
+		button_frame_layout = QtWidgets.QHBoxLayout()
+		self.button_frame.setLayout(button_frame_layout)
 		self.button_frame.layout().setContentsMargins(5, 5, 5, 5)
 		self.button_frame.layout().addStretch()
 		button_submit = QtWidgets.QPushButton("Submit")

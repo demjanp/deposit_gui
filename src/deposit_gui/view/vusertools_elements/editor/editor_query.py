@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.user_elements.query import (Query)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class EditorQuery(QtWidgets.QDialog):
 	
@@ -20,12 +20,14 @@ class EditorQuery(QtWidgets.QDialog):
 		
 		self.setMinimumWidth(600)
 		self.setModal(True)
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		
 		self.title_edit = QtWidgets.QLineEdit()
 		self.query_edit = QtWidgets.QPlainTextEdit()
 		form = QtWidgets.QFrame()
-		form.setLayout(QtWidgets.QFormLayout())
+		form_layout = QtWidgets.QFormLayout()
+		form.setLayout(form_layout)
 		form.layout().setContentsMargins(0, 0, 0, 0)
 		form.layout().addRow("Title:", self.title_edit)
 		form.layout().addRow("Query:", self.query_edit)

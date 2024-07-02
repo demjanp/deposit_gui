@@ -1,13 +1,13 @@
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
-class Action(QtWidgets.QAction):
+class Action(QtGui.QAction):
 	
 	def __init__(self, form_editor):
 		
 		self.form_editor = form_editor
 		
-		QtWidgets.QAction.__init__(self, self.form_editor._vusertools.vmain)
+		QtGui.QAction.__init__(self, self.form_editor._vusertools.vmain)
 		
 		self.setText(self.name())
 		icon = self.icon()

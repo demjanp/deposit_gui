@@ -1,6 +1,6 @@
 from deposit_gui.view.vnavigator_elements.class_list import ClassList
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class ClassWidget(QtWidgets.QWidget):
 	
@@ -12,7 +12,8 @@ class ClassWidget(QtWidgets.QWidget):
 		self._classlist = ClassList(self._vnavigator)
 		self._footer = ClassFooter(self._vnavigator)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.layout().addWidget(self._classlist)
@@ -74,8 +75,9 @@ class ClassFooter(QtWidgets.QFrame):
 		QtWidgets.QFrame.__init__(self)
 		
 		self._vnavigator = vnavigator
-		
-		self.setLayout(QtWidgets.QHBoxLayout())
+
+		layout = QtWidgets.QHBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setSpacing(6)
 		

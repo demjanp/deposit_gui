@@ -6,7 +6,7 @@ from deposit import externalsource as Externalsource
 from deposit.utils.fnc_files import (as_url, sanitize_filename, get_temp_path)
 from deposit.utils.fnc_serialize import (value_to_str)
 
-from PySide2 import (QtWidgets, QtGui, QtCore)
+from PySide6 import (QtWidgets, QtGui, QtCore)
 from collections import defaultdict
 from natsort import natsorted
 import os

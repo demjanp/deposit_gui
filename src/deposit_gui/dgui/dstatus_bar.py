@@ -2,7 +2,7 @@
 Generic class to be re-used also by Deposit in the future
 '''
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class DStatusBar(QtWidgets.QStatusBar):
 	

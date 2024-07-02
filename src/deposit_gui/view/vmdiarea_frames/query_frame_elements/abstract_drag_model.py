@@ -1,6 +1,6 @@
 from deposit_gui.view.vmdiarea_frames.query_frame_elements.query_item import QueryItem
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 import json
 
 class AbstractDragModel(object):

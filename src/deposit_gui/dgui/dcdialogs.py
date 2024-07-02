@@ -1,38 +1,42 @@
 from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller
 from deposit_gui.dgui.dvdialogs import DVDialogs
 
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 
 class DCDialogs(AbstractSubcontroller):
-	
+
 	def __init__(self, cmain, cview) -> None:
 		
 		AbstractSubcontroller.__init__(self, cmain)
 		
 		self._vdialogs = DVDialogs(cview._view)
 		self._dialogs = {}
-		
+
 		self._vdialogs.signal_process.connect(self.on_dialog_process)
 		self._vdialogs.signal_cancel.connect(self.on_dialog_cancel)
-	
+
 	def open(self, name, *args, **kwargs):
 		
 		if name in self._dialogs:
-			self._dialogs[name].close()
+			try:
+				if self._dialogs[name].isVisible():
+					self._dialogs[name].close()
+			except:
+				pass
 			del self._dialogs[name]
-		
+
 		dialog = self._vdialogs.open(name)
 		dialog._args = args
 		dialog._kwargs = kwargs
-		
+
 		if hasattr(self, "set_up_%s" % (name)):
 			getattr(self, "set_up_%s" % (name))(dialog, *args, **kwargs)
 			if dialog._button_box is not None:
 				dialog.layout().addWidget(dialog._button_box)
 			dialog.adjustSize()
-		
-		dialog.show()
+
 		self._dialogs[name] = dialog
+		self._dialogs[name].show()
 	
 	def close(self, name):
 		

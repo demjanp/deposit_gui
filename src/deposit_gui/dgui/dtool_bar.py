@@ -1,4 +1,4 @@
-from PySide2 import (QtWidgets, QtCore, QtGui)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from collections import defaultdict
 
 class DToolBar(QtCore.QObject):
@@ -26,7 +26,7 @@ class DToolBar(QtCore.QObject):
 					self.toolbars[toolbar_name].addSeparator()
 				else:
 					name, caption = name
-					self.actions[name].append(QtWidgets.QAction(caption))
+					self.actions[name].append(QtGui.QAction(caption))
 					self.actions[name][-1].setData(name)
 					self.actions[name][-1]._toolbar_name = toolbar_name
 					self.toolbars[toolbar_name].addAction(self.actions[name][-1])
@@ -139,7 +139,7 @@ class DToolBar(QtCore.QObject):
 				action.setCurrentText(text)
 				action.blockSignals(False)
 	
-	@QtCore.Slot(QtWidgets.QAction)
+	@QtCore.Slot(QtGui.QAction)
 	def on_triggered(self, action):
 		
 		self.signal_triggered.emit(str(action.data()))

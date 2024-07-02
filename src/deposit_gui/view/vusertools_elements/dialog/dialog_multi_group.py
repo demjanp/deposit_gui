@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.dialog.dialog_frame import (DialogFrame)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 
 class DialogMultiGroup(QtWidgets.QGroupBox):
 	
@@ -17,15 +17,18 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 		
 		QtWidgets.QGroupBox.__init__(self, self.user_group.label)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.controls_frame = QtWidgets.QFrame()
-		self.controls_frame.setLayout(QtWidgets.QVBoxLayout())
+		controls_frame_layout = QtWidgets.QVBoxLayout()
+		self.controls_frame.setLayout(controls_frame_layout)
 		self.controls_frame.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().addWidget(self.controls_frame)
 		
 		button_frame = QtWidgets.QFrame()
-		button_frame.setLayout(QtWidgets.QHBoxLayout())
+		button_frame_layout = QtWidgets.QHBoxLayout()
+		button_frame.setLayout(button_frame_layout)
 		button_frame.layout().setContentsMargins(5, 5, 5, 5)
 		button_frame.layout().addStretch()
 		button_add = QtWidgets.QPushButton("Add Entry")
@@ -41,7 +44,8 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 	def add_frameset(self):
 		
 		self._framesets.append(QtWidgets.QFrame())
-		self._framesets[-1].setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self._framesets[-1].setLayout(layout)
 		self.controls_frame.layout().addWidget(self._framesets[-1])
 		return self._framesets[-1]
 	
@@ -66,7 +70,8 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 			self.add_frame(member)
 		
 		button_frame = QtWidgets.QWidget()
-		button_frame.setLayout(QtWidgets.QHBoxLayout())
+		button_frame_layout = QtWidgets.QHBoxLayout()
+		button_frame.setLayout(button_frame_layout)
 		button_frame.layout().setContentsMargins(0, 0, 0, 0)
 		button_remove = QtWidgets.QPushButton("Remove")
 		button_remove.clicked.connect(self.on_remove_entry)

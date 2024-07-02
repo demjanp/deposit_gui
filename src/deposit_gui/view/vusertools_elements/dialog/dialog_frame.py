@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.dialog import dialog_controls as DialogControls
 
-from PySide2 import (QtWidgets)
+from PySide6 import (QtWidgets)
 
 class DialogFrame(QtWidgets.QFrame):
 	
@@ -15,7 +15,8 @@ class DialogFrame(QtWidgets.QFrame):
 		
 		self.ctrl = getattr(DialogControls, user_control.__class__.__name__)(self._cmodel, self.user_control)
 		
-		self.setLayout(QtWidgets.QFormLayout())
+		layout = QtWidgets.QFormLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().setRowWrapPolicy(QtWidgets.QFormLayout.WrapLongRows)
 		label = QtWidgets.QLabel("%s:" % (self.user_control.label))

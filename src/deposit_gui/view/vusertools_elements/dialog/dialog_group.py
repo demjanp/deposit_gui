@@ -1,6 +1,6 @@
 from deposit_gui.view.vusertools_elements.dialog.dialog_frame import (DialogFrame)
 
-from PySide2 import (QtWidgets, QtCore)
+from PySide6 import (QtWidgets, QtCore)
 from natsort import (natsorted)
 
 class DialogGroup(QtWidgets.QGroupBox):
@@ -16,10 +16,12 @@ class DialogGroup(QtWidgets.QGroupBox):
 		
 		QtWidgets.QGroupBox.__init__(self, self.user_group.label)
 		
-		self.setLayout(QtWidgets.QVBoxLayout())
+		layout = QtWidgets.QVBoxLayout()
+		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.controls_frame = QtWidgets.QFrame()
-		self.controls_frame.setLayout(QtWidgets.QVBoxLayout())
+		controls_frame_layout = QtWidgets.QVBoxLayout()
+		self.controls_frame.setLayout(controls_frame_layout)
 		self.controls_frame.layout().setContentsMargins(10, 10, 10, 10)
 		self.layout().addWidget(self.controls_frame)
 		
@@ -29,7 +31,8 @@ class DialogGroup(QtWidgets.QGroupBox):
 		lookup_button.clicked.connect(self.on_lookup_combo)
 		
 		lookup_frame = QtWidgets.QFrame()
-		lookup_frame.setLayout(QtWidgets.QHBoxLayout())
+		lookup_frame_layout = QtWidgets.QHBoxLayout()
+		lookup_frame.setLayout(lookup_frame_layout)
 		lookup_frame.layout().setContentsMargins(0, 0, 0, 0)
 		lookup_frame.layout().addStretch()
 		lookup_frame.layout().addWidget(self.lookup_combo)
@@ -40,7 +43,8 @@ class DialogGroup(QtWidgets.QGroupBox):
 			self.add_frame(member)
 		
 		button_frame = QtWidgets.QWidget()
-		button_frame.setLayout(QtWidgets.QHBoxLayout())
+		button_frame_layout = QtWidgets.QHBoxLayout()
+		button_frame.setLayout(button_frame_layout)
 		button_frame.layout().setContentsMargins(0, 0, 0, 0)
 		button_remove = QtWidgets.QPushButton("Remove")
 		button_remove.clicked.connect(self.on_remove)
