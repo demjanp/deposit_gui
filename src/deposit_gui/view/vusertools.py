@@ -11,7 +11,7 @@ from deposit_gui.view.vusertools_elements.dialog.dialog_entry_form import (Dialo
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 
-class VUserTools(AbstractSubview):
+class VUserTools(AbstractSubview, QtCore.QObject):
 	
 	signal_search_submit = QtCore.Signal(str)
 	#	querystr
@@ -35,6 +35,7 @@ class VUserTools(AbstractSubview):
 	def __init__(self, vmain, cmodel) -> None:
 		
 		AbstractSubview.__init__(self, vmain)
+		QtCore.QObject.__init__(self)
 		
 		self._cmodel = cmodel
 		

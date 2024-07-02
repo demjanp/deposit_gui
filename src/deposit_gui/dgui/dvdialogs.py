@@ -3,7 +3,7 @@ from deposit_gui.dgui.ddialog import DDialog
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 
-class DVDialogs(AbstractSubview):
+class DVDialogs(AbstractSubview, QtCore.QObject):
 	
 	signal_process = QtCore.Signal(str, object)
 	signal_cancel = QtCore.Signal(str, object)
@@ -11,6 +11,7 @@ class DVDialogs(AbstractSubview):
 	def __init__(self, vmain) -> None:
 		
 		AbstractSubview.__init__(self, vmain)
+		QtCore.QObject.__init__(self)
 	
 	def open(self, name):
 		

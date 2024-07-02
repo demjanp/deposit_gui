@@ -2,13 +2,14 @@ from deposit_gui.dgui.abstract_subview import AbstractSubview
 
 from PySide2 import (QtWidgets, QtCore, QtGui)
 
-class VQueryToolbar(AbstractSubview):
+class VQueryToolbar(AbstractSubview, QtCore.QObject):
 	
 	signal_entered = QtCore.Signal(str)
 	
 	def __init__(self, vmain) -> None:
 		
 		AbstractSubview.__init__(self, vmain)
+		QtCore.QObject.__init__(self)
 		
 		self.vmain.addToolBarBreak()
 		self._toolbar = self.vmain.addToolBar("Query")

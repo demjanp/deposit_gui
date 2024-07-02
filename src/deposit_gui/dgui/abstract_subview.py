@@ -5,11 +5,9 @@ import deposit_gui
 
 import os
 
-class AbstractSubview(QtCore.QObject):
+class AbstractSubview(object):
 	
 	def __init__(self, vmain = None) -> None:
-		
-		QtCore.QObject.__init__(self)
 		
 		self.vmain = vmain
 		self._res_folder = None
