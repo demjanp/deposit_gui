@@ -15,6 +15,7 @@ a = Analysis(
     datas=[
         ('../src/deposit_gui/res', 'deposit_gui/res'),
         ('../src/deposit_gui/dgui/qss', 'deposit_gui/dgui/qss'),
+        ('../src/deposit_gui/utils', 'deposit_gui/utils'),
         ('../LICENSE', '.'),
         ('../THIRDPARTY.TXT', '.'),
     ],
@@ -66,6 +67,6 @@ coll = COLLECT(
     upx_exclude=[],
     name='dep_gui',
     distpath='dist/deposit_gui',
-    excludes=['../src/deposit_gui/dgui/pygraphviz', '../src/deposit_gui/dgui/graphviz_win'],
+    excludes=[],
 )
 

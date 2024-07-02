@@ -6,8 +6,12 @@ import os
 ftemplate = "installer_mac/deposit_gui.pkgproj.tpl"
 
 installer_path = os.path.dirname(os.path.normpath(os.path.abspath(ftemplate)))
+dist_path = os.path.join(installer_path, '..', 'dist')
 
-fout = os.path.join(installer_path, '..', 'dist', 'deposit_gui.pkgproj')
+if not os.path.isdir(dist_path):
+	os.makedirs(dist_path)
+
+fout = os.path.join(dist_path, 'deposit_gui.pkgproj')
 
 with open(ftemplate, "r", encoding = "utf-8-sig") as f:
 	text = f.read()

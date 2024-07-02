@@ -5,24 +5,16 @@ from PySide2 import (QtWidgets)
 import sys
 import os
 
-if sys.platform == "darwin":
-	frameworks_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Frameworks'))
-	if os.path.isdir(frameworks_path):
-		path_items = []
-		dyld_items = []
-		for framework in os.listdir(frameworks_path):
-			path_items.append(os.path.join(frameworks_path, framework, 'bin'))
-			dyld_items.append(os.path.join(frameworks_path, framework, 'lib'))
-		os.environ['PATH'] = os.environ.get('PATH', '') + ":" + ':'.join(path_items)
-		os.environ['DYLD_LIBRARY_PATH'] = os.environ.get('DYLD_LIBRARY_PATH', '') + ":" + ':'.join(dyld_items)
-elif sys.platform in ["linux", "linux2"]:
+if sys.platform in ["linux", "linux2"]:
 	os.environ['QT_QPA_PLATFORM'] = 'wayland'
 
 class DGUIMain(object):
 	
 	def __init__(self, store: object = None) -> None:
 		
-		app = QtWidgets.QApplication(sys.argv)
+		app = QtWidgets.QApplication.instance()
+		if not app:
+			app = QtWidgets.QApplication(sys.argv)
 		
 		self.controller = Controller(store)
 		self.controller.cview.show()

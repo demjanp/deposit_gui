@@ -7,7 +7,6 @@ from deposit_gui.controller.cactions import CActions
 from deposit_gui.controller.cquerytoolbar import CQueryToolbar
 from deposit_gui.controller.cusertools import CUserTools
 
-
 from deposit import Store
 from deposit.store.dclass import DClass
 
@@ -43,7 +42,7 @@ class Controller(QtCore.QObject):
 		self.cmodel.set_progress(self.cview.progress)
 		self.cmodel.on_loaded()
 		self.cview.log_message("Deposit GUI started")
-	
+		
 	
 	# ---- Signal handling
 	# ------------------------------------------------------------------------
