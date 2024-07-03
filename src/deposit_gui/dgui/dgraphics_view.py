@@ -89,10 +89,10 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 			return
 		self._zoomed = True
 		if event is not None:
-			pos_old = self.mapToScene(event.pos())
+			pos_old = self.mapToScene(event.position().toPoint())
 		self.scale(factor, factor)
 		if event is not None:
-			diff = self.mapToScene(event.pos()) - pos_old
+			diff = self.mapToScene(event.position().toPoint()) - pos_old
 			self.translate(diff.x(), diff.y())
 		rect = self.scene().itemsBoundingRect().marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
 		rect = rect.united(self.mapToScene(self.frameRect()).boundingRect().toRect())
@@ -107,5 +107,6 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 	
 	def wheelEvent(self, event):
 		
-		self.scale_view(2**(event.delta() / 240.0), event)
+		delta = event.angleDelta().y()
+		self.scale_view(2**(delta / 240.0), event)
 	

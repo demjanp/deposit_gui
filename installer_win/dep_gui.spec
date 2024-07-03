@@ -1,10 +1,14 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.building.datastruct import TOC
+from PyInstaller.utils.hooks import collect_submodules, collect_dynamic_libs
 
-from deposit_gui.utils.download_libs import download_libs
-download_libs()
+from deposit_gui.utils.download_libs import download_win_libs
+download_win_libs()
 
 block_cipher = None
+
+hiddenimports = collect_submodules('deposit_gui') + collect_submodules('numpy')
+binaries = collect_dynamic_libs('deposit_gui') + collect_dynamic_libs('numpy')
 
 path = 'installer_win\\hiddenimports.py'
 with open(path, 'r') as file:
@@ -12,24 +16,37 @@ with open(path, 'r') as file:
 imports = []
 exec(file_content)
 
+imports += [
+    'deposit_gui',
+    '_struct',
+    'struct',
+    'pyi_rth_multiprocessing',
+    'pyi_rth_pkgres',
+    'pkg_resources',
+    'pkg_resources.py2_warn',
+    'pkg_resources.markers',
+    'pkg_resources._vendor',
+    'pkg_resources._vendor.packaging',
+    'pkg_resources.extern',
+    'encodings',
+    'codecs',
+]
+hiddenimports.extend(imports)
+
+datas = [
+	('..\\src\\deposit_gui\\dgui\\graphviz_win', 'deposit_gui\\dgui\\graphviz_win'),
+	('..\\src\\deposit_gui\\dgui\\pygraphviz', 'deposit_gui\\dgui\\pygraphviz'),
+	('..\\src\\deposit_gui\\res', 'deposit_gui\\res'),
+	('..\\LICENSE', '.'),
+	('..\\THIRDPARTY.TXT', '.'),
+]
+
 a = Analysis(
 	['..\\bin\\start_gui.py'],
-	pathex=['.venv\\Lib\\site-packages'],
-	binaries=[],
-	datas=[
-			('..\\src\\deposit_gui\\dgui\\graphviz_win', 'deposit_gui\\dgui\\graphviz_win'),
-			('..\\src\\deposit_gui\\dgui\\pygraphviz', 'deposit_gui\\dgui\\pygraphviz'),
-			('..\\src\\deposit_gui\\res', 'deposit_gui\\res'),
-			('..\\LICENSE', '.'),
-			('..\\THIRDPARTY.TXT', '.'),
-		],
-	hiddenimports=[
-		'deposit_gui',
-		'networkit.base',
-		'networkit.helpers',
-		'networkit.traversal',
-		'scipy.io',
-	] + imports,
+	pathex=['.', '.venv\\Lib\\site-packages'],
+	binaries=binaries,
+	datas=datas,
+	hiddenimports=hiddenimports,
 	hookspath=[],
 	hooksconfig={},
 	runtime_hooks=[],

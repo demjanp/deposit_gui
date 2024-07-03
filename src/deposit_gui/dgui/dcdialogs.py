@@ -14,15 +14,19 @@ class DCDialogs(AbstractSubcontroller):
 
 		self._vdialogs.signal_process.connect(self.on_dialog_process)
 		self._vdialogs.signal_cancel.connect(self.on_dialog_cancel)
-
+	
+	@staticmethod
+	def safely_close_dialog(dialog):
+		try:
+			if dialog.isVisible():
+				dialog.close()
+		except:
+			pass
+	
 	def open(self, name, *args, **kwargs):
 		
 		if name in self._dialogs:
-			try:
-				if self._dialogs[name].isVisible():
-					self._dialogs[name].close()
-			except:
-				pass
+			self.safely_close_dialog(self._dialogs[name])
 			del self._dialogs[name]
 
 		dialog = self._vdialogs.open(name)
@@ -41,7 +45,7 @@ class DCDialogs(AbstractSubcontroller):
 	def close(self, name):
 		
 		if name in self._dialogs:
-			self._dialogs[name].close()
+			self.safely_close_dialog(self._dialogs[name])
 	
 	def is_open(self, name):
 		
@@ -52,7 +56,7 @@ class DCDialogs(AbstractSubcontroller):
 		
 		if hasattr(self, "process_%s" % (name)):
 			getattr(self, "process_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
-		dialog.close()
+		self.safely_close_dialog(dialog)
 		if name in self._dialogs:
 			del self._dialogs[name]
 	
@@ -61,7 +65,7 @@ class DCDialogs(AbstractSubcontroller):
 		
 		if hasattr(self, "cancel_%s" % (name)):
 			getattr(self, "cancel_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
-		dialog.close()
+		self.safely_close_dialog(dialog)
 		if name in self._dialogs:
 			del self._dialogs[name]
 	

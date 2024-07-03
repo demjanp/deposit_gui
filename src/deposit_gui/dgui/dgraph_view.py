@@ -6,9 +6,13 @@ import networkx as nx
 import weakref
 import math
 import sys
+import os
 import re
 
 if sys.platform == "win32":
+	graphviz_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'graphviz_win'))
+	os.environ["PATH"] += os.pathsep + graphviz_path
+	os.add_dll_directory(graphviz_path)
 	from deposit_gui.dgui import pygraphviz
 else:
 	import pygraphviz
@@ -1029,7 +1033,7 @@ class DGraphView(DGraphicsView):
 		elif event.button() == QtCore.Qt.RightButton:
 			self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
 			self.setCursor(QtCore.Qt.OpenHandCursor)
-			self._mouse_prev = (event.x(), event.y())
+			self._mouse_prev = (event.position().toPoint().x(), event.position().toPoint().y())
 			return
 		
 		QtWidgets.QGraphicsView.mousePressEvent(self, event)
@@ -1038,10 +1042,10 @@ class DGraphView(DGraphicsView):
 		
 		if self._mouse_prev is not None:
 			prev_point = self.mapToScene(*self._mouse_prev)
-			new_point = self.mapToScene(event.pos())
+			new_point = self.mapToScene(event.position().toPoint())
 			translation = new_point - prev_point
 			self.translate(translation.x(), translation.y())
-			self._mouse_prev = (event.x(), event.y())
+			self._mouse_prev = (event.position().toPoint().x(), event.position().toPoint().y())
 		
 		QtWidgets.QGraphicsView.mouseMoveEvent(self, event)
 	
@@ -1055,7 +1059,7 @@ class DGraphView(DGraphicsView):
 	
 	def mouseDoubleClickEvent(self, event):
 		
-		item = self.itemAt(event.pos())
+		item = self.itemAt(event.position().toPoint())
 		if item is None:
 			return
 		if item.type == NODE_TYPE:
