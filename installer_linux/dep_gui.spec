@@ -1,10 +1,14 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 import sys
+from PyInstaller.utils.hooks import collect_submodules, collect_dynamic_libs
 
 block_cipher = None
 
 sys.path.insert(0, os.path.abspath('installer_linux/custom_hooks'))
+
+hiddenimports = collect_submodules('deposit_gui') + collect_submodules('networkit')
+binaries = collect_dynamic_libs('deposit_gui') + collect_dynamic_libs('networkit')
 
 path = 'installer_linux/hiddenimports.py'
 with open(path, 'r') as file:
@@ -12,27 +16,39 @@ with open(path, 'r') as file:
 imports = []
 exec(file_content)
 
+imports += [
+    'deposit_gui',
+    '_struct',
+    'struct',
+    'pyi_rth_multiprocessing',
+    'pyi_rth_pkgres',
+    'pkg_resources',
+    'pkg_resources.py2_warn',
+    'pkg_resources.markers',
+    'pkg_resources._vendor',
+    'pkg_resources._vendor.packaging',
+    'pkg_resources.extern',
+]
+hiddenimports.extend(imports)
+
+datas=[
+    ('../src/deposit_gui/res', 'deposit_gui/res'),
+    ('../src/deposit_gui/dgui/qss', 'deposit_gui/dgui/qss'),
+    ('../src/deposit_gui/utils', 'deposit_gui/utils'),
+    ('../LICENSE', '.'),
+    ('../THIRDPARTY.TXT', '.'),
+]
+
 a = Analysis(
     ['../bin/start_gui.py'],
     pathex=['.venv/lib/python3.10/site-packages'],
-    binaries=[],
-    datas=[
-        ('../src/deposit_gui/res', 'deposit_gui/res'),
-        ('../src/deposit_gui/dgui/qss', 'deposit_gui/dgui/qss'),
-        ('../LICENSE', '.'),
-        ('../THIRDPARTY.TXT', '.'),
-    ],
-    hiddenimports=[
-        'deposit_gui',
-        'networkit.base',
-        'networkit.helpers',
-        'networkit.traversal',
-        'scipy.io',
-    ] + imports,
+    binaries=binaries,
+    datas=datas,
+    hiddenimports=hiddenimports,
     hookspath=['installer_linux/custom_hooks'],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets'],
+    excludes=['sip', 'PyQt6', 'PyQt6.QtCore', 'PyQt6.QtGui', 'PyQt6.QtWidgets'],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,

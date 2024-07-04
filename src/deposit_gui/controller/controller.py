@@ -153,13 +153,10 @@ class Controller(QtCore.QObject):
 	def open_in_external(self, path):
 		if os.path.isfile(path):
 			if sys.platform in ["linux", "linux2"]:
-				# Linux
 				subprocess.call(["xdg-open", path])
 			elif sys.platform == "darwin":
-				# macOS
 				subprocess.call(["open", path])
 			elif sys.platform.startswith("win"):
-				# Windows
 				os.startfile(path)
 		else:
 			raise FileNotFoundError(f"The file {path} does not exist.")	

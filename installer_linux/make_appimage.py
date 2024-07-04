@@ -1,3 +1,5 @@
+from deposit_gui import (__version__)
+
 import os
 import shutil
 import subprocess
@@ -43,17 +45,17 @@ def build_appimage(app_dir, output_dir):
         url = "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         subprocess.run(["wget", url, "-O", appimagetool_path], check=True)
         os.chmod(appimagetool_path, 0o755)
-    subprocess.run(["./" + appimagetool_path, "deposit_gui.AppDir", "deposit_gui.AppImage"], check=True)
+    version_underscored = "_".join(__version__.split("."))
+    subprocess.run(["./" + appimagetool_path, "deposit_gui.AppDir", f"deposit_{version_underscored}.AppImage"], check=True)
 
 def main():
     source_dir = "dist/dep_gui"
     output_dir = "dist"
     app_dir = os.path.join(output_dir, "deposit_gui.AppDir")
-
-    # Clean up any existing AppDir
+	
     if os.path.exists(app_dir):
         shutil.rmtree(app_dir)
-
+	
     os.makedirs(app_dir)
     
     create_apprun_script(app_dir)

@@ -21,7 +21,6 @@ def download_win_libs():
 	url = "https://laseraidedprofiler.com/dist/thirdparty/deposit_gui.zip"
 	extract_to = os.path.abspath(os.path.join(script_dir, '..', '..'))
 	
-	# Download the file
 	local_filename = os.path.join(tempfile.gettempdir(), 'deposit_gui.zip')
 	response = requests.get(url, stream=True)
 	response.raise_for_status()
@@ -40,19 +39,35 @@ def download_win_libs():
 			bar.update(len(data))
 			file.write(data)
 	
-	# Extract the file
 	with zipfile.ZipFile(local_filename, 'r') as zip_ref:
 		zip_ref.extractall(extract_to)
 
-def download_mac_libs(libraries):
+
+def check_mac_libs(libraries):
+	if not libraries:
+		return True
+	try:
+		result = subprocess.run(['brew', 'list', '--formula'], capture_output=True, text=True)
+		installed_libraries = result.stdout.splitlines()
+		
+		for library in libraries:
+			if library not in installed_libraries:
+				return False
+		return True
+	except Exception as e:
+		print(f"An error occurred: {e}")
+		return False
+
+
+def download_mac_libs(libraries, title):
 	
 	if sys.platform != "darwin":
 		return True
 	
-	if check_libraries(libraries):
+	if check_mac_libs(libraries):
 		return True
 	
-	script_path = os.path.join(os.path.dirname(__file__), 'install_libs.sh')
+	script_path = os.path.join(os.path.dirname(__file__), 'install_mac_libs.sh')
 	joined_list = ",".join(libraries)
 	
 	temp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -80,15 +95,16 @@ def download_mac_libs(libraries):
 	if os.path.exists(temp_file_path):
 		os.remove(temp_file_path)
 	
-	return check_libraries(libraries)
+	return check_mac_libs(libraries)
 
 
-def check_libraries(libraries):
+def check_linux_libs(libraries):
+	if not libraries:
+		return True
 	try:
-		# Get the list of installed libraries
-		result = subprocess.run(['brew', 'list', '--formula'], capture_output=True, text=True)
-		installed_libraries = result.stdout.splitlines()
-		
+		result = subprocess.run(['apt', 'list', '--installed'], capture_output=True, text=True)
+		installed_libraries = [line.split('/')[0] for line in result.stdout.splitlines() if 'installed' in line]
+
 		for library in libraries:
 			if library not in installed_libraries:
 				return False
@@ -96,3 +112,20 @@ def check_libraries(libraries):
 	except Exception as e:
 		print(f"An error occurred: {e}")
 		return False
+
+def download_linux_libs(libraries, title):
+	
+	if sys.platform not in ["linux", "linux2"]:
+		return True
+	
+	if check_linux_libs(libraries):
+		return True
+	
+	script_path = os.path.join(os.path.dirname(__file__), 'install_linux_libs.sh')
+	joined_list = ",".join(libraries)
+	try:
+		subprocess.run(['bash', script_path, title, joined_list])
+	except Exception as e:
+		subprocess.run(['notify-send', title, f'An unexpected error occurred during library installation: {e}'])
+	
+	return check_linux_libs(libraries)

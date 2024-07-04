@@ -3,15 +3,18 @@ from ._meta import title as __title__, date as __date__, __version__
 import os
 import sys
 
-if sys.platform == "darwin":
+if sys.platform in ["darwin", "linux", "linux2"]:
 	import shutil
-	from .utils.download_libs import download_mac_libs
-	
-	os.environ["PATH"] += os.pathsep + "/usr/local/bin"
+	if sys.platform == "darwin":
+		from .utils.download_libs import download_mac_libs as download_libs
+		os.environ["PATH"] += os.pathsep + "/usr/local/bin"
+	else:
+		from deposit_gui.utils.download_libs import download_linux_libs as download_libs
+		os.environ["PATH"] += os.pathsep + "/usr/bin"
 	
 	found_graphviz = (shutil.which("dot") is not None)
 	if not found_graphviz:
-		found_graphviz = download_mac_libs(["graphviz"])
+		found_graphviz = download_libs(["graphviz"], __title__)
 	if not found_graphviz:
 		raise Exception("Graphviz not found")
 
