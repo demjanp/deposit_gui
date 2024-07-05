@@ -19,7 +19,7 @@ class DGUIMain(object):
 		self.controller = Controller(store)
 		self.controller.cview.show()
 		self.controller.cdialogs.open("Connect")
-
+		
 		app.exec()
 	
 	def __del__(self):

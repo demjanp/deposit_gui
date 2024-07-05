@@ -11,6 +11,8 @@ python installer_mac/make_pkgproj.py
 
 brew install graphviz
 
+python bin/update_imports.py installer_mac
+
 pyinstaller installer_mac/dep_gui.spec
 
 find dist/dep_gui -type d -name "__pycache__" -exec rm -r {} +
