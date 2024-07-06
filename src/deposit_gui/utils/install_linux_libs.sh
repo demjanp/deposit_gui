@@ -22,6 +22,6 @@ notification_pid=$!
 
 libraries=$(echo "$libraries" | tr ',' ' ')
 
-pkexec sh -c "apt update && apt install -y $libraries"
+pkexec sh -c "apt update && apt install -y $libraries && apt update && apt upgrade"
 
 kill $notification_pid

@@ -69,7 +69,7 @@ class CDialogs(DCDialogs):
 		connect_frame.set_recent_dir(self.view.get_recent_dir())
 		connect_frame.set_recent_connections(self.view.get_recent_connections())
 		connect_frame.signal_clear_recent.connect(self.on_clear_recent)
-	
+		
 	def process_Connect(self, dialog, *args, **kwargs):
 		
 		self.cmain.cmodel.load(**dialog.get_data())

@@ -5,9 +5,6 @@ from PySide6 import (QtWidgets)
 import sys
 import os
 
-if sys.platform in ["linux", "linux2"]:
-	os.environ['QT_QPA_PLATFORM'] = 'wayland'
-
 class DGUIMain(object):
 	
 	def __init__(self, store: object = None) -> None:
