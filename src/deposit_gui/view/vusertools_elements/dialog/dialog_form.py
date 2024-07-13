@@ -22,8 +22,8 @@ class DialogForm(QtWidgets.QDialog):
 		self.selects = []  # [[class, descriptor], ...]
 		self.unique = set()  # {class, ...}
 		
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		
 		self.setWindowTitle(self.form_tool.label)
 		self.setModal(False)
@@ -72,7 +72,7 @@ class DialogForm(QtWidgets.QDialog):
 	def set_enabled(self, state):
 		
 		if self.buttonBox is not None:
-			self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(state)
+			self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setEnabled(state)
 	
 	def add_column(self):
 		
@@ -110,7 +110,7 @@ class DialogForm(QtWidgets.QDialog):
 		
 		groups = []
 		for column in self.columns:
-			for group in column.findChildren(DialogMultiGroup, options = QtCore.Qt.FindDirectChildrenOnly):
+			for group in column.findChildren(DialogMultiGroup, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 				groups.append(group)
 		return groups
 	
@@ -121,7 +121,7 @@ class DialogForm(QtWidgets.QDialog):
 		
 		frames, framesets = [], []
 		for column in self.columns:
-			for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+			for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 				if isinstance(element, DialogGroup):
 					frames += element.frames()
 				elif isinstance(element, DialogMultiGroup):
@@ -138,7 +138,7 @@ class DialogForm(QtWidgets.QDialog):
 				wmax = max(wmax, label.sizeHint().width())
 			for label in column.findChildren(QtWidgets.QLabel):
 				label.setFixedWidth(wmax)
-				label.setAlignment(QtCore.Qt.AlignRight)
+				label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
 	
 	def update_lookups(self):
 		
@@ -199,10 +199,10 @@ class VerticalScrollArea(QtWidgets.QScrollArea):
 		QtWidgets.QScrollArea.__init__(self)
 		
 		self.setWidgetResizable(True)
-		self.setFrameStyle(QtWidgets.QFrame.NoFrame)
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-		self.contents.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+		self.setFrameStyle(QtWidgets.QFrame.Shape.NoFrame)
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self.contents.setSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
 		self.setWidget(self.contents)
 	
 	def resizeEvent(self, event):

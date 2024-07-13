@@ -21,13 +21,13 @@ if sys.platform == "darwin":
 	import objc
 	from Cocoa import NSObject, NSApplication
 	
+	
 	class AppDelegate(NSObject):
 		def applicationSupportsSecureRestorableState_(self, app):
 			return True
-	
+
 
 class DView(AbstractSubview, DMainWindow):
-	
 	APP_NAME = "DView"
 	REG_PREFIX = ""
 	VERSION = "0.0.0"
@@ -48,7 +48,6 @@ class DView(AbstractSubview, DMainWindow):
 		self.setStatusBar(self.statusbar)
 		
 		sys.excepthook = self.exception_event
-	
 	
 	# public methods
 	
@@ -88,12 +87,12 @@ class DView(AbstractSubview, DMainWindow):
 		self.setWindowIcon(self.get_icon(name))
 	
 	def update_style(self, path=None):
-
+		
 		def _check_dark_mode():
 			result = subprocess.run(
-				["defaults", "read", "-g", "AppleInterfaceStyle"], 
-				stdout=subprocess.PIPE, 
-				stderr=subprocess.PIPE, 
+				["defaults", "read", "-g", "AppleInterfaceStyle"],
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE,
 				text=True
 			)
 			if "Dark" in result.stdout:
@@ -105,7 +104,8 @@ class DView(AbstractSubview, DMainWindow):
 		if sys.platform == "darwin":
 			if _check_dark_mode():
 				import deposit_gui.dgui
-				qss_path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "qss", "dark.qss")))
+				qss_path = os.path.normpath(
+					os.path.abspath(os.path.join(os.path.dirname(deposit_gui.dgui.__file__), "qss", "dark.qss")))
 				with open(qss_path, 'r') as f:
 					style = f.read()
 		
@@ -116,7 +116,6 @@ class DView(AbstractSubview, DMainWindow):
 		if style:
 			app = QtWidgets.QApplication.instance()
 			app.setStyleSheet(style)
-		
 	
 	def get_recent_dir(self):
 		
@@ -141,7 +140,7 @@ class DView(AbstractSubview, DMainWindow):
 			return collect
 		return []
 	
-	def add_recent_connection(self, url = None, identifier = None, connstr = None):
+	def add_recent_connection(self, url=None, identifier=None, connstr=None):
 		
 		data = self.get_recent_connections()
 		row = None
@@ -171,7 +170,6 @@ class DView(AbstractSubview, DMainWindow):
 				break
 		return active
 	
-	
 	def show_information(self, caption, text):
 		
 		QtWidgets.QMessageBox.information(
@@ -188,18 +186,18 @@ class DView(AbstractSubview, DMainWindow):
 			self.get_active_window(), caption, text
 		)
 		
-		return reply == QtWidgets.QMessageBox.Yes
+		return reply == QtWidgets.QMessageBox.StandardButton.Yes
 	
-	def show_input_dialog(self, caption, text, value = "", **kwargs):
+	def show_input_dialog(self, caption, text, value="", **kwargs):
 		
 		text, ok = QtWidgets.QInputDialog.getText(
-			self.get_active_window(), caption, text, text = value, **kwargs
+			self.get_active_window(), caption, text, text=value, **kwargs
 		)
 		if text and ok:
 			return text
 		return None
 	
-	def show_item_dialog(self, caption, text, items, editable = False):
+	def show_item_dialog(self, caption, text, items, editable=False):
 		
 		name, ok = QtWidgets.QInputDialog.getItem(
 			self.get_active_window(), caption, text, items, editable
@@ -207,7 +205,6 @@ class DView(AbstractSubview, DMainWindow):
 		if name and ok:
 			return name
 		return None
-	
 	
 	# events
 	
@@ -219,22 +216,20 @@ class DView(AbstractSubview, DMainWindow):
 		self.logging.append(text)
 		print(text)
 	
-	
 	# overriden QMainWindow methods
 	
 	def keyPressEvent(self, event):
-		
-		for action in self.findChildren(QtGui.QAction):
-			if action.isEnabled() and (
-				action.shortcut() == QtGui.QKeySequence(
-					event.key()+int(event.modifiers())
-				)
-			):
-				action.trigger()
+		if isinstance(event, QtGui.QKeyEvent):
+			key_combination = QtCore.QKeyCombination(
+					QtCore.Qt.KeyboardModifier(event.modifiers()),
+					QtCore.Qt.Key(event.key())
+			)
+			for action in self.findChildren(QtGui.QAction):
+				if action.isEnabled() and (action.shortcut() == key_combination):
+					action.trigger()
 		
 		QtWidgets.QMainWindow.keyPressEvent(self, event)
 	
 	def closeEvent(self, event):
 		
 		DMainWindow.closeEvent(self, event)
-

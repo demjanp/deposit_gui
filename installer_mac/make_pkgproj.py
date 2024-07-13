@@ -1,6 +1,4 @@
 from deposit_gui import (__version__)
-import codecs
-import sys
 import os
 
 ftemplate = "installer_mac/deposit_gui.pkgproj.tpl"

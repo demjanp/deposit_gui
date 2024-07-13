@@ -74,7 +74,7 @@ class ExternalFrame(AbstractMDIAreaFrame, QtWidgets.QWidget):
 		header = self.get_current_header()
 		targets = {}
 		for idx in range(self._externalsource.column_count(header.sheet_name())):
-			substr, bracketed = remove_bracketed_all(header.item(0, idx).data(QtCore.Qt.DisplayRole))
+			substr, bracketed = remove_bracketed_all(header.item(0, idx).data(QtCore.Qt.ItemDataRole.DisplayRole))
 			data = substr.split(".")
 			if len(data) != 2:
 				continue
@@ -151,13 +151,13 @@ class ExternalHeader(QtWidgets.QTableWidget):
 		self._externalsource = externalsource
 		self._sheet = sheet
 		
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Interactive)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
+		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		self.horizontalHeader().setStretchLastSection(True)
-		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)
-		self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
+		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+		self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
 		self.verticalHeader().setVisible(False)
 		
 		columns_n = self._externalsource.column_count(self._sheet)
@@ -167,13 +167,13 @@ class ExternalHeader(QtWidgets.QTableWidget):
 			name = self._externalsource.column_name(self._sheet, idx)
 			# set column label
 			item = QtWidgets.QTableWidgetItem()
-			item.setData(QtCore.Qt.DisplayRole, name)
+			item.setData(QtCore.Qt.ItemDataRole.DisplayRole, name)
 			self.setHorizontalHeaderItem(idx, item)
 			
 			# set target
 			item = QtWidgets.QTableWidgetItem()
-			item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
-			item.setData(QtCore.Qt.DisplayRole, name)
+			item.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsEditable)
+			item.setData(QtCore.Qt.ItemDataRole.DisplayRole, name)
 			self.setItem(0, idx, item)
 		
 		self.adjustSize()
@@ -192,11 +192,11 @@ class ExternalBody(QtWidgets.QTableWidget):
 		self._externalsource = externalsource
 		self._sheet = sheet
 		
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Interactive)
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
+		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		self.horizontalHeader().setStretchLastSection(True)
-		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)
+		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 		self.horizontalHeader().setVisible(False)
 		self.verticalHeader().setVisible(False)
 		
@@ -215,13 +215,13 @@ class ExternalBody(QtWidgets.QTableWidget):
 				data = self._externalsource.data(self._sheet, row_idx, column_idx)
 				
 				item = QtWidgets.QTableWidgetItem()
-				item.setData(QtCore.Qt.UserRole, data)
+				item.setData(QtCore.Qt.ItemDataRole.UserRole, data)
 				if isinstance(data, DGeometry):
-					item.setData(QtCore.Qt.DisplayRole, data.geometry_type)
-					item.setData(QtCore.Qt.DecorationRole, self._externalframe.get_icon("geometry.svg"))
+					item.setData(QtCore.Qt.ItemDataRole.DisplayRole, data.geometry_type)
+					item.setData(QtCore.Qt.ItemDataRole.DecorationRole, self._externalframe.get_icon("geometry.svg"))
 				else:
-					item.setData(QtCore.Qt.DisplayRole, data)
-				item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
+					item.setData(QtCore.Qt.ItemDataRole.DisplayRole, data)
+				item.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable)
 				
 				self.setItem(row_idx, column_idx, item)
 		

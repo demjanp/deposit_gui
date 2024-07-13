@@ -97,7 +97,7 @@ class CDialogs(DCDialogs):
 			"Load Database?", 
 			"Load database from <b>%s</b>" % (datasource.get_name()),
 		)
-		if reply == QtWidgets.QMessageBox.Yes:
+		if reply == QtWidgets.QMessageBox.StandardButton.Yes:
 			self.cmain.cmodel.load(**data)
 	
 	
@@ -595,8 +595,8 @@ DDateTime('2022-07-20T19:31:00.729558')
 		frame.layout().addWidget(label)
 		frame.layout().addWidget(frame.expr_edit)
 		
-		frame.layout().setAlignment(frame.target_edit, QtCore.Qt.AlignTop)
-		frame.layout().setAlignment(label, QtCore.Qt.AlignTop)
+		frame.layout().setAlignment(frame.target_edit, QtCore.Qt.AlignmentFlag.AlignTop)
+		frame.layout().setAlignment(label, QtCore.Qt.AlignmentFlag.AlignTop)
 		
 		dialog.set_frame(frame)
 	

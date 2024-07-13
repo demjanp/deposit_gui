@@ -34,7 +34,7 @@ class AbstractTabFile(QtWidgets.QFrame):
 		self.tree.setAnimated(False)
 		self.tree.setIndentation(20)
 		self.tree.setSortingEnabled(True)
-		self.tree.sortByColumn(0, QtCore.Qt.AscendingOrder)
+		self.tree.sortByColumn(0, QtCore.Qt.SortOrder.AscendingOrder)
 		self.tree.selected.connect(self.on_selected)
 		self.tree.activated.connect(self.on_connect)
 		

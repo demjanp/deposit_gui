@@ -72,14 +72,14 @@ class EditorGroup(QtWidgets.QGroupBox):
 		self.group.label = label
 		self.group.stylesheet = "QGroupBox {font-weight: bold;}" if self.bold else ""
 		self.group.members = []
-		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorFrame):
 				self.group.members.append(element.user_element())
 		return self.group
 		
 	def get_selected(self):
 		
-		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorFrame):
 				if element.selected:
 					return element
@@ -87,7 +87,7 @@ class EditorGroup(QtWidgets.QGroupBox):
 		
 	def deselect_all(self):
 		
-		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorFrame):
 				element.setSelected(False)
 	

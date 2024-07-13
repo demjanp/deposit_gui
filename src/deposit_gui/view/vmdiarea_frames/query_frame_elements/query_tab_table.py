@@ -18,7 +18,7 @@ class ProxyModel(QtCore.QSortFilterProxyModel):
 	
 	def lessThan(self, source_left, source_right):
 		
-		values = [("" if val is None else val) for val in [source_left.data(QtCore.Qt.DisplayRole), source_right.data(QtCore.Qt.DisplayRole)]]
+		values = [("" if val is None else val) for val in [source_left.data(QtCore.Qt.ItemDataRole.DisplayRole), source_right.data(QtCore.Qt.ItemDataRole.DisplayRole)]]
 		
 		return values == natsorted(values)
 	
@@ -97,18 +97,18 @@ class TableModel(AbstractDragModel, QtCore.QAbstractTableModel):
 	
 	def headerData(self, section, orientation, role):
 		
-		if orientation == QtCore.Qt.Horizontal: # column headers
-			if role == QtCore.Qt.DisplayRole:
+		if orientation == QtCore.Qt.Orientation.Horizontal: # column headers
+			if role == QtCore.Qt.ItemDataRole.DisplayRole:
 				return self._column_names[section]
-			elif role == QtCore.Qt.UserRole:
+			elif role == QtCore.Qt.ItemDataRole.UserRole:
 				return self._query.columns[section]
 			return None
 		
-		if orientation == QtCore.Qt.Vertical: # row headers
+		if orientation == QtCore.Qt.Orientation.Vertical: # row headers
 			index = self._proxy_model.index(section, 0)
-			if role == QtCore.Qt.DisplayRole:
+			if role == QtCore.Qt.ItemDataRole.DisplayRole:
 				return str(self.get_query_item(index).obj_id_row)
-			elif role == QtCore.Qt.UserRole:
+			elif role == QtCore.Qt.ItemDataRole.UserRole:
 				return self.get_query_item(index).obj_id_row
 			
 		return None
@@ -122,9 +122,9 @@ class TableModel(AbstractDragModel, QtCore.QAbstractTableModel):
 		
 		return item.data(role)
 	
-	def setData(self, index, value, role = QtCore.Qt.EditRole):
+	def setData(self, index, value, role = QtCore.Qt.ItemDataRole.EditRole):
 		
-		if role == QtCore.Qt.EditRole:
+		if role == QtCore.Qt.ItemDataRole.EditRole:
 			item = self.get_query_item(index)
 			QtCore.QAbstractTableModel.setData(self, index, value, role)
 			self._queryframe.on_edited(item, value)
@@ -171,12 +171,12 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		
 		self.setAcceptDrops(True)
 		self.setDragEnabled(True)
-		self.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-		self.setDefaultDropAction(QtCore.Qt.CopyAction)
+		self.setDragDropMode(QtWidgets.QAbstractItemView.DragDropMode.DragDrop)
+		self.setDefaultDropAction(QtCore.Qt.DropAction.CopyAction)
 		self.setDropIndicatorShown(True)
 		
 		self.setSortingEnabled(True)
-		self.horizontalHeader().setSortIndicator(0, QtCore.Qt.AscendingOrder)
+		self.horizontalHeader().setSortIndicator(0, QtCore.Qt.SortOrder.AscendingOrder)
 		
 		path = os.path.join(os.path.dirname(deposit_gui.__file__), "res/obj_id.svg")
 		path = path.replace("\\", "/")
@@ -202,13 +202,13 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		
 		self.setIconSize(QtCore.QSize(24, 24))
 		
-		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Interactive)
+		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
+		self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Interactive)
 		self.horizontalHeader().setStretchLastSection(True)
 		
 		self.setModel(self._table_model._proxy_model)
 		
-		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)
+		self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 		
 		self.activated.connect(self.on_activated)
 		self.verticalHeader().sectionDoubleClicked.connect(self.on_row_doubleclicked)
@@ -224,20 +224,21 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		if text == "":
 			self._table_model._proxy_model.setFilterWildcard("")
 		else:
-			self._table_model._proxy_model.setFilterRegExp(QtCore.QRegExp(".*%s.*" % text, QtCore.Qt.CaseInsensitive))
+			self._table_model._proxy_model.setFilterRegularExpression(
+				QtCore.QRegularExpression(".*%s.*" % text, QtCore.QRegularExpression.PatternOption.CaseInsensitiveOption))
 		self._table_model._proxy_model.setFilterKeyColumn(-1)
 	
 	def select_object(self, obj_id):
 		
 		for row in range(self._table_model._proxy_model.rowCount()):
-			if self._table_model._proxy_model.index(row, 0).data(QtCore.Qt.UserRole).obj_id_row == obj_id:
+			if self._table_model._proxy_model.index(row, 0).data(QtCore.Qt.ItemDataRole.UserRole).obj_id_row == obj_id:
 				self.selectRow(row)
 				return
 	
 	def get_item(self, row, col):
 		
 		index = self._table_model._proxy_model.index(row, col)
-		return self._table_model._proxy_model.mapToSource(index).data(QtCore.Qt.UserRole)
+		return self._table_model._proxy_model.mapToSource(index).data(QtCore.Qt.ItemDataRole.UserRole)
 	
 	def set_query_item(self, row, column, value):
 		
@@ -257,7 +258,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		n_columns = len(self._query.columns)
 		for row in range(len(self._query)):
 			for column in range(n_columns):
-				value = self._table_model.index(row, column).data(QtCore.Qt.UserRole)
+				value = self._table_model.index(row, column).data(QtCore.Qt.ItemDataRole.UserRole)
 				if isinstance(value, QueryItem):
 					value = value.value
 					if (value.__class__.__name__ == "DResource") and (value.is_image):
@@ -270,7 +271,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 		obj_ids = set()
 		for row in range(self._table_model._proxy_model.rowCount()):
 			index = self._table_model._proxy_model.index(row, 0)
-			item = self._table_model._proxy_model.mapToSource(index).data(QtCore.Qt.UserRole)
+			item = self._table_model._proxy_model.mapToSource(index).data(QtCore.Qt.ItemDataRole.UserRole)
 			if isinstance(item, QueryItem):
 				obj_id = item.obj_id
 				if obj_id is not None:
@@ -294,7 +295,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 	@QtCore.Slot(QtCore.QModelIndex)
 	def on_activated(self, index):
 		
-		item = index.data(QtCore.Qt.UserRole)
+		item = index.data(QtCore.Qt.ItemDataRole.UserRole)
 		self._queryframe.on_query_activated(item)
 	
 	@QtCore.Slot(int)
@@ -304,8 +305,8 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 	
 	def on_selected(self):
 		
-		row_items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedRows()]
-		items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedIndexes()]
+		row_items = [index.data(QtCore.Qt.ItemDataRole.UserRole) for index in self.selectionModel().selectedRows()]
+		items = [index.data(QtCore.Qt.ItemDataRole.UserRole) for index in self.selectionModel().selectedIndexes()]
 		items = [item for item in items if item is not None]
 		self._queryframe.on_query_selected(items)
 		self._queryframe.on_selected_rows(row_items)

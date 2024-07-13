@@ -45,7 +45,7 @@ class VUserTools(AbstractSubview, QtCore.QObject):
 		self._form_editor = None
 		self.entry_form_geometry = None
 		
-		self._toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+		self._toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 		
 		self.action_manage = QtGui.QAction("User Tools")
 		self.action_manage.setToolTip("Manage User Tools")

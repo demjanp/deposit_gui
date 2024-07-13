@@ -8,7 +8,7 @@ class QueryList(QtWidgets.QListWidget):
 		
 		self._vnavigator = vnavigator
 		
-		self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+		self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
 		
 		self.itemActivated.connect(self.on_activated)
 		self.itemSelectionChanged.connect(self.on_selected)

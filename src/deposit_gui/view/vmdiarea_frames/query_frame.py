@@ -58,8 +58,8 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		self.tabs.addTab(self.tab_images, "Images")
 		self.tabs.addTab(self.tab_graph, "Graph")
 		
-		splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
-		splitter.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
+		splitter.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		self.layout().addWidget(splitter)
 		
 		frame_left = QtWidgets.QFrame()
@@ -72,7 +72,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 
 		self.scroll_area = QtWidgets.QScrollArea()
 		self.scroll_area.setWidgetResizable(True)
-		self.scroll_area.setFrameStyle(QtWidgets.QFrame.NoFrame)
+		self.scroll_area.setFrameStyle(QtWidgets.QFrame.Shape.NoFrame)
 		self.scroll_area.setWidget(self.relation_frame)
 		
 		splitter.addWidget(frame_left)
@@ -170,7 +170,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 	def get_header(self, col, user_role = False):
 		# pass to deposit.AbstractExternalsource to provide header data from QueryTabTable
 		
-		return self.tab_table._table_model.headerData(col, QtCore.Qt.Horizontal, QtCore.Qt.UserRole if user_role else QtCore.Qt.DisplayRole)
+		return self.tab_table._table_model.headerData(col, QtCore.Qt.Orientation.Horizontal, QtCore.Qt.ItemDataRole.UserRole if user_role else QtCore.Qt.ItemDataRole.DisplayRole)
 	
 	def get_item(self, row, col):
 		# pass to deposit.AbstractExternalsource to provide data from QueryTabTable
@@ -354,8 +354,8 @@ class QueryFooter(QtWidgets.QFrame):
 		self._queryframe = queryframe
 		self._count_text = None
 		
-		self.setFrameShape(QtWidgets.QFrame.StyledPanel)
-		self.setFrameShadow(QtWidgets.QFrame.Raised)
+		self.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+		self.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
 
 		layout = QtWidgets.QGridLayout()
 		self.setLayout(layout)

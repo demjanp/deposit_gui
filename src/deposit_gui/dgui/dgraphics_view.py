@@ -13,9 +13,9 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		
 		scene = QtWidgets.QGraphicsScene(self)
 		self.setScene(scene)
-		self.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.SmoothPixmapTransform)
-		self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
-		self.setBackgroundBrush(QtCore.Qt.white)
+		self.setRenderHints(QtGui.QPainter.RenderHint.Antialiasing | QtGui.QPainter.RenderHint.SmoothPixmapTransform)
+		self.setTransformationAnchor(QtWidgets.QGraphicsView.ViewportAnchor.AnchorUnderMouse)
+		self.setBackgroundBrush(QtCore.Qt.GlobalColor.white)
 		
 		layout = QtWidgets.QVBoxLayout()
 		self.setLayout(layout)
@@ -23,7 +23,7 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		self._button_frame.setLayout(layout_button_frame)
 		self.layout().addWidget(self._button_frame)
 		self.layout().addStretch()
-		self.layout().setAlignment(self._button_frame, QtCore.Qt.AlignLeft)
+		self.layout().setAlignment(self._button_frame, QtCore.Qt.AlignmentFlag.AlignLeft)
 	
 	def set_button_zoom_reset(self, caption = "Reset Zoom", icon = None):
 		
@@ -76,9 +76,9 @@ class DGraphicsView(QtWidgets.QGraphicsView):
 		rect = self.scene().itemsBoundingRect().marginsAdded(QtCore.QMarginsF(10, 10, 10, 10))
 		if rect.isEmpty():
 			rect.setRect(-100, -100, 200, 200)
-			self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
+			self.fitInView(rect, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
 		else:
-			self.fitInView(rect, QtCore.Qt.KeepAspectRatio)
+			self.fitInView(rect, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
 			self.reset_scene()
 		if self._button_zoom_reset is not None:
 			self._button_zoom_reset.hide()

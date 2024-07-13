@@ -22,7 +22,7 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		self.right.layout().setContentsMargins(0, 0, 0, 0)
 		
 		self.recent_list = QtWidgets.QListWidget()
-		self.recent_list.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+		self.recent_list.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
 		self.recent_list.itemSelectionChanged.connect(self.on_selected)
 		self.recent_list.activated.connect(self.on_connect)
 		
@@ -58,7 +58,7 @@ class DConnectTabRecent(QtWidgets.QFrame):
 			if not name:
 				continue
 			item = QtWidgets.QListWidgetItem(name)
-			item.setData(QtCore.Qt.UserRole, row)
+			item.setData(QtCore.Qt.ItemDataRole.UserRole, row)
 			self.recent_list.addItem(item)
 		
 		self.update()
@@ -81,7 +81,7 @@ class DConnectTabRecent(QtWidgets.QFrame):
 		item = self.recent_list.currentItem()
 		if not item:
 			return
-		row = item.data(QtCore.Qt.UserRole)
+		row = item.data(QtCore.Qt.ItemDataRole.UserRole)
 		if len(row) == 1:
 			self.parent.on_connect(url = row[0])
 			return

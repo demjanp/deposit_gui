@@ -13,27 +13,27 @@ class AbstractDragModel(object):
 	
 	def supportedDragActions(self):
 		
-		return QtCore.Qt.CopyAction | QtCore.Qt.MoveAction | QtCore.Qt.LinkAction | QtCore.Qt.ActionMask | QtCore.Qt.IgnoreAction
+		return QtCore.Qt.DropAction.CopyAction | QtCore.Qt.DropAction.MoveAction | QtCore.Qt.DropAction.LinkAction | QtCore.Qt.DropAction.ActionMask | QtCore.Qt.DropAction.IgnoreAction
 	
 	def supportedDropActions(self):
 		
-		return QtCore.Qt.CopyAction | QtCore.Qt.MoveAction | QtCore.Qt.LinkAction | QtCore.Qt.ActionMask | QtCore.Qt.IgnoreAction
+		return QtCore.Qt.DropAction.CopyAction | QtCore.Qt.DropAction.MoveAction | QtCore.Qt.DropAction.LinkAction | QtCore.Qt.DropAction.ActionMask | QtCore.Qt.DropAction.IgnoreAction
 	
 	def flags(self, item):
 		
-		flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+		flags = QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable
 		
 		if item is None:
 			return flags
 		
 		if self.drag_supported(item):
-			flags = flags | QtCore.Qt.ItemIsDragEnabled
+			flags = flags | QtCore.Qt.ItemFlag.ItemIsDragEnabled
 		
 		if self.drop_supported(item):
-			flags = flags | QtCore.Qt.ItemIsDropEnabled
+			flags = flags | QtCore.Qt.ItemFlag.ItemIsDropEnabled
 		
 		if not item.read_only:
-			flags = flags | QtCore.Qt.ItemIsEditable
+			flags = flags | QtCore.Qt.ItemFlag.ItemIsEditable
 		
 		return flags
 	
@@ -48,7 +48,7 @@ class AbstractDragModel(object):
 		datasource = self._queryframe._cmodel.get_datasource().to_dict()
 		datasource["_id"] = id(self._queryframe._cmodel)
 		for index in indexes:
-			item = index.data(QtCore.Qt.UserRole)
+			item = index.data(QtCore.Qt.ItemDataRole.UserRole)
 			if item.is_resource():
 				path = self._queryframe._cmodel.get_temp_copy(item.value)
 				if path is not None:
@@ -94,7 +94,7 @@ class AbstractDragModel(object):
 	
 	def dropMimeData(self, data, action, row, column, parent):
 		
-		item = parent.data(QtCore.Qt.UserRole)
+		item = parent.data(QtCore.Qt.ItemDataRole.UserRole)
 		if item is None:
 			return False
 		return self.process_drop(item, data)

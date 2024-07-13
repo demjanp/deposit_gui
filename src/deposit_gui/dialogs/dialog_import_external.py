@@ -84,7 +84,7 @@ class DialogImportExternal(AbstractSubview, QtWidgets.QFrame):
 			row += 1
 		
 		button_add = QtWidgets.QToolButton()
-		button_add.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+		button_add.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 		button_add.setIcon(self.get_icon("link.svg"))
 		button_add.setIconSize(QtCore.QSize(24,24))
 		button_add.setText("Add")

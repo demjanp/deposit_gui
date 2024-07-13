@@ -9,7 +9,7 @@ class DialogColumn(QtWidgets.QFrame):
 		
 		layout = QtWidgets.QVBoxLayout()
 		self.setLayout(layout)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		self.layout().setContentsMargins(0, 0, 0, 0)
 		self.layout().addStretch()
 		

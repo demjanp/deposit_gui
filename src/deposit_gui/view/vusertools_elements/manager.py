@@ -19,8 +19,8 @@ class Manager(QtWidgets.QDialog):
 		
 		self._vusertools = vusertools
 		
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		self.setStyleSheet("QPushButton {Text-align:left;}")
 		self.setWindowTitle("User Tool Manager")
 		self.setMinimumWidth(300)
@@ -30,7 +30,7 @@ class Manager(QtWidgets.QDialog):
 		self.layout().setContentsMargins(10, 10, 10, 10)
 		
 		self.tool_list = QtWidgets.QListWidget()
-		self.tool_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+		self.tool_list.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
 		self.controls = QtWidgets.QFrame()
 		controls_layout = QtWidgets.QVBoxLayout()
 		self.controls.setLayout(controls_layout)
@@ -174,8 +174,8 @@ class Manager(QtWidgets.QDialog):
 		labels = [tool.label for tool in self.get_selected()]
 		if not labels:
 			return
-		reply = QtWidgets.QMessageBox.question(self, "Delete Tool", "Delete %d tools?" % (len(labels)), QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-		if reply != QtWidgets.QMessageBox.Yes:
+		reply = QtWidgets.QMessageBox.question(self, "Delete Tool", "Delete %d tools?" % (len(labels)), QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+		if reply != QtWidgets.QMessageBox.StandardButton.Yes:
 			return
 		self.signal_del_tool.emit(labels)
 	

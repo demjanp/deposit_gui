@@ -73,9 +73,9 @@ class QueryItem(object):
 	
 	def populate_data(self, role):
 		
-		if role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
+		if role in [QtCore.Qt.ItemDataRole.DisplayRole, QtCore.Qt.ItemDataRole.EditRole]:
 			
-			role2 = QtCore.Qt.EditRole if role == QtCore.Qt.DisplayRole else QtCore.Qt.DisplayRole
+			role2 = QtCore.Qt.ItemDataRole.EditRole if role == QtCore.Qt.ItemDataRole.DisplayRole else QtCore.Qt.ItemDataRole.DisplayRole
 			if role2 in self._data:
 				self._data[role] = self._data[role2]
 			
@@ -102,7 +102,7 @@ class QueryItem(object):
 			self._data[role] = str(self.value)
 			return
 		
-		if role == QtCore.Qt.DecorationRole:
+		if role == QtCore.Qt.ItemDataRole.DecorationRole:
 			
 			if self.value is None:
 				self._data[role] = None
@@ -142,12 +142,12 @@ class QueryItem(object):
 			self._data[role] = None
 			return
 		
-		if role == QtCore.Qt.UserRole:
+		if role == QtCore.Qt.ItemDataRole.UserRole:
 			
 			self._data[role] = self
 			return
 		
-		if role == QtCore.Qt.BackgroundRole:
+		if role == QtCore.Qt.ItemDataRole.BackgroundRole:
 			
 			if self.read_only:
 				self._data[role] = QtGui.QColor(240, 240, 240, 255)
@@ -167,7 +167,7 @@ class QueryItem(object):
 	
 	def get_display_data(self):
 		
-		return self.data(QtCore.Qt.DisplayRole)
+		return self.data(QtCore.Qt.ItemDataRole.DisplayRole)
 	
 	def __repr__(self):
 		

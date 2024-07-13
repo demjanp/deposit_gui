@@ -1,4 +1,3 @@
-from deposit_gui.view.vmdiarea_frames.abstract_mdiarea_frame import AbstractMDIAreaFrame
 from PySide6 import (QtWidgets, QtCore, QtGui)
 from natsort import (natsorted)
 from urllib.parse import (urlencode, parse_qsl)
@@ -18,7 +17,7 @@ class RelationFrame(QtWidgets.QFrame):
 		
 		layout = QtWidgets.QVBoxLayout()
 		self.setLayout(layout)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		self.setStyleSheet('''
 			QFrame {
 				background-color: white;
@@ -30,10 +29,10 @@ class RelationFrame(QtWidgets.QFrame):
 		form_header.setLayout(form_header_layout)
 		form_header.layout().setContentsMargins(0, 0, 0, 0)
 		self.label_obj_id = QtWidgets.QLabel("None")
-		self.label_obj_id.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+		self.label_obj_id.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextBrowserInteraction)
 		self.label_obj_id.linkActivated.connect(self.on_object_link)
 		self.label_classes = QtWidgets.QLabel("None")
-		self.label_classes.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+		self.label_classes.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextBrowserInteraction)
 		self.label_classes.linkActivated.connect(self.on_class_link)
 		form_header.layout().addRow("<b>Object ID:</b>", self.label_obj_id)
 		form_header.layout().addRow("<b>Classes:</b>", self.label_classes)
@@ -83,14 +82,14 @@ class RelationFrame(QtWidgets.QFrame):
 				"<a style=\"text-decoration:none;\" href=\"%s\">%s.%s</a>" % \
 					(urlencode({"obj_id": obj.id, "label": label, "name": name}), label, name)
 			)
-			label_link.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+			label_link.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextBrowserInteraction)
 			label_link.linkActivated.connect(self.on_relation_link)
 			
 			label_unlink = QtWidgets.QLabel(
 				"<a style=\"text-decoration:none;\" href=\"%s\">unlink</a>" % \
 					(urlencode({"obj_id": obj.id, "label": label, "name": name}))
 			)
-			label_unlink.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+			label_unlink.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextBrowserInteraction)
 			label_unlink.linkActivated.connect(self.on_relation_unlink)
 			
 			self.list_related.layout().addRow(label_link, label_unlink)

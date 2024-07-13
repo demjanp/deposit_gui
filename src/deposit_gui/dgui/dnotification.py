@@ -12,8 +12,8 @@ class DNotification(QtWidgets.QFrame):
 		
 		self.label = QtWidgets.QLabel()
 		
-		self.setWindowFlags(QtCore.Qt.ToolTip)
-		self.setFrameShape(QtWidgets.QFrame.StyledPanel)
+		self.setWindowFlags(QtCore.Qt.WindowType.ToolTip)
+		self.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
 		self.setStyleSheet('''
 		QFrame { background-color: white;}
 		QToolButton {
@@ -30,7 +30,7 @@ class DNotification(QtWidgets.QFrame):
 		
 		close_button = QtWidgets.QToolButton()
 		close_button.setIcon(QtWidgets.QApplication.style().standardIcon(
-			QtWidgets.QStyle.SP_TitleBarCloseButton)
+			QtWidgets.QStyle.StandardPixmap.SP_TitleBarCloseButton)
 		)
 		
 		layout = QtWidgets.QVBoxLayout()
@@ -39,11 +39,13 @@ class DNotification(QtWidgets.QFrame):
 		self.layout().setSpacing(0)
 		self.layout().addWidget(close_button)
 		self.layout().addWidget(self.label)
-		self.layout().setAlignment(close_button, QtCore.Qt.AlignRight)
+		self.layout().setAlignment(close_button, QtCore.Qt.AlignmentFlag.AlignRight)
 		
 		close_button.clicked.connect(self.on_close)
 		
-		self.hide_timer = QtCore.QTimer(singleShot = True, timeout = self.on_hide_timer)
+		self.hide_timer = QtCore.QTimer()
+		self.hide_timer.setSingleShot(True)
+		self.hide_timer.timeout.connect(self.on_hide_timer)
 		self.hide()
 	
 	def set_delay(self, delay):

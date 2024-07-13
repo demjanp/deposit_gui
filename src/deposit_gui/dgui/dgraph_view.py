@@ -75,7 +75,6 @@ def pygraphviz_layout(G, prog="dot", root=None, args=""):
 			node_pos[n] = (0.0, 0.0)
 	return node_pos
 
-
 NODE_TYPE = QtWidgets.QGraphicsItem.UserType + 1
 EDGE_TYPE = QtWidgets.QGraphicsItem.UserType + 2
 
@@ -99,11 +98,11 @@ class AbstractNode(QtWidgets.QGraphicsItem):
 			self.label_w = rect.width()
 		
 		self.setAcceptHoverEvents(True)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
-		self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsFocusable, True)
+		self.setCacheMode(QtWidgets.QGraphicsItem.CacheMode.DeviceCoordinateCache)
 		self.setZValue(-1)
 	
 	def add_edge(self, edge):
@@ -206,7 +205,7 @@ class AbstractNode(QtWidgets.QGraphicsItem):
 	
 	def itemChange(self, change, value):
 		
-		if change == QtWidgets.QGraphicsItem.ItemPositionChange:
+		if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemPositionChange:
 			for edge in self.edges:
 				edge = edge()
 				if edge is not None:
@@ -251,16 +250,16 @@ class Node(AbstractNode):
 		path.addEllipse(-self.radius, -self.radius, 2*self.radius, 2*self.radius)
 		return path
 	
-	def paint(self, painter, option, widget):
+	def paint(self, painter, option, widget=None):
 		
 		pen_width = 0
-		if option.state & QtWidgets.QStyle.State_Sunken:
+		if option.state & QtWidgets.QStyle.StateFlag.State_Sunken:
 			pen_width = 2
-		if option.state & QtWidgets.QStyle.State_Selected:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.lightGray))
+		if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.lightGray))
 		else:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.white))
-		painter.setPen(QtGui.QPen(QtCore.Qt.black, pen_width))
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.white))
+		painter.setPen(QtGui.QPen(QtCore.Qt.GlobalColor.black, pen_width))
 		painter.drawEllipse(-self.radius, -self.radius, 2*self.radius, 2*self.radius)
 		if self.label != "":
 			painter.setFont(self.font)
@@ -351,30 +350,30 @@ class NodeWithAttributes(AbstractNode):
 		
 		return self.selection_shape
 	
-	def paint(self, painter, option, widget):
+	def paint(self, painter, option, widget=None):
 		
 		adjust_y = -2
 		
 		pen_width = 0
-		if option.state & QtWidgets.QStyle.State_Sunken:
+		if option.state & QtWidgets.QStyle.StateFlag.State_Sunken:
 			pen_width = 2
 		
 		y = self.label_h + 2*self.text_padding + adjust_y
 		rect = self.selection_polygon.boundingRect()
 		
-		painter.setPen(QtCore.Qt.NoPen)
-		painter.setBrush(QtGui.QBrush(QtCore.Qt.white))
+		painter.setPen(QtCore.Qt.PenStyle.NoPen)
+		painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.white))
 		painter.drawPath(self.selection_shape)
 		
-		painter.setPen(QtCore.Qt.NoPen)
-		if option.state & QtWidgets.QStyle.State_Selected:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.darkGray))
+		painter.setPen(QtCore.Qt.PenStyle.NoPen)
+		if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.darkGray))
 		else:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.lightGray))
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.lightGray))
 		painter.drawRect(0, 0, rect.width(), y)
 		
-		painter.setPen(QtGui.QPen(QtCore.Qt.black, pen_width))
-		painter.setBrush(QtCore.Qt.NoBrush)
+		painter.setPen(QtGui.QPen(QtCore.Qt.GlobalColor.black, pen_width))
+		painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 		painter.drawLine(0, y, rect.width(), y)
 		painter.drawPath(self.selection_shape)
 		
@@ -435,21 +434,21 @@ class NodeWithSimpleAttributes(NodeWithAttributes):
 		self.selection_shape = QtGui.QPainterPath()
 		self.selection_shape.addPolygon(self.selection_polygon)
 	
-	def paint(self, painter, option, widget):
+	def paint(self, painter, option, widget=None):
 		
 		adjust_y = -2
 		
 		pen_width = 0
-		if option.state & QtWidgets.QStyle.State_Sunken:
+		if option.state & QtWidgets.QStyle.StateFlag.State_Sunken:
 			pen_width = 2
 		
-		painter.setPen(QtCore.Qt.NoPen)
-		if option.state & QtWidgets.QStyle.State_Selected:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.lightGray))
+		painter.setPen(QtCore.Qt.PenStyle.NoPen)
+		if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.lightGray))
 		else:
-			painter.setBrush(QtGui.QBrush(QtCore.Qt.white))
+			painter.setBrush(QtGui.QBrush(QtCore.Qt.GlobalColor.white))
 		
-		painter.setPen(QtGui.QPen(QtCore.Qt.black, pen_width))
+		painter.setPen(QtGui.QPen(QtCore.Qt.GlobalColor.black, pen_width))
 		
 		painter.drawPath(self.selection_shape)
 		
@@ -491,7 +490,7 @@ class Edge(QtWidgets.QGraphicsItem):
 		QtWidgets.QGraphicsItem.__init__(self)
 		
 		self.label = label
-		self.color = QtCore.Qt.gray if color is None else color
+		self.color = QtCore.Qt.GlobalColor.gray if color is None else color
 		self.source = weakref.ref(source)
 		self.target = weakref.ref(target)
 		self.offset = offset
@@ -513,10 +512,10 @@ class Edge(QtWidgets.QGraphicsItem):
 		if isinstance(self.color, str):
 			self.color = getattr(QtCore.Qt, self.color)
 		
-		self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
-		self.setFlag(QtWidgets.QGraphicsItem.ItemIsFocusable, True)
-		self.setCacheMode(QtWidgets.QGraphicsItem.DeviceCoordinateCache)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+		self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsFocusable, True)
+		self.setCacheMode(QtWidgets.QGraphicsItem.CacheMode.DeviceCoordinateCache)
 		self.setZValue(-2)
 		
 		self.source().add_edge(self)
@@ -601,7 +600,7 @@ class Edge(QtWidgets.QGraphicsItem):
 		
 		return self.selection_shape
 	
-	def paint(self, painter, option, widget):
+	def paint(self, painter, option, widget=None):
 		
 		if not self.source() or not self.target():
 			return
@@ -609,10 +608,10 @@ class Edge(QtWidgets.QGraphicsItem):
 		pen_width = 1
 		if self._line_width is not None:
 			pen_width = self._line_width
-		if option.state & QtWidgets.QStyle.State_Selected:
+		if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
 			pen_width *= 2
 		
-		pen = QtGui.QPen(self.color, pen_width, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+		pen = QtGui.QPen(self.color, pen_width, QtCore.Qt.PenStyle.SolidLine, QtCore.Qt.PenCapStyle.RoundCap, QtCore.Qt.PenJoinStyle.RoundJoin)
 		pen.setCosmetic(True)
 		
 		painter.setPen(pen)
@@ -630,11 +629,11 @@ class Edge(QtWidgets.QGraphicsItem):
 		
 		if self.label != "":
 			painter.setFont(self.font)
-			painter.setPen(QtGui.QPen(QtCore.Qt.black, pen_width))
+			painter.setPen(QtGui.QPen(QtCore.Qt.GlobalColor.black, pen_width))
 			text_pos = self.edge_path.pointAtPercent(0.5)
 			x = text_pos.x()
 			y = text_pos.y()
-			painter.drawText(x - self.label_w / 2, y + self.label_h / 4, self.label)
+			painter.drawText(QtCore.QPointF(x - self.label_w / 2, y + self.label_h / 4), self.label)
 
 class DGraphView(DGraphicsView):
 	
@@ -652,9 +651,9 @@ class DGraphView(DGraphicsView):
 		
 		DGraphicsView.__init__(self)
 		
-		self.scene().setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
-		self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorViewCenter)
-		self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
+		self.scene().setItemIndexMethod(QtWidgets.QGraphicsScene.ItemIndexMethod.NoIndex)
+		self.setResizeAnchor(QtWidgets.QGraphicsView.ViewportAnchor.AnchorViewCenter)
+		self.setDragMode(QtWidgets.QGraphicsView.DragMode.NoDrag)
 		
 		self.setMinimumSize(200, 200)
 		
@@ -678,7 +677,7 @@ class DGraphView(DGraphicsView):
 			search_box.layout().addWidget(label)
 		search_box.layout().addWidget(self._search_edit)
 		self.layout().addWidget(search_box)
-		self.layout().setAlignment(search_box, QtCore.Qt.AlignLeft)
+		self.layout().setAlignment(search_box, QtCore.Qt.AlignmentFlag.AlignLeft)
 	
 	def clear(self):
 		
@@ -953,7 +952,7 @@ class DGraphView(DGraphicsView):
 		
 		self.scene().clearSelection()
 	
-	def save_pdf(self, path, dpi = 72, page_size = QtGui.QPageSize.A4, stroke_width = None):
+	def save_pdf(self, path, dpi = 72, page_size = QtGui.QPageSize.PageSizeId.A4, stroke_width = None):
 		
 		self.scene().clearSelection()
 		
@@ -970,15 +969,15 @@ class DGraphView(DGraphicsView):
 		w, h = rect.width(), rect.height()
 		
 		printer = QtPrintSupport.QPrinter()
-		printer.setWinPageSize(page_size)
+		printer.setPageSize(page_size)
 		printer.setFullPage(True)
 		is_landscape = False
 		if w > h:
 			is_landscape = True
-			printer.setOrientation(QtPrintSupport.QPrinter.Landscape)
+			printer.setPageOrientation(QtGui.QPageLayout.Orientation.Landscape)
 		else:
-			printer.setOrientation(QtPrintSupport.QPrinter.Portrait)
-		printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+			printer.setPageOrientation(QtGui.QPageLayout.Orientation.Portrait)
+		printer.setOutputFormat(QtPrintSupport.QPrinter.OutputFormat.PdfFormat)
 		printer.setOutputFileName(path)
 		size = printer.pageLayout().pageSize().sizePoints()
 		if is_landscape:
@@ -990,9 +989,9 @@ class DGraphView(DGraphicsView):
 		pw *= scale
 		ph *= scale
 		if is_landscape:
-			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(ph, pw), units = QtGui.QPageSize.Point))
+			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(ph, pw), units = QtGui.QPageSize.Unit.Point))
 		else:
-			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(pw, ph), units = QtGui.QPageSize.Point))
+			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(pw, ph), units = QtGui.QPageSize.Unit.Point))
 		
 		painter = QtGui.QPainter(printer)
 		self.scene().render(painter, source = rect)
@@ -1027,12 +1026,12 @@ class DGraphView(DGraphicsView):
 	
 	def mousePressEvent(self, event):
 		
-		if event.button() == QtCore.Qt.LeftButton:
-			self.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
-			self.setCursor(QtCore.Qt.ArrowCursor)
-		elif event.button() == QtCore.Qt.RightButton:
-			self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
-			self.setCursor(QtCore.Qt.OpenHandCursor)
+		if event.button() == QtCore.Qt.MouseButton.LeftButton:
+			self.setDragMode(QtWidgets.QGraphicsView.DragMode.RubberBandDrag)
+			self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
+		elif event.button() == QtCore.Qt.MouseButton.RightButton:
+			self.setDragMode(QtWidgets.QGraphicsView.DragMode.NoDrag)
+			self.setCursor(QtCore.Qt.CursorShape.OpenHandCursor)
 			self._mouse_prev = (event.position().toPoint().x(), event.position().toPoint().y())
 			return
 		
@@ -1051,8 +1050,8 @@ class DGraphView(DGraphicsView):
 	
 	def mouseReleaseEvent(self, event):
 		
-		self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
-		self.setCursor(QtCore.Qt.ArrowCursor)
+		self.setDragMode(QtWidgets.QGraphicsView.DragMode.NoDrag)
+		self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
 		self._mouse_prev = None
 		
 		QtWidgets.QGraphicsView.mouseReleaseEvent(self, event)

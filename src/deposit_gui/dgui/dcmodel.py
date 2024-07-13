@@ -2,9 +2,7 @@ from deposit_gui.dgui.abstract_subcontroller import AbstractSubcontroller
 from deposit_gui.dgui.dmodel import DModel
 
 from deposit import (DDateTime, DGeometry, DResource)
-from deposit.datasource import AbstractDatasource
 
-from deposit.utils.fnc_files import (as_url)
 from deposit.utils.fnc_serialize import (try_numeric, value_to_str)
 from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 

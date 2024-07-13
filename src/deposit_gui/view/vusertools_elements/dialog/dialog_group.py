@@ -139,7 +139,7 @@ class DialogGroup(QtWidgets.QGroupBox):
 	
 	def frames(self):
 		
-		return list(self.controls_frame.findChildren(DialogFrame, options = QtCore.Qt.FindDirectChildrenOnly))
+		return list(self.controls_frame.findChildren(DialogFrame, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly))
 	
 	@QtCore.Slot()
 	def on_ctrl_changed(self):

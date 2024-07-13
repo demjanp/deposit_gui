@@ -1,4 +1,4 @@
-from PySide6 import (QtWidgets, QtCore)
+from PySide6 import (QtCore)
 import os
 import logging
 from pathlib import Path

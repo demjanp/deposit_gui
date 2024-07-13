@@ -4,7 +4,7 @@ Generic class to be re-used also by Deposit in the future
 '''
 
 
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtCore
 import sys
 
 class DRegistry(QtCore.QObject):

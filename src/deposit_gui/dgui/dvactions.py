@@ -19,8 +19,6 @@ from deposit_gui.dgui.abstract_subview import AbstractSubview
 from deposit_gui.dgui.dtool_bar import DToolBar
 from deposit_gui.dgui.dmenu_bar import DMenuBar
 
-from PySide6 import (QtCore)
-
 class DVActions(AbstractSubview):
 	
 	def __init__(self, vmain) -> None:

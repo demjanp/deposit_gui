@@ -4,9 +4,7 @@ from deposit import Store
 from deposit.utils.fnc_serialize import (parse_connstr)
 
 from PySide6 import (QtWidgets, QtCore, QtGui)
-from collections import defaultdict
 from natsort import natsorted
-import os
 
 class DConnectTabDB(QtWidgets.QFrame):
 	
@@ -44,12 +42,12 @@ class DConnectTabDB(QtWidgets.QFrame):
 		self.user_edit = QtWidgets.QLineEdit("")
 		self.user_edit.textChanged.connect(self.update)
 		self.pass_edit = QtWidgets.QLineEdit("")
-		self.pass_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+		self.pass_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
 		self.pass_edit.textChanged.connect(self.update)
 		self.identifier_combo = QtWidgets.QComboBox()
 		self.identifier_combo.setEditable(True)
 		self.identifier_combo.editTextChanged.connect(self.on_identifier_changed)
-		self.identifier_combo.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.identifier_combo.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		
 		self.connect_button = QtWidgets.QPushButton(self.parent.connect_caption())
 		self.connect_button.setEnabled(False)
@@ -232,7 +230,7 @@ class DConnectTabDB(QtWidgets.QFrame):
 		
 		if self._can_load:
 			reply = QtWidgets.QMessageBox.question(self, "Confirm Overwrite", "Are you sure you want to overwrite the database?<br>All data will be lost!")
-			if reply != QtWidgets.QMessageBox.Yes:
+			if reply != QtWidgets.QMessageBox.StandardButton.Yes:
 				return
 		
 		if self._can_create:
@@ -251,7 +249,7 @@ class DConnectTabDB(QtWidgets.QFrame):
 		
 		if self._can_load:
 			reply = QtWidgets.QMessageBox.question(self, "Confirm Deletion", "Are you sure you want to delete the database?")
-			if reply != QtWidgets.QMessageBox.Yes:
+			if reply != QtWidgets.QMessageBox.StandardButton.Yes:
 				return
 		
 		self.datasource.delete()

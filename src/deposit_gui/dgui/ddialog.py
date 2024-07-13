@@ -17,9 +17,9 @@ class DDialog(QtWidgets.QDialog):
 		self._button_box = None
 
 
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-		self.setWindowFlags(self.windowFlags() |  QtCore.Qt.WindowStaysOnTopHint)
+		self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+		self.setWindowFlags(self.windowFlags() |  QtCore.Qt.WindowType.WindowStaysOnTopHint)
 		
 		self.accepted.connect(self.on_accepted)
 		self.rejected.connect(self.on_rejected)
@@ -50,15 +50,15 @@ class DDialog(QtWidgets.QDialog):
 		if not (ok or cancel):
 			return
 		if ok and cancel:
-			flags = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
+			flags = QtWidgets.QDialogButtonBox.StandardButton.Ok | QtWidgets.QDialogButtonBox.StandardButton.Cancel
 		elif ok:
-			flags = QtWidgets.QDialogButtonBox.Ok
+			flags = QtWidgets.QDialogButtonBox.StandardButton.Ok
 		else:
-			flags = QtWidgets.QDialogButtonBox.Cancel
+			flags = QtWidgets.QDialogButtonBox.StandardButton.Cancel
 		self._button_box = QtWidgets.QFrame()
 		layout = QtWidgets.QVBoxLayout()
 		self._button_box.setLayout(layout)
-		buttons = QtWidgets.QDialogButtonBox(flags, QtCore.Qt.Horizontal)
+		buttons = QtWidgets.QDialogButtonBox(flags, QtCore.Qt.Orientation.Horizontal)
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 		self._button_box.layout().addWidget(buttons)
@@ -66,7 +66,7 @@ class DDialog(QtWidgets.QDialog):
 	def set_enabled(self, state):
 		
 		if self._button_box is not None:
-			self._button_box.layout().itemAt(0).widget().button(QtWidgets.QDialogButtonBox.Ok).setEnabled(state)
+			self._button_box.layout().itemAt(0).widget().button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setEnabled(state)
 	
 	@QtCore.Slot()
 	def on_accepted(self):

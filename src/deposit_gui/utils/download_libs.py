@@ -41,6 +41,8 @@ def download_win_libs():
 	
 	with zipfile.ZipFile(local_filename, 'r') as zip_ref:
 		zip_ref.extractall(extract_to)
+	
+	os.remove(local_filename)
 
 
 def check_mac_libs(libraries):

@@ -28,7 +28,7 @@ class EditorForm(QtWidgets.QMainWindow):
 		self.form_tool = form_tool
 		self.columns = []
 		
-		self.setWindowModality(QtCore.Qt.ApplicationModal)
+		self.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
 		
 		self.central_widget = QtWidgets.QWidget(self)
 		layout = QtWidgets.QVBoxLayout()
@@ -134,7 +134,7 @@ class EditorForm(QtWidgets.QMainWindow):
 	def get_selected(self):
 		
 		for column in self.columns:
-			for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+			for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 				if isinstance(element, EditorGroup) or isinstance(element, EditorFrame):
 					if element.selected:
 						return element
@@ -142,11 +142,11 @@ class EditorForm(QtWidgets.QMainWindow):
 						element = element.get_selected()
 						if element is not None:
 							return element
-		for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorSelect):
 				if element.selected:
 					return element
-		for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorUnique):
 				if element.selected:
 					return element
@@ -154,15 +154,15 @@ class EditorForm(QtWidgets.QMainWindow):
 	
 	def deselect_all(self):
 		
-		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.controls_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorGroup) or isinstance(element, EditorFrame):
 				element.setSelected(False)
 				if isinstance(element, EditorGroup):
 					element.deselect_all()
-		for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorSelect):
 				element.setSelected(False)
-		for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+		for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if isinstance(element, EditorUnique):
 				element.setSelected(False)
 	
@@ -262,15 +262,15 @@ class EditorForm(QtWidgets.QMainWindow):
 			form = Form(title, self._vusertools)
 			for column in self.columns:
 				form.elements.append(column.user_element())
-				for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+				for element in column.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 					if element.parent() != column:
 						continue
 					if isinstance(element, EditorGroup) or isinstance(element, EditorFrame):
 						form.elements.append(element.user_element())
-			for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+			for element in self.selects_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 				if isinstance(element, EditorSelect):
 					form.elements.append(element.user_element())
-			for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindDirectChildrenOnly):
+			for element in self.unique_frame.findChildren(QtWidgets.QWidget, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 				if isinstance(element, EditorUnique):
 					form.elements.append(element.user_element())
 			if self.form_tool is None:

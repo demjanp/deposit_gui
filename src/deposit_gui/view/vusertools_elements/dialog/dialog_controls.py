@@ -106,7 +106,7 @@ class PlainTextEdit(DialogControl, QtWidgets.QPlainTextEdit):
 		DialogControl.__init__(self, cmodel, user_control)
 		QtWidgets.QPlainTextEdit.__init__(self)
 		
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 		
 		self.populate_lookup()
 		
@@ -154,7 +154,7 @@ class PlainTextEdit(DialogControl, QtWidgets.QPlainTextEdit):
 					self.setPlainText(value)
 					cursor = self.textCursor()
 					cursor.setPosition(len(text))
-					cursor.setPosition(len(value), QtGui.QTextCursor.KeepAnchor)
+					cursor.setPosition(len(value), QtGui.QTextCursor.MoveMode.KeepAnchor)
 					self.setTextCursor(cursor)
 					self.last_added = cursor.selectedText()
 					self.blockSignals(False)

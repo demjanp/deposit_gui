@@ -10,9 +10,9 @@ class DProgress(QtWidgets.QProgressDialog):
 		
 		self._view = view
 		
-		QtWidgets.QProgressDialog.__init__(self, "", "Cancel", 0, 0, view, flags = QtCore.Qt.FramelessWindowHint)
+		QtWidgets.QProgressDialog.__init__(self, "", "Cancel", 0, 0, view, flags = QtCore.Qt.WindowType.FramelessWindowHint)
 		
-		self.setWindowModality(QtCore.Qt.WindowModal)
+		self.setWindowModality(QtCore.Qt.WindowModality.WindowModal)
 		
 		self.cancel()
 		self.reset()

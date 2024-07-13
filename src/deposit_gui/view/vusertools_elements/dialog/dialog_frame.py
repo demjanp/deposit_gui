@@ -18,7 +18,7 @@ class DialogFrame(QtWidgets.QFrame):
 		layout = QtWidgets.QFormLayout()
 		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
-		self.layout().setRowWrapPolicy(QtWidgets.QFormLayout.WrapLongRows)
+		self.layout().setRowWrapPolicy(QtWidgets.QFormLayout.RowWrapPolicy.WrapLongRows)
 		label = QtWidgets.QLabel("%s:" % (self.user_control.label))
 		if self.user_control.stylesheet:
 			label.setStyleSheet(self.user_control.stylesheet)

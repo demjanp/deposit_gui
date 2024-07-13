@@ -31,7 +31,7 @@ class DialogEntryForm(DialogForm):
 		else:
 			self.setMinimumWidth(600)
 		
-		self.overrideWindowFlags(QtCore.Qt.Window)
+		self.overrideWindowFlags(QtCore.Qt.WindowType.Window)
 		
 		button_remove = QtWidgets.QPushButton("Delete")
 		button_remove.clicked.connect(self.on_remove)

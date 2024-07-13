@@ -79,7 +79,7 @@ class DToolBar(QtCore.QObject):
 					action.clear()
 					action.addItems(items)
 					i = action.findText(
-						text, flags = QtCore.Qt.MatchExactly|QtCore.Qt.MatchCaseSensitive
+						text, flags = QtCore.Qt.MatchFlag.MatchExactly|QtCore.Qt.MatchFlag.MatchCaseSensitive
 					)
 					if i > -1:
 						action.setCurrentIndex(i)
@@ -102,9 +102,9 @@ class DToolBar(QtCore.QObject):
 			if "shortcut" in data:
 				action.setShortcut(QtGui.QKeySequence(data["shortcut"]))
 				if child_window:
-					action.setShortcutContext(QtCore.Qt.WindowShortcut)
+					action.setShortcutContext(QtCore.Qt.ShortcutContext.WindowShortcut)
 				else:
-					action.setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
+					action.setShortcutContext(QtCore.Qt.ShortcutContext.WidgetWithChildrenShortcut)
 			if "help" in data:
 				action.setToolTip(data["help"])
 			if "checkable" in data:
@@ -158,6 +158,6 @@ class ComboAction(QtWidgets.QComboBox):
 		self._name = name
 		self._toolbar_name = toolbar_name
 		
-		self.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+		self.setSizeAdjustPolicy(QtWidgets.QComboBox.SizeAdjustPolicy.AdjustToContents)
 		self.setEditable(True)
 

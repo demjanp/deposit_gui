@@ -4,7 +4,6 @@ from deposit.utils.fnc_files import (
 )
 from deposit_gui.utils.fnc_svg import (svg_to_raster)
 
-from PySide6 import (QtCore, QtGui, QtSvg)
 from PIL import Image
 import hashlib
 import shutil
@@ -25,7 +24,7 @@ def make_thumbnail(src_path, tgt_path, size, src_format):
 			icon = Image.open(src_path).convert("RGB")
 		except:
 			return
-		icon.thumbnail((size, size), Image.ANTIALIAS)
+		icon.thumbnail((size, size), Image.Resampling.LANCZOS)
 		icon.save(tgt_path, quality = 100)
 		icon.close()
 	

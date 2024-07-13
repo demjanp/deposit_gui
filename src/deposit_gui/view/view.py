@@ -23,11 +23,11 @@ class View(DView):
 		self.setCentralWidget(central_widget)
 		
 		self._tool_window = QtWidgets.QMainWindow()
-		self._tool_window.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self._tool_window.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
 		central_widget_layout.addWidget(self._tool_window)
 		
-		splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
-		splitter.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
+		splitter.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		central_widget_layout.addWidget(splitter)
 		
 		left_frame = QtWidgets.QFrame()

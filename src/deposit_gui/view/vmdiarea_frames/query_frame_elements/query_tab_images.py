@@ -14,7 +14,7 @@ class ImageDelegate(QtWidgets.QStyledItemDelegate):
 	
 	def paint(self, painter, option, index):
 		
-		self._query_tab_images._list_model.on_paint(index.data(QtCore.Qt.UserRole))
+		self._query_tab_images._list_model.on_paint(index.data(QtCore.Qt.ItemDataRole.UserRole))
 		
 		QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
 
@@ -32,7 +32,7 @@ class ProxyModel(QtCore.QSortFilterProxyModel):
 			
 			if self._item_order is None:
 				return 0
-			item = source.data(QtCore.Qt.UserRole)
+			item = source.data(QtCore.Qt.ItemDataRole.UserRole)
 			if item is None:
 				return 0
 			if item._key in self._item_order:
@@ -45,7 +45,7 @@ class ProxyModel(QtCore.QSortFilterProxyModel):
 		
 		if self._item_order is None:
 			return True
-		item = self.sourceModel().index(row, 0, parent).data(QtCore.Qt.UserRole)
+		item = self.sourceModel().index(row, 0, parent).data(QtCore.Qt.ItemDataRole.UserRole)
 		if item is None:
 			return False
 		if item._key in self._item_order:
@@ -56,8 +56,8 @@ class ProxyModel(QtCore.QSortFilterProxyModel):
 		
 		self._item_order = item_order
 		
-		QtCore.QSortFilterProxyModel.sort(self, 0, QtCore.Qt.DescendingOrder)
-		QtCore.QSortFilterProxyModel.sort(self, 0, QtCore.Qt.AscendingOrder)
+		QtCore.QSortFilterProxyModel.sort(self, 0, QtCore.Qt.SortOrder.DescendingOrder)
+		QtCore.QSortFilterProxyModel.sort(self, 0, QtCore.Qt.SortOrder.AscendingOrder)
 	
 	def filter(self, item_order):
 		
@@ -102,7 +102,7 @@ class ListModel(AbstractDragModel, QtCore.QAbstractListModel):
 	
 	def flags(self, index):
 		
-		item = self.data(index, QtCore.Qt.UserRole)
+		item = self.data(index, QtCore.Qt.ItemDataRole.UserRole)
 		
 		return AbstractDragModel.flags(self, item)
 	
@@ -110,16 +110,16 @@ class ListModel(AbstractDragModel, QtCore.QAbstractListModel):
 		
 		key = self._keys[index.row()]
 		
-		if role == QtCore.Qt.DisplayRole:
+		if role == QtCore.Qt.ItemDataRole.DisplayRole:
 			return self._images[key].filename
 		
-		if role == QtCore.Qt.DecorationRole:
+		if role == QtCore.Qt.ItemDataRole.DecorationRole:
 			icon = self._icons.get(key, None)
 			if icon is None:
 				return self.empty_icon
 			return icon
 		
-		if role == QtCore.Qt.UserRole:
+		if role == QtCore.Qt.ItemDataRole.UserRole:
 			class_name, descriptor_name = self._query.columns[key[1]]
 			value = self._images[key]
 			obj_id = list(value.object_ids)
@@ -189,21 +189,21 @@ class ListView(AbstractQueryTab, QtWidgets.QListView):
 		
 		self.setAcceptDrops(True)
 		self.setDragEnabled(True)
-		self.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-		self.setDefaultDropAction(QtCore.Qt.CopyAction)
+		self.setDragDropMode(QtWidgets.QAbstractItemView.DragDropMode.DragDrop)
+		self.setDefaultDropAction(QtCore.Qt.DropAction.CopyAction)
 		self.setDropIndicatorShown(True)
 		
 		self.setItemDelegate(ImageDelegate(self))
 		self._list_model = ListModel(queryframe, images, item_order, cmodel, self._icon_size)
 		
-		self.setViewMode(QtWidgets.QListView.IconMode)
+		self.setViewMode(QtWidgets.QListView.ViewMode.IconMode)
 		self.setUniformItemSizes(True)
-		self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-		self.setResizeMode(QtWidgets.QListView.Adjust)
+		self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
+		self.setResizeMode(QtWidgets.QListView.ResizeMode.Adjust)
 		self.setWrapping(True)
-		self.setFlow(QtWidgets.QListView.LeftToRight)
+		self.setFlow(QtWidgets.QListView.Flow.LeftToRight)
 		
-		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+		self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
 		
 		self.setModel(self._list_model._proxy_model)
 		
@@ -237,12 +237,12 @@ class ListView(AbstractQueryTab, QtWidgets.QListView):
 	@QtCore.Slot(QtCore.QModelIndex)
 	def on_activated(self, index):
 		
-		item = index.data(QtCore.Qt.UserRole)
+		item = index.data(QtCore.Qt.ItemDataRole.UserRole)
 		self._queryframe.on_query_activated(item)
 	
 	def on_selected(self):
 		
-		items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedIndexes()]
+		items = [index.data(QtCore.Qt.ItemDataRole.UserRole) for index in self.selectionModel().selectedIndexes()]
 		items = [item for item in items if item is not None]
 		self._queryframe.on_query_selected(items)
 		self._header.set_to_object_enabled(len(items) == 1)
@@ -270,8 +270,8 @@ class ListHeader(QtWidgets.QFrame):
 		self._queryframe = queryframe
 		self._obj_id = None
 		
-		self.setFrameShape(QtWidgets.QFrame.StyledPanel)
-		self.setFrameShadow(QtWidgets.QFrame.Raised)
+		self.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+		self.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
 		layout = QtWidgets.QHBoxLayout()
 		self.setLayout(layout)
 		self.layout().setContentsMargins(5, 0, 0, 0)
@@ -290,7 +290,7 @@ class ListHeader(QtWidgets.QFrame):
 		zoom_label = QtWidgets.QLabel("Zoom:")
 		zoom_label.setContentsMargins(5, 0, 5, 0)
 		self.layout().addWidget(zoom_label)
-		self.zoom_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+		self.zoom_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
 		self.zoom_slider.setMinimum(64)
 		self.zoom_slider.setMaximum(256)
 		self.zoom_slider.setMaximumWidth(400)

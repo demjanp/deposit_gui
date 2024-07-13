@@ -7,7 +7,6 @@ from deposit_gui.controller.cactions import CActions
 from deposit_gui.controller.cquerytoolbar import CQueryToolbar
 from deposit_gui.controller.cusertools import CUserTools
 
-from deposit import Store
 from deposit.store.dclass import DClass
 
 from PySide6 import (QtWidgets, QtCore, QtGui)
@@ -139,11 +138,11 @@ class Controller(QtCore.QObject):
 		if (not self._is_subwindow) and (not self.cmodel.is_saved()):
 			reply = QtWidgets.QMessageBox.question(self.cview._view, 
 				"Exit", "Save changes to database?",
-				QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
+				QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No | QtWidgets.QMessageBox.StandardButton.Cancel
 			)
-			if reply == QtWidgets.QMessageBox.Yes:
+			if reply == QtWidgets.QMessageBox.StandardButton.Yes:
 				self.cactions.on_Save(True)
-			elif reply == QtWidgets.QMessageBox.No:
+			elif reply == QtWidgets.QMessageBox.StandardButton.No:
 				return True
 			else:
 				return False

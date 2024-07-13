@@ -29,7 +29,7 @@ class DialogConnect(DConnectFrame):
 		logo_frame.setLayout(layout)
 		logo_frame.layout().setContentsMargins(0, 0, 0, 0)
 		logo_frame.layout().addStretch()
-		logo_frame.layout().addWidget(DClickableLogo(path, "https://github.com/demjanp/deposit", alignment = QtCore.Qt.AlignCenter))
+		logo_frame.layout().addWidget(DClickableLogo(path, "https://github.com/demjanp/deposit", alignment = QtCore.Qt.AlignmentFlag.AlignCenter))
 		logo_frame.layout().addStretch()
 		
 		return logo_frame

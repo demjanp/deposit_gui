@@ -17,10 +17,10 @@ class VQueryToolbar(AbstractSubview, QtCore.QObject):
 		self._query_box = QtWidgets.QComboBox()
 		self._query_box.setEditable(True)
 		self._query_box.setSizePolicy(
-			QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+			QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
 		)
 		self._query_box.setMinimumHeight(26)
-		self._query_box.completer().setCaseSensitivity(QtCore.Qt.CaseSensitive)
+		self._query_box.completer().setCaseSensitivity(QtCore.Qt.CaseSensitivity.CaseSensitive)
 		
 		query_button = QtWidgets.QToolButton()
 		query_button.setText("Enter")

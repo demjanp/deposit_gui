@@ -111,7 +111,7 @@ class CView(AbstractSubcontroller):
 		
 		reply = QtWidgets.QMessageBox.question(self._view, caption, text)
 		
-		return reply == QtWidgets.QMessageBox.Yes
+		return reply == QtWidgets.QMessageBox.StandardButton.Yes
 	
 	def close(self):
 		

@@ -11,7 +11,7 @@ class ClassList(QtWidgets.QTreeWidget):
 		self._saved_selection = None
 		
 		self.setHeaderHidden(True)
-		self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+		self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
 		self.setExpandsOnDoubleClick(False)
 		self.setIconSize(QtCore.QSize(24,24))
 		self.setColumnCount(1)
@@ -31,30 +31,30 @@ class ClassList(QtWidgets.QTreeWidget):
 		items = []
 		item = QtWidgets.QTreeWidgetItem()
 		item.is_descriptor = False
-		item.setData(0, QtCore.Qt.DisplayRole, "[classless objects]")
-		item.setData(0, QtCore.Qt.UserRole, "!*")
-		item.setData(0, QtCore.Qt.DecorationRole, icon_obj)
+		item.setData(0, QtCore.Qt.ItemDataRole.DisplayRole, "[classless objects]")
+		item.setData(0, QtCore.Qt.ItemDataRole.UserRole, "!*")
+		item.setData(0, QtCore.Qt.ItemDataRole.DecorationRole, icon_obj)
 		items.append(item)
 		for cls in classes:
 			item = QtWidgets.QTreeWidgetItem()
 			item.is_descriptor = False
-			item.setData(0, QtCore.Qt.DisplayRole, cls.name)
-			item.setData(0, QtCore.Qt.UserRole, cls)
-			item.setData(0, QtCore.Qt.DecorationRole, icon_cls)
+			item.setData(0, QtCore.Qt.ItemDataRole.DisplayRole, cls.name)
+			item.setData(0, QtCore.Qt.ItemDataRole.UserRole, cls)
+			item.setData(0, QtCore.Qt.ItemDataRole.DecorationRole, icon_cls)
 			subitems = []
 			for descr in cls.get_descriptors(ordered = True):
 				subitem = QtWidgets.QTreeWidgetItem()
 				subitem.is_descriptor = True
-				subitem.setData(0, QtCore.Qt.DisplayRole, descr.name)
-				subitem.setData(0, QtCore.Qt.UserRole, descr)
-				subitem.setData(0, QtCore.Qt.DecorationRole, icon_descr)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.DisplayRole, descr.name)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.UserRole, descr)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.DecorationRole, icon_descr)
 				subitems.append(subitem)
 			for cls_sub in cls.get_subclasses(ordered = True):
 				subitem = QtWidgets.QTreeWidgetItem()
 				subitem.is_descriptor = False
-				subitem.setData(0, QtCore.Qt.DisplayRole, cls_sub.name)
-				subitem.setData(0, QtCore.Qt.UserRole, cls_sub)
-				subitem.setData(0, QtCore.Qt.DecorationRole, icon_cls)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.DisplayRole, cls_sub.name)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.UserRole, cls_sub)
+				subitem.setData(0, QtCore.Qt.ItemDataRole.DecorationRole, icon_cls)
 				subitems.append(subitem)
 			if subitems:
 				item.insertChildren(0, subitems)
@@ -68,18 +68,18 @@ class ClassList(QtWidgets.QTreeWidget):
 				for row, parent in selected[:-1]:
 					parent = self.model().index(parent, 0)
 					index = self.model().index(row, 0, parent)
-					self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+					self.selectionModel().select(index, QtCore.QItemSelectionModel.SelectionFlag.Select)
 				self.blockSignals(False)
 			row, parent = selected[-1]
 			parent = self.model().index(parent, 0)
 			index = self.model().index(row, 0, parent)
-			self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+			self.selectionModel().select(index, QtCore.QItemSelectionModel.SelectionFlag.Select)
 			self.scrollTo(index)
 			
 	
 	def get_selected(self):
 		
-		return [item.data(0, QtCore.Qt.UserRole) for item in self.selectedItems()]
+		return [item.data(0, QtCore.Qt.ItemDataRole.UserRole) for item in self.selectedItems()]
 	
 	def get_selected_is_descriptor(self):
 		
@@ -96,7 +96,7 @@ class ClassList(QtWidgets.QTreeWidget):
 		parent = selected[0].parent()
 		if parent is None:
 			return None
-		return parent.data(0, QtCore.Qt.UserRole)
+		return parent.data(0, QtCore.Qt.ItemDataRole.UserRole)
 	
 	def get_items_around_selected(self):
 		
@@ -104,8 +104,8 @@ class ClassList(QtWidgets.QTreeWidget):
 		if not indexes:
 			return None, None
 		
-		above = self.indexAbove(indexes[0]).data(QtCore.Qt.UserRole)
-		below = self.indexBelow(indexes[0]).data(QtCore.Qt.UserRole)
+		above = self.indexAbove(indexes[0]).data(QtCore.Qt.ItemDataRole.UserRole)
+		below = self.indexBelow(indexes[0]).data(QtCore.Qt.ItemDataRole.UserRole)
 		
 		return above, below
 	
@@ -115,7 +115,7 @@ class ClassList(QtWidgets.QTreeWidget):
 		if not indexes:
 			return
 		index = self.indexAbove(indexes[0])
-		self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+		self.selectionModel().select(index, QtCore.QItemSelectionModel.SelectionFlag.Select)
 		self.setCurrentIndex(index)
 	
 	def select_one_below(self):
@@ -124,7 +124,7 @@ class ClassList(QtWidgets.QTreeWidget):
 		if not indexes:
 			return
 		index = self.indexBelow(indexes[0])
-		self.selectionModel().select(index, QtCore.QItemSelectionModel.Select)
+		self.selectionModel().select(index, QtCore.QItemSelectionModel.SelectionFlag.Select)
 		self.setCurrentIndex(index)
 	
 	def set_selected(self, names):
@@ -132,7 +132,7 @@ class ClassList(QtWidgets.QTreeWidget):
 		iterator = QtWidgets.QTreeWidgetItemIterator(self)
 		while iterator.value():
 			item = iterator.value()
-			name = item.data(0, QtCore.Qt.UserRole)
+			name = item.data(0, QtCore.Qt.ItemDataRole.UserRole)
 			if name in names:
 				item.setSelected(True)
 				names.remove(name) # select only the first occurence of name
@@ -146,10 +146,10 @@ class ClassList(QtWidgets.QTreeWidget):
 	@QtCore.Slot(object, int)
 	def on_activated(self, item, column):
 
-		cls = item.data(0, QtCore.Qt.UserRole)
+		cls = item.data(0, QtCore.Qt.ItemDataRole.UserRole)
 		parent = item.parent()
 		if parent is not None:
-			parent = parent.data(0, QtCore.Qt.UserRole)
+			parent = parent.data(0, QtCore.Qt.ItemDataRole.UserRole)
 		self._vnavigator.on_class_activated(cls, item.is_descriptor, parent)
 	
 	def focusInEvent(self, event):

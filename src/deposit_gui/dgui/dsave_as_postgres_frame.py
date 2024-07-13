@@ -2,8 +2,6 @@ from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db import DConnectTabDB
 from deposit_gui.dgui.dconnect_tabs.dconnect_tab_db_rel import DConnectTabDBRel
 
 from PySide6 import (QtWidgets, QtCore, QtGui)
-from pathlib import Path
-import os
 
 class DSaveAsPostgresFrame(QtWidgets.QFrame):
 	

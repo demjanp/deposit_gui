@@ -7,7 +7,6 @@ from deposit_gui.dgui.dconnect_tabs.dconnect_tab_memory import DConnectTabMemory
 
 from PySide6 import (QtWidgets, QtCore, QtGui)
 from pathlib import Path
-import os
 
 class DConnectFrame(QtWidgets.QFrame):
 	

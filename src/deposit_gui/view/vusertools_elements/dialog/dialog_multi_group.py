@@ -52,7 +52,7 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 	def framesets(self):
 		# returns [[DialogFrame, ...], ...]
 		
-		return [list(frameset.findChildren(DialogFrame, options = QtCore.Qt.FindDirectChildrenOnly)) for frameset in self._framesets]
+		return [list(frameset.findChildren(DialogFrame, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly)) for frameset in self._framesets]
 	
 	def add_frame(self, user_control):
 		
@@ -62,8 +62,8 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 		
 		if len(self._framesets) > 0:
 			line = QtWidgets.QFrame()
-			line.setFrameShape(QtWidgets.QFrame.HLine)
-			line.setFrameShadow(QtWidgets.QFrame.Sunken)
+			line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+			line.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
 			self.controls_frame.layout().addWidget(line)
 		self.add_frameset()
 		for member in self.user_group.members:
@@ -79,7 +79,7 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 		button_frame.layout().addWidget(button_remove)
 		self._framesets[-1].layout().addWidget(button_frame)
 		
-		return list(self._framesets[-1].findChildren(DialogFrame, options = QtCore.Qt.FindDirectChildrenOnly))
+		return list(self._framesets[-1].findChildren(DialogFrame, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly))
 	
 	def remove_entry(self, frameset):
 		
@@ -88,7 +88,7 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 				break
 		
 		obj_ids = set([])
-		for frame in self._framesets[idx].findChildren(DialogFrame, options = QtCore.Qt.FindDirectChildrenOnly):
+		for frame in self._framesets[idx].findChildren(DialogFrame, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			obj_id = frame.ctrl.obj_id
 			if obj_id is not None:
 				obj_ids.add(obj_id)
@@ -112,7 +112,7 @@ class DialogMultiGroup(QtWidgets.QGroupBox):
 	
 	def clear(self):
 		
-		for frame in self.controls_frame.findChildren(QtWidgets.QFrame, options = QtCore.Qt.FindDirectChildrenOnly):
+		for frame in self.controls_frame.findChildren(QtWidgets.QFrame, options = QtCore.Qt.FindChildOption.FindDirectChildrenOnly):
 			if frame.__class__.__name__ != "QFrame":
 				continue
 			self.controls_frame.layout().removeWidget(frame)

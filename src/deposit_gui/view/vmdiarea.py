@@ -135,9 +135,9 @@ class VMDIArea(AbstractSubview, QtWidgets.QFrame):
 		
 		was_active = False
 		is_active = False
-		if old_state & QtCore.Qt.WindowActive:
+		if old_state & QtCore.Qt.WindowState.WindowActive:
 			was_active = True
-		if new_state & QtCore.Qt.WindowActive:
+		if new_state & QtCore.Qt.WindowState.WindowActive:
 			is_active = True
 		if was_active and not is_active:
 			frame = window.widget()
@@ -158,8 +158,8 @@ class MDIArea(QtWidgets.QMdiArea):
 		self._background_text = ""
 		
 		self.setAcceptDrops(True)
-		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+		self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+		self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 	
 	def paintEvent(self, event):
 
@@ -196,9 +196,9 @@ class MdiSubWindow(QtWidgets.QMdiSubWindow):
 
 	def __init__(self):
 		
-		QtWidgets.QMdiSubWindow.__init__(self, flags = QtCore.Qt.SubWindow)
+		QtWidgets.QMdiSubWindow.__init__(self, flags = QtCore.Qt.WindowType.SubWindow)
 		
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+		self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
 	
 	def closeEvent(self, *args, **kwargs):
 		

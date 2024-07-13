@@ -14,8 +14,8 @@ class EditorQuery(QtWidgets.QDialog):
 		self._vusertools = vusertools
 		self.query_tool = query_tool
 		
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+		self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
 		self.setWindowTitle("Edit Query Tool")
 		
 		self.setMinimumWidth(600)
@@ -33,7 +33,7 @@ class EditorQuery(QtWidgets.QDialog):
 		form.layout().addRow("Query:", self.query_edit)
 		self.layout().addWidget(form)
 		
-		self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal)
+		self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.StandardButton.Ok | QtWidgets.QDialogButtonBox.StandardButton.Cancel, QtCore.Qt.Orientation.Horizontal)
 		self.buttonBox.accepted.connect(self.accept)
 		self.buttonBox.rejected.connect(self.reject)
 		self.layout().addWidget(self.buttonBox)
@@ -58,5 +58,5 @@ class EditorQuery(QtWidgets.QDialog):
 	@QtCore.Slot(object)
 	def on_finished(self, code):
 		
-		if code == QtWidgets.QDialog.Accepted:
+		if code == QtWidgets.QDialog.DialogCode.Accepted:
 			self.save()

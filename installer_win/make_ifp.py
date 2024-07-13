@@ -1,5 +1,4 @@
 from deposit_gui import (__version__)
-import codecs
 import sys
 import os
 

@@ -31,7 +31,7 @@ class VNavigator(AbstractSubview, QtWidgets.QFrame):
 		layout = QtWidgets.QVBoxLayout()
 		self.setLayout(layout)
 		self.layout().setContentsMargins(0, 0, 0, 0)
-		self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
+		self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
 		
 		toolbox = QtWidgets.QToolBox()
 		toolbox.layout().setSpacing(0)

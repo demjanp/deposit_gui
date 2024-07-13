@@ -86,7 +86,7 @@ class DMainWindow(QtWidgets.QMainWindow):
 		QtWidgets.QMainWindow.changeEvent(self, event)
 		if not self.isVisible():
 			return
-		if event.type() ==  QtCore.QEvent.WindowStateChange:
+		if event.type() ==  QtCore.QEvent.Type.WindowStateChange:
 			self._save_window_state()
 			if self.isMaximized():
 				self._save_geometry(self._previous_geometry)

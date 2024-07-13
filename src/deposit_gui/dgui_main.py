@@ -3,7 +3,6 @@ from deposit.utils.fnc_files import (clear_temp_dir)
 
 from PySide6 import (QtWidgets)
 import sys
-import os
 
 class DGUIMain(object):
 	
