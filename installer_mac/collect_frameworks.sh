@@ -1,9 +1,5 @@
 #!/bin/bash
 
-to_abs_path() {
-    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
-}
-
 copy_app() {
     local app_name=$1
     local app_path=$2
@@ -29,11 +25,13 @@ INSTALLER_DIR=Frameworks
 
 if [ "$#" -eq 1 ]; then
 # Convert provided arguments to absolute paths
-    INSTALLER_DIR=$(to_abs_path "$1/Frameworks")
+    INSTALLER_DIR="$1/Frameworks"
 fi
 
 rm -rf "$INSTALLER_DIR"
-mkdir "$INSTALLER_DIR"
+mkdir -p "$INSTALLER_DIR"
+
+brew install jq
 
 # Uninstall and reinstall specified packages
 brew uninstall poppler tesseract

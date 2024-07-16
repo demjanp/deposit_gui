@@ -40,6 +40,6 @@ if [ ! -d "$ARG1/Frameworks" ]; then
     bash installer_mac/collect_frameworks.sh "$ARG1"
 fi
 
-cp -R '$ARG1/Frameworks' 'dist'
+cp -R "$ARG1/Frameworks" "dist"
 
 python installer_mac/create_app.py
