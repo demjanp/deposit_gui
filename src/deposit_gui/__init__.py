@@ -16,12 +16,9 @@ if sys.platform == "darwin":
 
 elif sys.platform in ["linux", "linux2"]:
 	import shutil
-	if sys.platform == "darwin":
-		from .utils.download_libs import download_mac_libs as download_libs
-		os.environ["PATH"] += os.pathsep + "/usr/local/bin"
-	else:
-		from deposit_gui.utils.download_libs import download_linux_libs as download_libs
-		os.environ["PATH"] += os.pathsep + "/usr/bin"
+	
+	from deposit_gui.utils.download_libs import download_linux_libs as download_libs
+	os.environ["PATH"] += os.pathsep + "/usr/bin"
 	
 	found_graphviz = (shutil.which("dot") is not None)
 	if not found_graphviz:

@@ -62,6 +62,7 @@ def copy_dep_gui(app_name, dep_gui_src):
 def create_app_package():
     create_directory_structure(app_name)
     copy_icon_file(app_name, app_icon)
+    copy_frameworks(app_name, frameworks_src)
     copy_dep_gui(app_name, dep_gui_src)
     write_info_plist(app_name, info_plist)
     print(f'{app_name} has been created successfully.')
