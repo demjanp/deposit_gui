@@ -4,15 +4,10 @@ import sys
 import os
 
 if sys.platform == "darwin":
-	frameworks_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Frameworks'))
-	if os.path.isdir(frameworks_path):
-		path_items = []
-		dyld_items = []
-		for framework in os.listdir(frameworks_path):
-			path_items.append(os.path.join(frameworks_path, framework, 'bin'))
-			dyld_items.append(os.path.join(frameworks_path, framework, 'lib'))
-		os.environ['PATH'] = os.environ.get('PATH', '') + ":" + ':'.join(path_items)
-		os.environ['DYLD_LIBRARY_PATH'] = os.environ.get('DYLD_LIBRARY_PATH', '') + ":" + ':'.join(dyld_items)
+	macos_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'MacOS'))
+	if os.path.isdir(macos_path):
+		os.environ['PATH'] = os.environ.get('PATH', '') + ":" + macos_path
+		os.environ['DYLD_LIBRARY_PATH'] = os.environ.get('DYLD_LIBRARY_PATH', '') + ":" + macos_path
 
 elif sys.platform in ["linux", "linux2"]:
 	import shutil
