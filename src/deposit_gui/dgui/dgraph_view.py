@@ -952,22 +952,19 @@ class DGraphView(DGraphicsView):
 		
 		self.scene().clearSelection()
 	
-	def save_pdf(self, path, dpi = 72, page_size = QtGui.QPageSize.PageSizeId.A4, stroke_width = None):
-		
+	def save_pdf(self, path, dpi=300, page_size=QtGui.QPageSize.PageSizeId.A4, stroke_width=None):
 		self.scene().clearSelection()
-		
-		scale = self.get_scale()
-		
+
 		if stroke_width is not None:
 			for item in self.scene().items():
 				if isinstance(item, Edge):
 					item.set_line_width(stroke_width)
-		
+
 		rect = self.scene().itemsBoundingRect()
-		m = min(rect.width(), rect.height())*0.05
+		m = min(rect.width(), rect.height()) * 0.05
 		rect = rect.marginsAdded(QtCore.QMarginsF(m, m, m, m))
 		w, h = rect.width(), rect.height()
-		
+
 		printer = QtPrintSupport.QPrinter()
 		printer.setPageSize(page_size)
 		printer.setFullPage(True)
@@ -979,29 +976,23 @@ class DGraphView(DGraphicsView):
 			printer.setPageOrientation(QtGui.QPageLayout.Orientation.Portrait)
 		printer.setOutputFormat(QtPrintSupport.QPrinter.OutputFormat.PdfFormat)
 		printer.setOutputFileName(path)
-		size = printer.pageLayout().pageSize().sizePoints()
-		if is_landscape:
-			pw, ph = size.height(), size.width()
-		else:
-			pw, ph = size.width(), size.height()
-		scale = min(pw / w, ph / h)
-		printer.setResolution(int(round(dpi)))
-		pw *= scale
-		ph *= scale
-		if is_landscape:
-			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(ph, pw), units = QtGui.QPageSize.Unit.Point))
-		else:
-			printer.setPageSize(QtGui.QPageSize(QtCore.QSize(pw, ph), units = QtGui.QPageSize.Unit.Point))
+		printer.setResolution(dpi)
 		
+		# Adjust page size to match DPI and ensure full page scaling
+		size = printer.pageRect(QtPrintSupport.QPrinter.DevicePixel).size()
+		scale = min(size.width() / w, size.height() / h)
+
 		painter = QtGui.QPainter(printer)
-		self.scene().render(painter, source = rect)
+		painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+		painter.scale(scale, scale)
+		self.scene().render(painter, source=rect, target=QtCore.QRectF(0, 0, w, h))
 		painter.end()
-		
+
 		if stroke_width is not None:
 			for item in self.scene().items():
 				if isinstance(item, Edge):
 					item.set_line_width(None)
-	
+				
 	@QtCore.Slot()
 	def on_selected(self):
 		
