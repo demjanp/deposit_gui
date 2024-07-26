@@ -305,7 +305,7 @@ class QueryTabTable(AbstractQueryTab, QtWidgets.QTableView):
 	def on_selected(self):
 		
 		row_items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedRows()]
-		items = [index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedIndexes()]
+		items =[index.data(QtCore.Qt.UserRole) for index in self.selectionModel().selectedIndexes()]
 		items = [item for item in items if item is not None]
 		self._queryframe.on_query_selected(items)
 		self._queryframe.on_selected_rows(row_items)

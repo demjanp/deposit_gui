@@ -35,7 +35,7 @@ class View(DView):
 		splitter.addWidget(vnavigator)
 		splitter.addWidget(vmdiarea)
 		
-		self.setWindowIcon(self.get_icon("dep_cube.svg"))
+		self.set_icon("dep_cube.svg")
 		
 	def menuBar(self):
 		# HACK to stop MDI Subwindows move controls to MenuBar when maximized

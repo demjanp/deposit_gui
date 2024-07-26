@@ -17,14 +17,12 @@ class DRegistry(QtCore.QObject):
         self._n_writes = 0
         
         if sys.platform == "win32":
-            # Kód pre Windows
             import winreg
             self.key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\%s" % self.app_name)
             for i in range(winreg.QueryInfoKey(self.key)[1]):
                 var, value, _ = winreg.EnumValue(self.key, i)
                 self._vars[var] = value
         elif sys.platform == "darwin":
-            # Kód pre macOS
             self.preferences = QtCore.QSettings("LAP 4")
             self.preferences.beginGroup(self.app_name)
             keys = self.preferences.allKeys()
@@ -32,11 +30,9 @@ class DRegistry(QtCore.QObject):
                 self._vars[key] = self.preferences.value(key)
             self.preferences.endGroup()
         elif sys.platform.startswith("linux"):
-            # Kód pre Linux
-            print("Spustam kód pre Linux")
+            raise NotImplmentedError("Linux not supported")
         else:
-            # Kód pre iné operačné systémy
-            print("Spustam kód pre iný operačný systém")
+            raise Exception("Unknown OS")
 	
     def get(self, var):
         if var not in self._vars:
