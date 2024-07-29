@@ -39,6 +39,8 @@ class DialogAddRelation(QtWidgets.QFrame):
 	
 	def update(self):
 		
+		if not self.isVisible():
+			return
 		source_txt = " \u2192 "
 		target_txt = " \u2192 "
 		if self._is_class:

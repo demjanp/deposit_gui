@@ -114,6 +114,16 @@ class CModel(DCModel):
 		)
 		self.cmain.cview.set_title(self.get_datasource_name())
 	
+	def update_gui(self):
+		
+		self.cmain.cnavigator.populate_classes()
+		self.cmain.cmdiarea.update_class_graphs()
+		self.cmain.cmdiarea.update_queries(
+			self._update_objects, self.get_classes()
+		)
+		self.cmain.cusertools.on_data_changed()
+		
+	
 	def update_recent(self, kwargs):
 		
 		datasource = kwargs.get("datasource", None)
