@@ -1,16 +1,15 @@
 #!/bin/bash
 
-
 cd ..
 
 rm -rf build
 rm -rf dist
 
+brew install graphviz
+
 source .venv/bin/activate
 
 python installer_mac/make_pkgproj.py
-
-brew install graphviz
 
 python bin/update_imports.py installer_mac
 
