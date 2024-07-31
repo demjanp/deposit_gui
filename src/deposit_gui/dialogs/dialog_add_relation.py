@@ -39,8 +39,6 @@ class DialogAddRelation(QtWidgets.QFrame):
 	
 	def update(self):
 		
-		if not self.isVisible():
-			return
 		source_txt = " \u2192 "
 		target_txt = " \u2192 "
 		if self._is_class:
@@ -68,6 +66,14 @@ class DialogAddRelation(QtWidgets.QFrame):
 	
 	@QtCore.Slot()
 	def on_selection_changed(self):
+		
+		is_visible = False
+		try:
+			is_visible = self._dialog.isVisible()
+		except:
+			pass
+		if not is_visible:
+			return
 		
 		if self._is_class:
 			self._targets = list(self._cmain.get_selected_classes())
