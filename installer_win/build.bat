@@ -8,4 +8,4 @@ python bin\update_imports.py installer_win
 
 call pyinstaller installer_win\dep_gui.spec
 
-python installer_win\make_ifp.py %cd%
+python installer_win\make_nsi.py %cd%
