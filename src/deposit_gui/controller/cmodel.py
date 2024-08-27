@@ -150,4 +150,12 @@ class CModel(DCModel):
 		if not self.cmain.check_save():
 			return False
 		
-		return DCModel.load(self, *args, **kwargs)
+		ret = DCModel.load(self, *args, **kwargs)
+		self.update_gui()
+		return ret
+	
+	def save(self, *args, **kwargs):
+		
+		ret = DCModel.save(self, *args, **kwargs)
+		self.update_gui()
+		return ret

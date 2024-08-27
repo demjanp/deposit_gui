@@ -5,7 +5,8 @@ from deposit.store.dclass import DClass
 from deposit_gui.utils.fnc_thumbnails import (load_thumbnails, get_thumbnail)
 from deposit.utils.fnc_files import (get_temp_path, sanitize_filename)
 
-from PySide6 import (QtCore)
+#from PySide6 import (QtCore)
+from PySide6 import (QtWidgets, QtCore) # DEBUG
 import shutil
 import uuid
 import os
@@ -434,5 +435,3 @@ class DModel(QtCore.QObject):
 	def is_saved(self):
 		
 		return self._store.is_saved()
-
-

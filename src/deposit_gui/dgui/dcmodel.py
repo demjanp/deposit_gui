@@ -572,6 +572,7 @@ class DCModel(AbstractSubcontroller):
 		if self._progress is not None:
 			self._progress.stop()
 		return False
+		
 	
 	def is_saved(self):
 		

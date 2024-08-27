@@ -110,7 +110,7 @@ class AbstractTabFile(QtWidgets.QFrame):
 		
 		url = as_url(path)
 		self.parent.on_connect(url = url)
-
+		
 class FileTree(QtWidgets.QTreeView):
 	
 	selected = QtCore.Signal()

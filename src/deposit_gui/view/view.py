@@ -1,4 +1,5 @@
 from deposit_gui.dgui.dview import DView
+from deposit_gui.dgui.dprogress import DProgress
 
 from deposit_gui import __version__, __title__
 
@@ -48,7 +49,7 @@ class View(DView):
 			raise Exception("Operating system not supported")
 		
 		self.update_style()
-		
+	
 	def menuBar(self):
 		# HACK to stop MDI Subwindows move controls to MenuBar when maximized
 		
