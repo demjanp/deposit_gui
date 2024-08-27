@@ -1,24 +1,47 @@
 from PySide6 import (QtWidgets, QtCore, QtGui)
 
-class DProgress(object):
-
-	def __init__(self, parent=None):
-		self._maximum = None
+class DProgress(QtWidgets.QProgressDialog):
 	
-	def cancel_pressed(self):    
-		return False
+	def __init__(self, view):
+		
+		self._view = view
+		
+		QtWidgets.QProgressDialog.__init__(self, "", "Cancel", 0, 0, view, flags = QtCore.Qt.WindowType.FramelessWindowHint)
+		
+		self.setWindowModality(QtCore.Qt.WindowModality.WindowModal)
+		
+		self.cancel()
+		self.reset()
 	
-	def show(self, text=""):
-		QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+	def cancel_pressed(self):
+		
+		return self.wasCanceled()
+	
+	def show(self, text = ""):
+		
+		self.reset()
+		
+		self.setLabelText(text)
+		
+		QtWidgets.QProgressDialog.show(self)
+		
+		QtWidgets.QApplication.processEvents()
 	
 	def stop(self):
-		QtWidgets.QApplication.restoreOverrideCursor()
-		self._maximum = None
-	
-	def update_state(self, text=None, value=None, maximum=None):
 		
+		self.cancel()
+		self.reset()
+	
+	def update_state(self, text = None, value = None, maximum = None):
+		
+		if not self.isVisible():
+			self.show()
+		if text is not None:
+			self.setLabelText(text)
+		if value is not None:
+			self.setValue(value)
 		if maximum is not None:
-			self._maximum = maximum
-		if (value is not None) and (self._maximum is not None):
-			if value >= self._maximum:
-				self.stop()
+			self.setMaximum(maximum)
+		
+		QtWidgets.QApplication.processEvents()
+

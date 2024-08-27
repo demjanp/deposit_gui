@@ -228,9 +228,9 @@ class CActions(DCActions):
 		if not path:
 			return
 		self.cmain.cview.set_recent_dir(path)
-		self.cmain.cview.progress.show("Saving")
-		store.save(path = path, progress = self.cmain.cview.progress)
-		self.cmain.cview.progress.stop()
+		QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+		store.save(path = path)
+		QtWidgets.QApplication.restoreOverrideCursor()
 		url = as_url(path)
 		self.cmain.cdialogs.open("ConfirmLoad", url)
 	

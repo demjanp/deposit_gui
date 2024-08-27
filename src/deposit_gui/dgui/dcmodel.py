@@ -6,7 +6,7 @@ from deposit import (DDateTime, DGeometry, DResource)
 from deposit.utils.fnc_serialize import (try_numeric, value_to_str)
 from deposit.query.parse import (remove_bracketed_selects, extract_expr_vars)
 
-from PySide6 import (QtCore)
+from PySide6 import (QtWidgets, QtCore, QtGui)
 from collections import defaultdict
 from natsort import natsorted
 import sys
@@ -548,29 +548,23 @@ class DCModel(AbstractSubcontroller):
 	
 	def save(self, *args, **kwargs):
 		
-		if self._progress is not None:
-			self._progress.show("Saving")
-		if self._model.save(progress = self._progress, *args, **kwargs):
-			if self._progress is not None:
-				self._progress.stop()
+		QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+		if self._model.save(*args, **kwargs):
+			QtWidgets.QApplication.restoreOverrideCursor()
 			self.update_recent(kwargs)
 			return True
-		if self._progress is not None:
-			self._progress.stop()
+		QtWidgets.QApplication.restoreOverrideCursor()
 		return False
 	
 	def load(self, *args, **kwargs):
 		# datasource = Datasource or format
 		
-		if self._progress is not None:
-			self._progress.show("Loading")
-		if self._model.load(progress = self._progress, *args, **kwargs):
-			if self._progress is not None:
-				self._progress.stop()
+		QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+		if self._model.load(*args, **kwargs):
+			QtWidgets.QApplication.restoreOverrideCursor()
 			self.update_recent(kwargs)
 			return True
-		if self._progress is not None:
-			self._progress.stop()
+		QtWidgets.QApplication.restoreOverrideCursor()
 		return False
 		
 	
