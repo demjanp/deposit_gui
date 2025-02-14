@@ -565,7 +565,7 @@ class CDialogs(DCDialogs):
 	
 	def set_up_FieldCalculator(self, dialog, rows, descriptor_name):
 		
-		dialog.set_title("About Deposit")
+		dialog.set_title("Field Calculator")
 		dialog.set_button_box(True, True)
 		dialog.setModal(True)
 		
