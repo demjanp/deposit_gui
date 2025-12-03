@@ -78,7 +78,7 @@ class QueryFrame(AbstractMDIAreaFrame, QtWidgets.QFrame):
 		splitter.addWidget(frame_left)
 		splitter.addWidget(self.scroll_area)
 		
-		self._filter_timer = QtCore.QTimer()
+		self._filter_timer = QtCore.QTimer(self)
 		self._filter_timer.setSingleShot(True)
 		self._filter_timer.timeout.connect(self.on_filter_timer)
 		

@@ -12,7 +12,7 @@ class CModel(DCModel):
 		
 		DCModel.__init__(self, cmain, store)
 		
-		self._update_timer = QtCore.QTimer()
+		self._update_timer = QtCore.QTimer(self)
 		self._update_timer.setSingleShot(True)
 		self._update_timer.timeout.connect(self.on_update_timer)
 		self._update_objects = set()

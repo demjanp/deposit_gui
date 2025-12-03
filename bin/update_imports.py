@@ -12,7 +12,7 @@ class DGUIMain_mod(DGUIMain, QtCore.QObject):
 		
 		self.app = QtWidgets.QApplication(sys.argv)
 		
-		self.timer = QtCore.QTimer()
+		self.timer = QtCore.QTimer(self)
 		self.timer.setSingleShot(True)
 		self.timer.timeout.connect(self.on_timer)
 		

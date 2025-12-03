@@ -82,7 +82,7 @@ class DConnectTabDB(QtWidgets.QFrame):
 		self.layout().addWidget(button_container)
 		self.layout().addStretch()
 		
-		self._update_timer = QtCore.QTimer()
+		self._update_timer = QtCore.QTimer(self)
 		self._update_timer.setSingleShot(True)
 		self._update_timer.timeout.connect(self.on_update_timer)
 	

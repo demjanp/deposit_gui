@@ -43,7 +43,7 @@ class DNotification(QtWidgets.QFrame):
 		
 		close_button.clicked.connect(self.on_close)
 		
-		self.hide_timer = QtCore.QTimer()
+		self.hide_timer = QtCore.QTimer(self)
 		self.hide_timer.setSingleShot(True)
 		self.hide_timer.timeout.connect(self.on_hide_timer)
 		self.hide()

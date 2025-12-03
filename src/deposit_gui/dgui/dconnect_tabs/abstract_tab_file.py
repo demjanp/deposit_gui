@@ -24,7 +24,7 @@ class AbstractTabFile(QtWidgets.QFrame):
 		if not rootdir:
 			rootdir = homedir
 		
-		self.fs_model = QtWidgets.QFileSystemModel()
+		self.fs_model = QtWidgets.QFileSystemModel(self)
 		self.fs_model.setRootPath(rootdir)
 		self.fs_model.setNameFilters(["*.%s" % self.EXTENSION])
 		self.fs_model.setNameFilterDisables(False)
