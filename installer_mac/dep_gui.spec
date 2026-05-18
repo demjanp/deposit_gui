@@ -82,7 +82,7 @@ coll = COLLECT(
     upx=True,
     upx_exclude=[],
     name='dep_gui',
-    distpath='dist/deposit_gui',
+    distpath='dist',
     excludes=[],
 )
 

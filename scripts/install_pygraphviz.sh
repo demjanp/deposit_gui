@@ -1,27 +1,23 @@
 #!/bin/bash
+set -euo pipefail
 
-# Define variables
-REPO_URL="https://github.com/pygraphviz/pygraphviz.git"
-TEMP_DIR=$(mktemp -d)
+if ! command -v brew >/dev/null 2>&1; then
+	echo "Homebrew is required to install pygraphviz on macOS." >&2
+	exit 1
+fi
 
-GRAPHVIZ_PREFIX=$(brew --prefix graphviz)
-GRAPHVIZ_REAL_PATH=$(realpath $GRAPHVIZ_PREFIX)
+if ! brew list graphviz >/dev/null 2>&1; then
+	brew install graphviz
+fi
 
-# Clone the pygraphviz repository
-git clone $REPO_URL $TEMP_DIR
+GRAPHVIZ_PREFIX="$(brew --prefix graphviz)"
 
-cd $TEMP_DIR
+python -m pip install --no-cache-dir \
+	--config-settings=--global-option=build_ext \
+	--config-settings=--global-option="-I${GRAPHVIZ_PREFIX}/include" \
+	--config-settings=--global-option="-L${GRAPHVIZ_PREFIX}/lib" \
+	'pygraphviz>=1.13,<2'
 
-# Modify setup.py to include the necessary paths
-sed -i '' "s|include_dirs=\[\]|include_dirs=['${GRAPHVIZ_REAL_PATH}/include']|" setup.py
-sed -i '' "s|library_dirs=\[\]|library_dirs=['${GRAPHVIZ_REAL_PATH}/lib']|" setup.py
-
-# Build and install pygraphviz
-python3 setup.py build
-python3 setup.py install
-
-# Clean up
-cd ..
-rm -rf $TEMP_DIR
+python -c "import pygraphviz"
 
 echo "pygraphviz installation completed."
