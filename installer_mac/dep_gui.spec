@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 from PyInstaller.utils.hooks import collect_submodules, collect_dynamic_libs
+from deposit_gui import __version__
 
 block_cipher = None
 
@@ -84,5 +85,22 @@ coll = COLLECT(
     name='dep_gui',
     distpath='dist',
     excludes=[],
+)
+
+app = BUNDLE(
+    coll,
+    name='Deposit.app',
+    icon='../src/deposit_gui/res/deposit_icon.icns',
+    bundle_identifier='com.thelapteam.depositgui',
+    version=__version__,
+    info_plist={
+        'CFBundleName': 'DepositGUI',
+        'CFBundleDisplayName': 'Deposit GUI',
+        'CFBundleVersion': __version__,
+        'CFBundleShortVersionString': ".".join(__version__.split(".")[:2]),
+        'NSHighResolutionCapable': True,
+        'CFBundleDevelopmentRegion': 'English',
+        'LSMinimumSystemVersion': '11',
+    },
 )
 
