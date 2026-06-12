@@ -1,6 +1,7 @@
 from deposit_gui.dgui.dtool_bar import DToolBar
 
 from PySide6 import (QtWidgets, QtCore, QtGui)
+import sys
 
 class DMenuBar(DToolBar):
 	
@@ -36,7 +37,8 @@ class DMenuBar(DToolBar):
 					submenu = QtWidgets.QMenu(name[0])
 					menu.addMenu(submenu)
 					populate_menu(name[1], submenu)
-					submenu.triggered.connect(self.on_triggered)
+					if sys.platform == "darwin":
+						submenu.triggered.connect(self.on_triggered)
 		
 		for menu_name in tools:
 			self.menus[menu_name] = self.menubar.addMenu(menu_name)

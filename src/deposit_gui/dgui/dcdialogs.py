@@ -22,12 +22,19 @@ class DCDialogs(AbstractSubcontroller):
 				dialog.close()
 		except:
 			pass
-	
+
+	def _discard_dialog(self, name, dialog = None):
+
+		if dialog is None:
+			self._dialogs.pop(name, None)
+		elif self._dialogs.get(name) is dialog:
+			self._dialogs.pop(name, None)
+
 	def open(self, name, *args, **kwargs):
-		
-		if name in self._dialogs:
-			self.safely_close_dialog(self._dialogs[name])
-			del self._dialogs[name]
+
+		dialog_old = self._dialogs.pop(name, None)
+		if dialog_old is not None:
+			self.safely_close_dialog(dialog_old)
 
 		dialog = self._vdialogs.open(name)
 		dialog._args = args
@@ -57,17 +64,15 @@ class DCDialogs(AbstractSubcontroller):
 		if hasattr(self, "process_%s" % (name)):
 			getattr(self, "process_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
 		self.safely_close_dialog(dialog)
-		if name in self._dialogs:
-			del self._dialogs[name]
-	
+		self._discard_dialog(name, dialog)
+
 	@QtCore.Slot(str, object)
 	def on_dialog_cancel(self, name, dialog):
-		
+
 		if hasattr(self, "cancel_%s" % (name)):
 			getattr(self, "cancel_%s" % (name))(dialog, *dialog._args, **dialog._kwargs)
 		self.safely_close_dialog(dialog)
-		if name in self._dialogs:
-			del self._dialogs[name]
+		self._discard_dialog(name, dialog)
 	
 	
 	# ---- Signal handling
