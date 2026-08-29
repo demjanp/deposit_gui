@@ -3,7 +3,43 @@ from svgelements import (
 	SVG, Group, Image, Path, Polygon, Polyline, Line
 )
 import base64
+import binascii
 import re
+
+_IMAGE_DATA_URI_FORMATS = {
+	"image/jpeg": "JPG",
+	"image/jpg": "JPG",
+	"image/png": "PNG",
+}
+
+def _image_from_data_uri(data):
+
+	header, separator, encoded = data.partition(",")
+	header_lower = header.lower()
+	if separator != ",":
+		raise ValueError("Malformed embedded image data URI: missing comma")
+	if not header_lower.startswith("data:image/"):
+		raise ValueError("Unsupported embedded image data URI")
+	if not header_lower.endswith(";base64"):
+		raise ValueError("Unsupported embedded image data URI encoding")
+
+	mime_type = header[len("data:"):-len(";base64")].lower()
+	if mime_type not in _IMAGE_DATA_URI_FORMATS:
+		raise ValueError(
+			"Unsupported embedded image MIME type: %s" % (mime_type)
+		)
+
+	try:
+		image_data = base64.b64decode(encoded, validate = True)
+	except (binascii.Error, ValueError) as error:
+		raise ValueError(
+			"Invalid base64 payload for embedded %s image" % (mime_type)
+		) from error
+
+	image = QtGui.QImage()
+	if not image.loadFromData(image_data, _IMAGE_DATA_URI_FORMATS[mime_type]):
+		raise ValueError("Could not load embedded %s image" % (mime_type))
+	return image
 
 def svg_element_to_coords(element, scale = 1):
 	
@@ -103,20 +139,13 @@ def svg_to_raster(path_svg, path_raster,
 	idxs = sorted(idxs, key = lambda row: row[:2])[::-1]
 	
 	for i, j, coords, transform, x0, y0 in idxs:
-		
+
 		data = src_svg[i:j]
-		
-		path = None
-		if not data.startswith("data:image/"):
+
+		if not data.lower().startswith("data:image/"):
 			continue
-		
-		image = QtGui.QImage()
-		if path is not None:
-			image.load(path)
-		else:			
-			image.loadFromData(base64.b64decode(data[23:]), "JPG")
-		if image.isNull():
-			continue
+
+		image = _image_from_data_uri(data)
 		
 		transform = QtGui.QTransform(
 			transform.a,
