@@ -225,7 +225,9 @@ class DView(AbstractSubview, DMainWindow):
 					QtCore.Qt.Key(event.key())
 			)
 			for action in self.findChildren(QtGui.QAction):
-				if action.isEnabled() and (action.shortcut() == key_combination):
+				shortcut = action.shortcut()
+				if action.isEnabled() and not shortcut.isEmpty() and \
+					(shortcut == key_combination):
 					action.trigger()
 		
 		QtWidgets.QMainWindow.keyPressEvent(self, event)
