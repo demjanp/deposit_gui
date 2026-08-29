@@ -63,8 +63,8 @@ class DToolBar(QtCore.QObject):
 						toolbar_name = action._toolbar_name
 						caption = action.text()
 						action_ = ComboAction(name, toolbar_name, self.view)
-						action_.currentTextChanged.connect(
-							lambda text: self.on_combo_changed(name, text)
+						action_.currentIndexChanged.connect(
+							lambda index: self.on_combo_changed(name, action_.currentText())
 						)
 						if caption:
 							self.toolbars[toolbar_name].insertWidget(
